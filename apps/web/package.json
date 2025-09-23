@@ -1,0 +1,42 @@
+{
+  "name": "web",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "dev": "vite dev --port 3001",
+    "test": "vitest run",
+    "type-check": "tsc --noEmit",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@effect-atom/atom-react": "^0.1.15",
+    "@repo/domain": "workspace:*",
+    "@tailwindcss/vite": "^4.1.12",
+    "@tanstack/react-router": "^1.132.0",
+    "@tanstack/react-start": "^1.132.00",
+    "radix-ui": "^1.4.3",
+    "tw-animate-css": "1.3.7",
+    "effect": "catalog:",
+    "@effect/platform": "catalog:",
+    "@effect/rpc": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "clsx": "catalog:",
+    "class-variance-authority": "catalog:",
+    "lucide-react": "catalog:",
+    "tailwindcss": "catalog:",
+    "tailwind-merge": "catalog:"
+  },
+  "devDependencies": {
+    "@repo/config-typescript": "workspace:*",
+    "@vitejs/plugin-react": "^5.0.3",
+    "vite-tsconfig-paths": "^5.1.4",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "vite": "catalog:",
+    "@effect/language-service": "catalog:"
+  }
+}

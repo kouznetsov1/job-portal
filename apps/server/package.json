@@ -1,0 +1,28 @@
+{
+  "name": "server",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "bun build src/index.ts --outdir=dist --target=bun --minify",
+    "build:types": "tsc --emitDeclarationOnly",
+    "dev": "bun --watch run src/index.ts",
+    "test": "vitest run",
+    "type-check": "tsc --noEmit",
+    "clean": "git clean -xdf .cache .turbo dist node_modules"
+  },
+  "dependencies": {
+    "effect": "catalog:",
+    "@effect/platform": "catalog:",
+    "@effect/platform-bun": "^0.80.0",
+    "@effect/rpc": "catalog:",
+    "@effect/language-service": "catalog:",
+    "@repo/domain": "workspace:*"
+  },
+  "devDependencies": {
+    "@effect/vitest": "^0.25.1",
+    "@repo/config-typescript": "workspace:*",
+    "@types/bun": "1.2.21",
+    "vitest": "^3.2.4"
+  }
+}
