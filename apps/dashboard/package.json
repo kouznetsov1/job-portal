@@ -12,7 +12,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@effect-atom/atom-react": "^0.1.15",
+    "@effect-atom/atom-react": "catalog:",
     "@effect/platform": "catalog:",
     "@effect/rpc": "catalog:",
     "@repo/domain": "workspace:*",

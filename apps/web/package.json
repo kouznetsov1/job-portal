@@ -12,7 +12,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@effect-atom/atom-react": "^0.1.15",
+    "@effect-atom/atom-react": "catalog:",
     "@repo/domain": "workspace:*",
     "@tailwindcss/vite": "^4.1.12",
     "@tanstack/react-router": "^1.132.0",

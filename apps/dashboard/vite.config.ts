@@ -7,18 +7,7 @@ import tsConfigPaths from "vite-tsconfig-paths";
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [
-    tsConfigPaths(),
-    tanstackStart({
-      customViteReactPlugin: true,
-      target: "bun",
-      spa: {
-        enabled: true,
-      },
-    }),
-    react(),
-    tailwindcss(),
-  ],
+  plugins: [tsConfigPaths(), tanstackStart(), react(), tailwindcss()],
   resolve: {
     alias: {
       "#": path.resolve(__dirname, "./src"),
