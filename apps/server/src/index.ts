@@ -1,32 +1,17 @@
-import { HttpLayerRouter, HttpServer } from "@effect/platform";
+import { HttpRouter } from "@effect/platform";
 import { BunHttpServer, BunRuntime } from "@effect/platform-bun";
-import { Api } from "@repo/domain/Api";
-import { Config, Layer } from "effect";
-import { HealthGroupLive } from "./handlers/health";
-import { JobGroupLive } from "./handlers/job";
+import { Layer } from "effect";
+import { RpcSerialization, RpcServer } from "@effect/rpc";
+import { RpcLayer } from "./rpcs";
 
-const ApiRouter = HttpLayerRouter.addHttpApi(Api).pipe(
-  Layer.provide(Layer.merge(HealthGroupLive, JobGroupLive)),
+const HttpProtocol = RpcServer.layerProtocolHttp({
+  path: "/",
+}).pipe(Layer.provide(RpcSerialization.layerNdjson));
+
+const Main = HttpRouter.Default.serve().pipe(
+  Layer.provide(RpcLayer),
+  Layer.provide(HttpProtocol),
+  Layer.provide(BunHttpServer.layer({ port: 9090 })),
 );
 
-const AllRouters = Layer.mergeAll(ApiRouter).pipe(
-  Layer.provide(
-    HttpLayerRouter.cors({
-      allowedOrigins: ["*"],
-      allowedMethods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-      allowedHeaders: ["Content-Type", "Authorization", "B3", "traceparent"],
-      credentials: true,
-    }),
-  ),
-);
-
-const ServerConfig = Config.all({
-  port: Config.number("PORT").pipe(Config.withDefault(9000)),
-});
-
-const HttpLive = HttpLayerRouter.serve(AllRouters).pipe(
-  HttpServer.withLogAddress,
-  Layer.provideMerge(BunHttpServer.layerConfig(ServerConfig)),
-);
-
-BunRuntime.runMain(Layer.launch(HttpLive));
+BunRuntime.runMain(Layer.launch(Main));

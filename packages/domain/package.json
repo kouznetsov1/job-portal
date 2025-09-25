@@ -3,9 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "exports": {
-    ".": "./src/Api.ts",
-    "./Api": "./src/Api.ts",
-    "./Job": "./src/Job.ts"
+    ".": "./src/**/*.ts"
   },
   "scripts": {
     "build": "tsc",

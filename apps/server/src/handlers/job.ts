@@ -1,17 +1,19 @@
-import { HttpApiBuilder } from "@effect/platform";
-import { Api } from "@repo/domain/Api";
+import { Rpc } from "@effect/rpc";
 import { Job } from "@repo/domain/Job";
-import { Effect } from "effect";
+import { Effect, Layer } from "effect";
+import { JobsRpcs } from "../rpcs/job";
 
-export const JobGroupLive = HttpApiBuilder.group(Api, "job", (handlers) =>
-  handlers.handle("get", () =>
-    Effect.gen(function* () {
-      const data: typeof Job.Type = {
-        id: 2,
-        name: "Montör",
-      };
-      yield* Effect.sleep("3 seconds");
-      return data;
-    }),
-  ),
+export const JobsLive: Layer.Layer<Rpc.Handler<"GetJob">> = JobsRpcs.toLayer(
+  Effect.gen(function* () {
+    return {
+      GetJob: () =>
+        Effect.gen(function* () {
+          yield* Effect.sleep(3);
+          return yield* Effect.succeed<typeof Job.Type>({
+            id: 2,
+            name: "Montör",
+          });
+        }),
+    };
+  }),
 );

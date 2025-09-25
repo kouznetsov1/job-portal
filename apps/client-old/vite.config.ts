@@ -17,6 +17,6 @@ export default defineConfig({
   server: {
     strictPort: true,
     host: "127.0.0.1",
-    port: 9000,
+    port: 9090,
   },
 });

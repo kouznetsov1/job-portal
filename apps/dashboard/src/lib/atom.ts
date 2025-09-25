@@ -4,7 +4,7 @@ import { Api } from "@repo/domain";
 import { Effect } from "effect";
 import { RpcClient } from "./rpc-client";
 
-const SERVER_URL = import.meta.env.VITE_SERVER_URL || "http://localhost:9000";
+const SERVER_URL = import.meta.env.VITE_SERVER_URL || "http://localhost:9090";
 
 const runtime = Atom.runtime(RpcClient.Default);
 
