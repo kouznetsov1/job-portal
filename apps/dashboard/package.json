@@ -6,7 +6,7 @@
   "scripts": {
     "build": "vite build",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "dev": "vite dev --port 3000",
+    "dev": "vite dev --port 3000 --force",
     "test": "vitest run",
     "type-check": "tsc --noEmit",
     "preview": "vite preview"
