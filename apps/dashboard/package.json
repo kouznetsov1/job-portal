@@ -15,6 +15,7 @@
     "@effect-atom/atom-react": "catalog:",
     "@effect/platform": "catalog:",
     "@effect/rpc": "catalog:",
+    "@effect/platform-browser": "catalog:",
     "@repo/domain": "workspace:*",
     "@tailwindcss/vite": "^4.1.12",
     "@tanstack/react-router": "^1.132.0",

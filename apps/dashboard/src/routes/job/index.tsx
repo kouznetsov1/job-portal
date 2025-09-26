@@ -1,26 +1,25 @@
+import { createFileRoute } from "@tanstack/react-router";
 import { api } from "@/lib/rpc-client";
 import { Result, useAtomValue } from "@effect-atom/atom-react";
-import { createFileRoute, Link } from "@tanstack/react-router";
 import { Cause } from "effect";
 
-export const Route = createFileRoute("/")({
-  component: Home,
-  ssr: false,
+export const Route = createFileRoute("/job/")({
+  component: RouteComponent,
 });
 
-function Home() {
+function RouteComponent() {
   return (
     <div>
-      <Link to="/job">Go to another page</Link>
-      Job down below:
-      <Job />
+      Hello "/job/"!
+      <Job id={123} />
+      <Job id={35123} />
     </div>
   );
 }
 
-function Job() {
+function Job({ id }: { id: number }) {
   const thing = useAtomValue(
-    api.query("job.get", { id: 1337 }, { timeToLive: "60 minutes" }),
+    api.query("job.get", { id }, { timeToLive: "60 minutes" }),
   );
 
   return (

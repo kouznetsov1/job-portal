@@ -1,18 +1,17 @@
-import { FetchHttpClient } from "@effect/platform";
-import { RpcClient as EffectRpcClient, RpcSerialization } from "@effect/rpc";
-import { Effect, Layer } from "effect";
+import { AtomRpc } from "@effect-atom/atom-react";
+import { RpcClient, RpcSerialization } from "@effect/rpc";
+import { Rpcs } from "@repo/domain";
+import { Layer } from "effect";
+import { BrowserSocket } from "@effect/platform-browser";
 
-const SERVER_URL = import.meta.env.VITE_SERVER_URL || "http://localhost:9090";
+const SERVER_URL = import.meta.env.VITE_SERVER_URL || "localhost:9090";
 
-const ProtocolLive = EffectRpcClient.layerProtocolHttp({
-  url: `${SERVER_URL}/`,
-}).pipe(Layer.provide([FetchHttpClient.layer, RpcSerialization.layerNdjson]));
-
-export class RpcClient extends Effect.Service<RpcClient>()("RpcClient", {
-  dependencies: [ProtocolLive],
-  scoped: Effect.gen(function* () {
-    return {
-      client: yield* EffectRpcClient.make(undefined),
-    } as const;
-  }),
+export class api extends AtomRpc.Tag<api>()("api", {
+  group: Rpcs,
+  protocol: RpcClient.layerProtocolSocket({
+    retryTransientErrors: true,
+  }).pipe(
+    Layer.provide(BrowserSocket.layerWebSocket(`ws://${SERVER_URL}/rpc`)),
+    Layer.provide(RpcSerialization.layerNdjson),
+  ),
 }) {}

@@ -1,9 +1,9 @@
 import { Rpc, RpcGroup } from "@effect/rpc";
-import { Job } from "@repo/domain/Job";
 import { Schema } from "effect";
+import { Job } from "../schemas/Job";
 
 export class JobsRpcs extends RpcGroup.make(
-  Rpc.make("GetJob", {
+  Rpc.make("job.get", {
     success: Job,
     error: Schema.String,
     payload: {

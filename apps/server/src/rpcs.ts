@@ -1,13 +1,9 @@
 import { RpcServer } from "@effect/rpc";
-import { JobsRpcs } from "@repo/domain";
-import { JobsLive } from "../handlers/job";
+import { JobsLiveHandler } from "./handlers/job";
 import { Layer } from "effect";
-import {
-  HealthLive,
-  HealthRpcs,
-} from "../../../packages/domain/src/rpcs/health";
+import { HealthLive, Rpcs } from "@repo/domain";
 
-const JobsLayer = RpcServer.layer(JobsRpcs).pipe(Layer.provide(JobsLive));
-const HealthLayer = RpcServer.layer(HealthRpcs).pipe(Layer.provide(HealthLive));
-
-export const RpcLayer = Layer.mergeAll(JobsLayer, HealthLayer);
+// Create a single layer with the merged group
+export const RpcLayer = RpcServer.layer(Rpcs).pipe(
+  Layer.provide(Layer.mergeAll(JobsLiveHandler, HealthLive)),
+);
