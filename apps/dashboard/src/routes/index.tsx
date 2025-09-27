@@ -1,23 +1,29 @@
-import { api } from "@/lib/rpc-client";
-import { Result, useAtomValue, useAtomSet } from "@effect-atom/atom-react";
+import { api, httpApi, wsApi } from "@/lib/rpc-client";
+import { Result, useAtomValue } from "@effect-atom/atom-react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Cause } from "effect";
 import { useState } from "react";
+import { foo } from "@repo/domain";
 
 export const Route = createFileRoute("/")({
   component: Home,
-  ssr: false,
 });
 
 function Home() {
   return (
     <div className="container mx-auto p-4">
+      <div>{foo}</div>
       <h1 className="text-3xl font-bold mb-6">Job Search</h1>
       <JobSearch />
       <hr className="my-8" />
       <div className="mt-8">
-        <Link to="/job" className="text-blue-600 hover:underline">
-          Go to another page
+        <Link
+          to="/job"
+          className="text-blue-600 hover:underline"
+          preload="intent"
+          preloadDelay={50}
+        >
+          Go to another page (preloads on hover)
         </Link>
         <div className="mt-4">
           Job example:
@@ -32,9 +38,8 @@ function JobSearch() {
   const [searchQuery, setSearchQuery] = useState("");
   const [submittedQuery, setSubmittedQuery] = useState("");
 
-  // Always call the hook, but with a default empty query
   const searchResults = useAtomValue(
-    api.query(
+    wsApi.query(
       "jobads.search",
       {
         q: submittedQuery || " ", // Use a space as default to avoid empty string
@@ -42,7 +47,6 @@ function JobSearch() {
         sort: "relevance" as const,
       },
       {
-        timeToLive: "5 minutes",
         reactivityKeys: [`jobads-search-${submittedQuery}`],
       },
     ),
@@ -142,7 +146,11 @@ function JobSearch() {
 
                         {job.relevance !== undefined && (
                           <div className="mt-3 text-xs text-gray-500">
-                            Relevance: {(job.relevance * 100).toFixed(0)}%
+                            Relevance:{" "}
+                            {(job.relevance ? job.relevance * 100 : 0).toFixed(
+                              0,
+                            )}
+                            %
                           </div>
                         )}
                       </div>
@@ -163,9 +171,7 @@ function JobSearch() {
 }
 
 function Job() {
-  const thing = useAtomValue(
-    api.query("job.get", { id: 1337 }, { timeToLive: "60 minutes" }),
-  );
+  const thing = useAtomValue(api.query("job.get", { id: 1337 }));
 
   return (
     <div>

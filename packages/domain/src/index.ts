@@ -7,3 +7,5 @@ export * from "./rpcs/health";
 export * from "./rpcs/job";
 export * from "./rpcs/jobads";
 export * from "./rpcs/index";
+
+export const foo = "hejsan";

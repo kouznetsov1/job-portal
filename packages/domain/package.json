@@ -7,6 +7,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "dev": "tsc --watch",
     "type-check": "tsc --noEmit",
     "clean": "git clean -xdf .cache .turbo dist node_modules"
   },
