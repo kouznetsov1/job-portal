@@ -27,7 +27,7 @@ export class wsApi extends AtomRpc.Tag<wsApi>()("wsApi", {
   ),
 }) {}
 
-const ProtocolLive = RpcClient.layerProtocolHttp({
+export const ProtocolLive = RpcClient.layerProtocolHttp({
   url: `http://${SERVER_URL}/`,
 }).pipe(Layer.provide([FetchHttpClient.layer, RpcSerialization.layerJson]));
 

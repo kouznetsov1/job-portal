@@ -1,5 +1,5 @@
 import { FetchHttpClient, HttpClient } from "@effect/platform";
-import { Effect, Layer, Schema } from "effect";
+import { Effect, Schema } from "effect";
 import {
   JobAd,
   JobAdSearchParams,

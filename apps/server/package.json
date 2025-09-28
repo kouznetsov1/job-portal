@@ -17,7 +17,8 @@
     "@effect/platform-bun": "^0.80.0",
     "@effect/rpc": "catalog:",
     "@effect/language-service": "catalog:",
-    "@repo/domain": "workspace:*"
+    "@repo/domain": "workspace:*",
+    "better-auth": "catalog:"
   },
   "devDependencies": {
     "@effect/vitest": "^0.25.1",

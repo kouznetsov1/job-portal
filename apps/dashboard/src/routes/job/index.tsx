@@ -1,28 +1,30 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Result, useAtomValue } from "@effect-atom/atom-react";
 import { Cause } from "effect";
 import { api } from "@/lib/rpc-client";
+import { Result, useAtomValue } from "@effect-atom/atom-react";
 
 export const Route = createFileRoute("/job/")({
   component: RouteComponent,
+  loader: () => {},
 });
 
 function RouteComponent() {
   return (
     <div>
       Hello "/job/"!
-      <Job id={123} />
-      <Job id={35123} />
+      <Job />
     </div>
   );
 }
 
-function Job({ id }: { id: number }) {
-  const thing = useAtomValue(api.query("job.get", { id }));
+function Job() {
+  const job = useAtomValue(
+    api.query("job.get", { id: 123 }, { timeToLive: "60 minutes" }),
+  );
 
   return (
     <div>
-      {Result.match(thing, {
+      {Result.match(job, {
         onInitial: () => <div>Loading...</div>,
         onFailure: (e) => <div>failed: {Cause.pretty(e.cause)}</div>,
         onSuccess: (d) => (

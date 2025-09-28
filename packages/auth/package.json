@@ -1,0 +1,22 @@
+{
+  "name": "@repo/auth",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    ".": "./src/auth.ts"
+  },
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "build": "bun build src/auth.ts --outdir=dist --target=bun --minify"
+  },
+  "dependencies": {
+    "better-auth": "catalog:",
+    "effect": "catalog:",
+    "@effect/platform": "catalog:",
+    "@effect/rpc": "catalog:",
+    "@repo/db": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/config-typescript": "workspace:*"
+  }
+}

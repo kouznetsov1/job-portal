@@ -1,4 +1,4 @@
-import { api, httpApi, wsApi } from "@/lib/rpc-client";
+import { api, wsApi } from "@/lib/rpc-client";
 import { Result, useAtomValue } from "@effect-atom/atom-react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Cause } from "effect";
@@ -17,12 +17,7 @@ function Home() {
       <JobSearch />
       <hr className="my-8" />
       <div className="mt-8">
-        <Link
-          to="/job"
-          className="text-blue-600 hover:underline"
-          preload="intent"
-          preloadDelay={50}
-        >
+        <Link to="/job" className="text-blue-600 hover:underline">
           Go to another page (preloads on hover)
         </Link>
         <div className="mt-4">

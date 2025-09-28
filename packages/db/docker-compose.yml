@@ -1,0 +1,21 @@
+services:
+  db:
+    container_name: job_portal_db
+    env_file:
+      - ".env.db"
+    volumes:
+      - type: bind
+        source: /data
+        target: /var/lib/postgresql/data
+    restart: always
+    shm_size: 128mb
+    ports:
+      - 4010:5432
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    environment:
+      PGHOST: /var/run/postgresql
+    # Add host.docker.internal for MinIO/S3 access when using backups
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
