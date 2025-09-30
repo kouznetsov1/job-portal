@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "exports": {
-    ".": "./src/auth.ts"
+    ".": "./src/index.ts"
   },
   "scripts": {
     "clean": "git clean -xdf .cache .turbo dist node_modules",

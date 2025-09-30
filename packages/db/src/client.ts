@@ -1,6 +1,6 @@
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "./generated/prisma";
-import { Config, ConfigProvider, Effect } from "effect";
+import { PrismaClient } from "./generated/prisma/client";
+import { Config, ConfigProvider, Effect, Layer } from "effect";
 
 export class Database extends Effect.Service<Database>()("Database", {
   effect: Effect.gen(function* () {
@@ -9,5 +9,9 @@ export class Database extends Effect.Service<Database>()("Database", {
     const client = new PrismaClient({ adapter });
 
     return client;
-  }).pipe(Effect.withConfigProvider(ConfigProvider.fromEnv())),
-}) {}
+  }),
+}) {
+  static readonly Live = Database.Default.pipe(
+    Layer.provide(Layer.setConfigProvider(ConfigProvider.fromEnv())),
+  );
+}
