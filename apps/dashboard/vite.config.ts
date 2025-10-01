@@ -9,16 +9,14 @@ import tsConfigPaths from "vite-tsconfig-paths";
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, __dirname, "");
 
+  Object.assign(process.env, env);
+
   return {
     plugins: [tsConfigPaths(), tanstackStart(), react(), tailwindcss()],
     resolve: {
       alias: {
         "#": path.resolve(__dirname, "./src"),
       },
-    },
-    define: {
-      "process.env.DATABASE_URL": JSON.stringify(env.DATABASE_URL),
-      "process.env.BETTER_AUTH_SECRET": JSON.stringify(env.BETTER_AUTH_SECRET),
     },
     ssr: {
       noExternal: ["@repo/db", "@repo/auth"],

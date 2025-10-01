@@ -11,7 +11,8 @@
     "build": "bun build src/index.ts --outdir=dist --target=bun --minify",
     "prismagenerate": "prisma generate",
     "studio": "prisma studio",
-    "up": "docker compose up"
+    "up": "docker compose up",
+    "push": "prisma db push"
   },
   "devDependencies": {
     "@repo/config-typescript": "workspace:*",
@@ -19,9 +20,10 @@
     "typescript": "catalog:"
   },
   "dependencies": {
-    "effect": "catalog:",
     "@prisma/adapter-pg": "^6.16.2",
     "@prisma/client": "^6.16.2",
+    "dotenv": "^17.2.3",
+    "effect": "catalog:",
     "prisma": "^6.16.2"
   }
 }

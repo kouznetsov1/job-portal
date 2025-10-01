@@ -21,6 +21,9 @@
     "clean": {
       "cache": false
     },
+    "push": {
+      "cache": false
+    },
     "//#format": {},
     "//#lint": {
       "cache": false

@@ -26,14 +26,14 @@ export const Route = createFileRoute("/api/auth/$")({
     handlers: {
       GET: async ({ request }: { request: Request }) => {
         const databaseUrl = Schema.decodeUnknownSync(DatabaseUrlSchema)(
-          process.env["DATABASE_URL"],
+          process.env.DATABASE_URL,
         );
         const auth = await runAuth(Auth, databaseUrl);
         return auth.handler(request);
       },
       POST: async ({ request }: { request: Request }) => {
         const databaseUrl = Schema.decodeUnknownSync(DatabaseUrlSchema)(
-          process.env["DATABASE_URL"],
+          process.env.DATABASE_URL,
         );
         const auth = await runAuth(Auth, databaseUrl);
         return auth.handler(request);

@@ -8,3 +8,10 @@ interface ImportMetaEnv {
 declare interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+declare namespace NodeJS {
+  interface ProcessEnv {
+    readonly DATABASE_URL: string;
+    readonly BETTER_AUTH_SECRET: string;
+  }
+}

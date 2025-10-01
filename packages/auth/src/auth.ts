@@ -34,7 +34,7 @@ export class Auth extends Context.Tag("Auth")<
       };
 
       return betterAuth(config);
-    })
+    }),
   );
 
   static readonly getSession = (request: Request) =>
@@ -48,7 +48,7 @@ export class Auth extends Context.Tag("Auth")<
 
       if (!session) {
         return yield* Effect.fail(
-          new SessionNotFoundError({ message: "No active session found" })
+          new SessionNotFoundError({ message: "No active session found" }),
         );
       }
 
@@ -60,8 +60,8 @@ export class Auth extends Context.Tag("Auth")<
       Effect.mapError((error) =>
         error._tag === "SessionNotFoundError"
           ? new AuthError({ message: "Authentication required" })
-          : error
-      )
+          : error,
+      ),
     );
 }
 
