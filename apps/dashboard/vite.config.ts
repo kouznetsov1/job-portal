@@ -20,6 +20,10 @@ export default defineConfig(({ mode }) => {
     },
     ssr: {
       noExternal: ["@repo/db", "@repo/auth", "@repo/ui"],
+      external: ["@prisma/client"],
+    },
+    optimizeDeps: {
+      exclude: ["@prisma/client"],
     },
   };
 });

@@ -1,6 +1,6 @@
 import { useForm } from "@tanstack/react-form";
 import { Schema } from "effect";
-import { signUp } from "@/lib/auth-client";
+import { signUp } from "@/lib/auth";
 import { Link, useNavigate } from "@tanstack/react-router";
 import {
   Card,

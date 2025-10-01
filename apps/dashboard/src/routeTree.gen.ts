@@ -10,25 +10,25 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as authRouteRouteImport } from './routes/(auth)/route'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as JobIndexRouteImport } from './routes/job/index'
+import { Route as appRouteRouteImport } from './routes/(app)/route'
+import { Route as appIndexRouteImport } from './routes/(app)/index'
 import { Route as authRegisterRouteImport } from './routes/(auth)/register'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
+import { Route as appJobIndexRouteImport } from './routes/(app)/job/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
 const authRouteRoute = authRouteRouteImport.update({
   id: '/(auth)',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const appRouteRoute = appRouteRouteImport.update({
+  id: '/(app)',
   getParentRoute: () => rootRouteImport,
 } as any)
-const JobIndexRoute = JobIndexRouteImport.update({
-  id: '/job/',
-  path: '/job/',
-  getParentRoute: () => rootRouteImport,
+const appIndexRoute = appIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => appRouteRoute,
 } as any)
 const authRegisterRoute = authRegisterRouteImport.update({
   id: '/register',
@@ -40,6 +40,11 @@ const authLoginRoute = authLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => authRouteRoute,
 } as any)
+const appJobIndexRoute = appJobIndexRouteImport.update({
+  id: '/job/',
+  path: '/job/',
+  getParentRoute: () => appRouteRoute,
+} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -47,47 +52,48 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof authRouteRouteWithChildren
+  '/': typeof appIndexRoute
   '/login': typeof authLoginRoute
   '/register': typeof authRegisterRoute
-  '/job': typeof JobIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/job': typeof appJobIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof authRouteRouteWithChildren
+  '/': typeof appIndexRoute
   '/login': typeof authLoginRoute
   '/register': typeof authRegisterRoute
-  '/job': typeof JobIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/job': typeof appJobIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/(app)': typeof appRouteRouteWithChildren
   '/(auth)': typeof authRouteRouteWithChildren
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/register': typeof authRegisterRoute
-  '/job/': typeof JobIndexRoute
+  '/(app)/': typeof appIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/(app)/job/': typeof appJobIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/register' | '/job' | '/api/auth/$'
+  fullPaths: '/' | '/login' | '/register' | '/api/auth/$' | '/job'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/register' | '/job' | '/api/auth/$'
+  to: '/' | '/login' | '/register' | '/api/auth/$' | '/job'
   id:
     | '__root__'
-    | '/'
+    | '/(app)'
     | '/(auth)'
     | '/(auth)/login'
     | '/(auth)/register'
-    | '/job/'
+    | '/(app)/'
     | '/api/auth/$'
+    | '/(app)/job/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  appRouteRoute: typeof appRouteRouteWithChildren
   authRouteRoute: typeof authRouteRouteWithChildren
-  JobIndexRoute: typeof JobIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
@@ -100,19 +106,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
+    '/(app)': {
+      id: '/(app)'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+      preLoaderRoute: typeof appRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/job/': {
-      id: '/job/'
-      path: '/job'
-      fullPath: '/job'
-      preLoaderRoute: typeof JobIndexRouteImport
-      parentRoute: typeof rootRouteImport
+    '/(app)/': {
+      id: '/(app)/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof appIndexRouteImport
+      parentRoute: typeof appRouteRoute
     }
     '/(auth)/register': {
       id: '/(auth)/register'
@@ -128,6 +134,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authLoginRouteImport
       parentRoute: typeof authRouteRoute
     }
+    '/(app)/job/': {
+      id: '/(app)/job/'
+      path: '/job'
+      fullPath: '/job'
+      preLoaderRoute: typeof appJobIndexRouteImport
+      parentRoute: typeof appRouteRoute
+    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -137,6 +150,20 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface appRouteRouteChildren {
+  appIndexRoute: typeof appIndexRoute
+  appJobIndexRoute: typeof appJobIndexRoute
+}
+
+const appRouteRouteChildren: appRouteRouteChildren = {
+  appIndexRoute: appIndexRoute,
+  appJobIndexRoute: appJobIndexRoute,
+}
+
+const appRouteRouteWithChildren = appRouteRoute._addFileChildren(
+  appRouteRouteChildren,
+)
 
 interface authRouteRouteChildren {
   authLoginRoute: typeof authLoginRoute
@@ -153,9 +180,8 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
 )
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  appRouteRoute: appRouteRouteWithChildren,
   authRouteRoute: authRouteRouteWithChildren,
-  JobIndexRoute: JobIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport
@@ -166,6 +192,7 @@ import type { getRouter } from './router.tsx'
 import type { createStart } from '@tanstack/react-start'
 declare module '@tanstack/react-start' {
   interface Register {
+    ssr: true
     router: Awaited<ReturnType<typeof getRouter>>
   }
 }

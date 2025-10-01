@@ -1,11 +1,11 @@
-import { api, wsApi } from "@/lib/rpc-client";
+import { api, wsApi } from "@/lib/rpc";
 import { Result, useAtomValue } from "@effect-atom/atom-react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Cause } from "effect";
 import { useState } from "react";
 import { foo } from "@repo/domain";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/(app)/")({
   component: Home,
 });
 

@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Cause } from "effect";
-import { api } from "@/lib/rpc-client";
+import { api } from "@/lib/rpc";
 import { Result, useAtomValue } from "@effect-atom/atom-react";
 
-export const Route = createFileRoute("/job/")({
+export const Route = createFileRoute("/(app)/job/")({
   component: RouteComponent,
   loader: () => {},
 });
