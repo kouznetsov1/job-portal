@@ -9,8 +9,7 @@
     "dev": "vite dev --port 3000 --force",
     "test": "vitest run",
     "type-check": "tsc --noEmit",
-    "preview": "vite preview",
-    "ui:add": "npx shadcn@canary add"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@effect-atom/atom-react": "catalog:",
