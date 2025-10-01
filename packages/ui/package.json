@@ -1,0 +1,36 @@
+{
+  "name": "@repo/ui",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    "./globals.css": "./src/styles/globals.css",
+    "./postcss.config": "./postcss.config.mjs",
+    "./lib/*": "./src/lib/*.ts",
+    "./components/*": "./src/components/*.tsx",
+    "./hooks/*": "./src/hooks/*.ts"
+  },
+  "scripts": {
+    "clean": "git clean -xdf node_modules",
+    "type-check": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "dependencies": {
+    "@radix-ui/react-slot": "^1.2.3",
+    "class-variance-authority": "catalog:",
+    "clsx": "catalog:",
+    "lucide-react": "catalog:",
+    "tailwind-merge": "catalog:"
+  },
+  "devDependencies": {
+    "@repo/config-typescript": "workspace:*",
+    "@tailwindcss/postcss": "^4.1.12",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "postcss": "^8.4.49",
+    "typescript": "catalog:"
+  }
+}

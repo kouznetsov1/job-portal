@@ -10,7 +10,8 @@
     "format:check": "biome check",
     "test": "turbo run test",
     "type-check": "turbo run type-check",
-    "db:push": "turbo run push --filter=@repo/db"
+    "db:push": "turbo run push --filter=@repo/db",
+    "ui:add": "turbo run ui:add --filter=dashboard --"
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.2",

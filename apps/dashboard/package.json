@@ -9,15 +9,18 @@
     "dev": "vite dev --port 3000 --force",
     "test": "vitest run",
     "type-check": "tsc --noEmit",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "ui:add": "npx shadcn@canary add"
   },
   "dependencies": {
     "@effect-atom/atom-react": "catalog:",
     "@effect/platform": "catalog:",
     "@effect/platform-browser": "catalog:",
     "@effect/rpc": "catalog:",
-    "@repo/domain": "workspace:*",
+    "@radix-ui/react-slot": "^1.2.3",
     "@repo/auth": "workspace:*",
+    "@repo/domain": "workspace:*",
+    "@repo/ui": "workspace:*",
     "@tailwindcss/vite": "^4.1.12",
     "@tanstack/react-router": "^1.132.0",
     "@tanstack/react-start": "^1.132.0",

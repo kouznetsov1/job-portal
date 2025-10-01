@@ -6,6 +6,8 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 
+import globalsCss from "@repo/ui/globals.css?url";
+
 export const Route = createRootRoute({
   head: () => ({
     meta: [
@@ -18,6 +20,12 @@ export const Route = createRootRoute({
       },
       {
         title: "TanStack Start Starter",
+      },
+    ],
+    links: [
+      {
+        rel: "stylesheet",
+        href: globalsCss,
       },
     ],
   }),
@@ -36,7 +44,6 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <html>
       <head>
-        <link href="/src/style.css" rel="stylesheet" />
         <HeadContent />
       </head>
       <body>

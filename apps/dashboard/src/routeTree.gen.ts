@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TestRouteImport } from './routes/test'
 import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as JobIndexRouteImport } from './routes/job/index'
@@ -16,6 +17,11 @@ import { Route as authRegisterRouteImport } from './routes/(auth)/register'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
+const TestRoute = TestRouteImport.update({
+  id: '/test',
+  path: '/test',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const authRouteRoute = authRouteRouteImport.update({
   id: '/(auth)',
   getParentRoute: () => rootRouteImport,
@@ -48,6 +54,7 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof authRouteRouteWithChildren
+  '/test': typeof TestRoute
   '/login': typeof authLoginRoute
   '/register': typeof authRegisterRoute
   '/job': typeof JobIndexRoute
@@ -55,6 +62,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof authRouteRouteWithChildren
+  '/test': typeof TestRoute
   '/login': typeof authLoginRoute
   '/register': typeof authRegisterRoute
   '/job': typeof JobIndexRoute
@@ -64,6 +72,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/(auth)': typeof authRouteRouteWithChildren
+  '/test': typeof TestRoute
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/register': typeof authRegisterRoute
   '/job/': typeof JobIndexRoute
@@ -71,13 +80,14 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/register' | '/job' | '/api/auth/$'
+  fullPaths: '/' | '/test' | '/login' | '/register' | '/job' | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/register' | '/job' | '/api/auth/$'
+  to: '/' | '/test' | '/login' | '/register' | '/job' | '/api/auth/$'
   id:
     | '__root__'
     | '/'
     | '/(auth)'
+    | '/test'
     | '/(auth)/login'
     | '/(auth)/register'
     | '/job/'
@@ -87,12 +97,20 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   authRouteRoute: typeof authRouteRouteWithChildren
+  TestRoute: typeof TestRoute
   JobIndexRoute: typeof JobIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/test': {
+      id: '/test'
+      path: '/test'
+      fullPath: '/test'
+      preLoaderRoute: typeof TestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/(auth)': {
       id: '/(auth)'
       path: '/'
@@ -155,6 +173,7 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   authRouteRoute: authRouteRouteWithChildren,
+  TestRoute: TestRoute,
   JobIndexRoute: JobIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }

@@ -19,7 +19,7 @@ export default defineConfig(({ mode }) => {
       },
     },
     ssr: {
-      noExternal: ["@repo/db", "@repo/auth"],
+      noExternal: ["@repo/db", "@repo/auth", "@repo/ui"],
     },
   };
 });

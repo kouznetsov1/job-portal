@@ -24,6 +24,9 @@
     "push": {
       "cache": false
     },
+    "ui:add": {
+      "cache": false
+    },
     "//#format": {},
     "//#lint": {
       "cache": false
