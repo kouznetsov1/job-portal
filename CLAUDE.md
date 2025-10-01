@@ -392,3 +392,4 @@ The `.patterns/` directory contains comprehensive development patterns and best 
 - Follow established performance patterns in the codebase
 - Prioritize clarity over premature optimization
 - Use appropriate data structures for the use case
+- Claude NEVER runs the dev server, the user already has it running

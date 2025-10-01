@@ -1,184 +1,219 @@
-import { api, wsApi } from "@/lib/rpc";
+import { wsApi } from "@/lib/rpc";
 import { Result, useAtomValue } from "@effect-atom/atom-react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { Cause } from "effect";
 import { useState } from "react";
-import { foo } from "@repo/domain";
+import { SearchHeader, type SortOption, type ViewMode } from "@/components/search-header";
+import { JobCard, type JobCardData } from "@/components/job-card";
+import { FilterSidebar, type FilterState } from "@/components/filter-sidebar";
+import { Skeleton } from "@repo/ui/components/skeleton";
+import { cn } from "@repo/ui/lib/utils";
 
 export const Route = createFileRoute("/(app)/")({
   component: Home,
 });
 
 function Home() {
-  return (
-    <div className="container mx-auto p-4">
-      <div>{foo}</div>
-      <h1 className="text-3xl font-bold mb-6">Job Search</h1>
-      <JobSearch />
-      <hr className="my-8" />
-      <div className="mt-8">
-        <Link to="/job" className="text-blue-600 hover:underline">
-          Go to another page (preloads on hover)
-        </Link>
-        <div className="mt-4">
-          Job example:
-          <Job />
-        </div>
-      </div>
-    </div>
-  );
+  return <JobSearchPage />;
 }
 
-function JobSearch() {
+function JobSearchPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [submittedQuery, setSubmittedQuery] = useState("");
+  const [sortBy, setSortBy] = useState<SortOption>("relevance");
+  const [viewMode, setViewMode] = useState<ViewMode>("list");
+  const [filterOpen, setFilterOpen] = useState(false);
+
+  const [filters, setFilters] = useState<FilterState>({
+    employmentTypes: [],
+    remote: false,
+    experienceRequired: false,
+    datePosted: "all",
+    municipalities: [],
+  });
 
   const searchResults = useAtomValue(
     wsApi.query(
       "jobads.search",
       {
-        q: submittedQuery || " ", // Use a space as default to avoid empty string
+        q: submittedQuery || " ",
         limit: 20,
-        sort: "relevance" as const,
+        sort: sortBy,
+        ...(filters.employmentTypes.length > 0 && {
+          "employment-type": filters.employmentTypes,
+        }),
+        ...(filters.remote && { remote: true }),
+        ...(filters.experienceRequired && { experience: true }),
       },
       {
-        reactivityKeys: [`jobads-search-${submittedQuery}`],
-      },
-    ),
+        reactivityKeys: [`jobads-search-${submittedQuery}-${sortBy}`],
+      }
+    )
   );
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSearch = () => {
     if (searchQuery.trim()) {
       setSubmittedQuery(searchQuery.trim());
     }
   };
 
+  const handleClearFilters = () => {
+    setFilters({
+      employmentTypes: [],
+      remote: false,
+      experienceRequired: false,
+      datePosted: "all",
+      municipalities: [],
+    });
+  };
+
+  const handleJobSave = (jobId: string) => {
+    console.log("Save job:", jobId);
+  };
+
+  const handleJobHide = (jobId: string) => {
+    console.log("Hide job:", jobId);
+  };
+
+  const handleJobApply = (jobId: string) => {
+    console.log("Apply to job:", jobId);
+  };
+
   return (
-    <div className="space-y-4">
-      <form onSubmit={handleSearch} className="flex gap-2">
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search for jobs... (e.g., developer, designer, stockholm)"
-          className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+    <div className="flex h-full w-full">
+      {/* Filter Sidebar - Desktop */}
+      <div className="hidden lg:block">
+        <FilterSidebar
+          filters={filters}
+          onFiltersChange={setFilters}
+          onClearAll={handleClearFilters}
         />
-        <button
-          type="submit"
-          className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-        >
-          Search
-        </button>
-      </form>
+      </div>
 
-      {submittedQuery && (
-        <div>
-          {Result.match(searchResults, {
-            onInitial: () => <div className="text-gray-500">Loading...</div>,
-            onFailure: (e) => (
-              <div className="text-red-600">Error: {Cause.pretty(e.cause)}</div>
-            ),
-            onSuccess: (data) => (
-              <div className="space-y-4">
-                <div className="text-sm text-gray-600">
-                  Found {data.value.total?.value || 0} jobs
-                </div>
+      {/* Filter Sidebar - Mobile */}
+      <FilterSidebar
+        filters={filters}
+        onFiltersChange={setFilters}
+        onClearAll={handleClearFilters}
+        open={filterOpen}
+        onOpenChange={setFilterOpen}
+        isMobile
+      />
 
-                {data.value.hits && data.value.hits.length > 0 ? (
-                  <div className="grid gap-4">
-                    {data.value.hits.map((job) => (
-                      <div
-                        key={job.id}
-                        className="border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow"
-                      >
-                        <h3 className="text-lg font-semibold text-gray-900">
-                          {job.headline || "Untitled Position"}
-                        </h3>
+      {/* Main Content */}
+      <main className="flex-1 h-full overflow-y-auto">
+        <div className="mx-auto max-w-5xl p-4 lg:p-6">
+          {/* Search Header */}
+          <div className="sticky top-0 z-10 bg-background pb-6 pt-2">
+            <SearchHeader
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+              onSearchSubmit={handleSearch}
+              sortBy={sortBy}
+              onSortChange={setSortBy}
+              viewMode={viewMode}
+              onViewModeChange={setViewMode}
+              onFilterToggle={() => setFilterOpen(true)}
+              {...(Result.match(searchResults, {
+                onSuccess: (data) => ({ resultsCount: data.value.total?.value ?? 0 }),
+                onInitial: () => ({}),
+                onFailure: () => ({}),
+              }))}
+            />
+          </div>
 
-                        <div className="mt-2 space-y-1 text-sm text-gray-600">
-                          {job.employer?.name && (
-                            <p>
-                              <span className="font-medium">Company:</span>{" "}
-                              {job.employer.name}
-                            </p>
-                          )}
-
-                          {job.workplace_address && (
-                            <p>
-                              <span className="font-medium">Location:</span>{" "}
-                              {[
-                                job.workplace_address.municipality,
-                                job.workplace_address.region,
-                              ]
-                                .filter(Boolean)
-                                .join(", ")}
-                            </p>
-                          )}
-
-                          {job.employment_type?.label && (
-                            <p>
-                              <span className="font-medium">Type:</span>{" "}
-                              {job.employment_type.label}
-                            </p>
-                          )}
-
-                          {job.application_deadline && (
-                            <p>
-                              <span className="font-medium">Deadline:</span>{" "}
-                              {new Date(
-                                job.application_deadline,
-                              ).toLocaleDateString()}
-                            </p>
-                          )}
-                        </div>
-
-                        {job.description?.text && (
-                          <p className="mt-3 text-sm text-gray-700 line-clamp-3">
-                            {job.description.text}
-                          </p>
-                        )}
-
-                        {job.relevance !== undefined && (
-                          <div className="mt-3 text-xs text-gray-500">
-                            Relevance:{" "}
-                            {(job.relevance ? job.relevance * 100 : 0).toFixed(
-                              0,
-                            )}
-                            %
-                          </div>
-                        )}
-                      </div>
+          {/* Results */}
+          {submittedQuery && (
+            <div>
+              {Result.match(searchResults, {
+                onInitial: () => (
+                  <div className="space-y-4">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <JobCardSkeleton key={i} />
                     ))}
                   </div>
-                ) : (
-                  <div className="text-gray-500">
-                    No jobs found. Try a different search term.
+                ),
+                onFailure: (e) => (
+                  <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-6 text-sm text-destructive">
+                    <p className="font-medium mb-2">Ett fel uppstod</p>
+                    <p className="text-xs">{Cause.pretty(e.cause)}</p>
                   </div>
-                )}
-              </div>
-            ),
-          })}
+                ),
+                onSuccess: (data) => (
+                  <div>
+                    {data.value.hits && data.value.hits.length > 0 ? (
+                      <div
+                        className={cn(
+                          viewMode === "list" && "space-y-4",
+                          viewMode === "grid" &&
+                            "grid grid-cols-1 md:grid-cols-2 gap-4"
+                        )}
+                      >
+                        {data.value.hits.map((job) => (
+                          <JobCard
+                            key={job.id}
+                            job={job as JobCardData}
+                            onSave={handleJobSave}
+                            onHide={handleJobHide}
+                            onApply={handleJobApply}
+                          />
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center justify-center py-16 text-center">
+                        <p className="text-lg font-medium text-foreground mb-2">
+                          Inga jobb hittades
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          Prova att ändra dina sökkriterier eller filter
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                ),
+              })}
+            </div>
+          )}
+
+          {/* Empty State */}
+          {!submittedQuery && (
+            <div className="flex flex-col items-center justify-center py-16 text-center">
+              <h2 className="text-2xl font-semibold text-foreground mb-2">
+                Hitta ditt drömjobb
+              </h2>
+              <p className="text-sm text-muted-foreground max-w-md">
+                Börja genom att söka efter jobb, kompetenser eller företag som intresserar dig
+              </p>
+            </div>
+          )}
         </div>
-      )}
+      </main>
     </div>
   );
 }
 
-function Job() {
-  const thing = useAtomValue(api.query("job.get", { id: 1337 }));
-
+function JobCardSkeleton() {
   return (
-    <div>
-      {Result.match(thing, {
-        onInitial: () => <div>Loading...</div>,
-        onFailure: (e) => <div>failed: {Cause.pretty(e.cause)}</div>,
-        onSuccess: (d) => (
-          <div>
-            {d.value.id}: {d.value.name}
+    <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex items-start gap-3 flex-1">
+          <Skeleton className="h-12 w-12 rounded-md" />
+          <div className="flex-1 space-y-2">
+            <Skeleton className="h-5 w-3/4" />
+            <Skeleton className="h-4 w-1/2" />
           </div>
-        ),
-      })}
+        </div>
+        <Skeleton className="h-12 w-12 rounded-full" />
+      </div>
+      <div className="space-y-2">
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-5/6" />
+      </div>
+      <div className="flex items-center gap-2">
+        <Skeleton className="h-9 w-24" />
+        <Skeleton className="h-9 w-9" />
+        <Skeleton className="h-9 w-9" />
+      </div>
     </div>
   );
 }
