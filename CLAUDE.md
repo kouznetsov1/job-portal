@@ -92,6 +92,72 @@
 
 This is full stack repo built with Effect TS and Tanstack Start (Tanstack Router), using functional programming patterns and effect systems in TypeScript.
 
+## Form Management
+
+### TanStack Form
+
+**Use `@tanstack/react-form` for all form state management and validation.**
+
+**Basic Usage:**
+
+```typescript
+import { useForm } from '@tanstack/react-form'
+import { Schema } from 'effect'
+import { useAtomSet } from '@effect-atom/atom-react'
+
+const FormDataSchema = Schema.Struct({
+  firstName: Schema.String.pipe(
+    Schema.minLength(3),
+    Schema.annotations({
+      message: () => 'You must have a length of at least 3',
+    }),
+  ),
+})
+
+const FormSchema = Schema.standardSchemaV1(FormDataSchema)
+
+function MyForm() {
+  const submitForm = useAtomSet(MyRpcClient.mutation('submitForm'))
+
+  const form = useForm({
+    defaultValues: {
+      firstName: '',
+    },
+    validators: {
+      onChange: FormSchema,
+    },
+    onSubmit: async ({ value }) => {
+      submitForm({ payload: value, reactivityKeys: ['forms'] })
+    },
+  })
+
+  return (
+    <form.Field
+      name="firstName"
+      children={(field) => (
+        <input
+          value={field.state.value}
+          onChange={(e) => field.handleChange(e.target.value)}
+        />
+      )}
+    />
+  )
+}
+```
+
+**Integration with Effect:**
+
+- **Effect Schema for Validation**: Wrap schemas with `Schema.standardSchemaV1()` to use in form validators
+- **effect-atom Mutations**: Use `useAtomSet(Client.mutation())` for form submission
+- **Reactivity Keys**: Mutations can invalidate queries by passing `reactivityKeys` - when the mutation completes, any queries with matching reactivity keys will automatically refresh
+
+**Key Patterns:**
+
+- Use `form.Field` for type-safe field rendering
+- Use `form.Subscribe` to react to form state (canSubmit, isSubmitting, etc.)
+- Access field state via `field.state.value`, `field.state.meta.errors`
+- Field-level and form-level validation with `validators: { onChange, onBlur, onMount }`
+
 ## Development Workflow
 
 ### Core Principles
