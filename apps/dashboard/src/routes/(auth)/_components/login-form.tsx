@@ -1,91 +1,153 @@
-import { useState } from "react";
+import { useForm } from "@tanstack/react-form";
+import { Schema } from "effect";
 import { signIn } from "@/lib/auth-client";
 import { Link, useNavigate } from "@tanstack/react-router";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@repo/ui/components/card";
+import { Input } from "@repo/ui/components/input";
+import { Label } from "@repo/ui/components/label";
+import { Button } from "@repo/ui/components/button";
+import { Briefcase } from "lucide-react";
+
+const LoginFormSchema = Schema.Struct({
+  email: Schema.String.pipe(
+    Schema.minLength(1, { message: () => "E-post krävs" }),
+    Schema.pattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, {
+      message: () => "Ange en giltig e-postadress",
+    }),
+  ),
+  password: Schema.String.pipe(
+    Schema.minLength(1, { message: () => "Lösenord krävs" }),
+  ),
+});
+
+const FormSchema = Schema.standardSchemaV1(LoginFormSchema);
 
 export function LoginForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    setIsLoading(true);
+  const form = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+    validators: {
+      onChange: FormSchema,
+    },
+    onSubmit: async ({ value, formApi }) => {
+      const result = await signIn.email({
+        email: value.email,
+        password: value.password,
+        callbackURL: "/",
+      });
 
-    const result = await signIn.email({
-      email,
-      password,
-      callbackURL: "/",
-    });
-
-    setIsLoading(false);
-
-    if (result.error) {
-      setError(result.error.message || "Failed to sign in");
-    } else {
-      navigate({ to: "/" });
-    }
-  };
+      if (result.error) {
+        formApi.setFieldMeta("email", (prev) => ({
+          ...prev,
+          errorMap: {
+            onChange: result.error.message || "Inloggning misslyckades",
+          },
+        }));
+      } else {
+        navigate({ to: "/" });
+      }
+    },
+  });
 
   return (
-    <div className="mx-auto max-w-sm space-y-6">
-      <div className="space-y-2 text-center">
-        <h1 className="text-3xl font-bold">Sign In</h1>
-        <p className="text-gray-500">
-          Enter your email and password to access your account
-        </p>
-      </div>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="space-y-2">
-          <label htmlFor="email" className="text-sm font-medium">
-            Email
-          </label>
-          <input
-            id="email"
-            type="email"
-            placeholder="name@example.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            disabled={isLoading}
-          />
+    <Card className="w-full max-w-md">
+      <CardHeader className="text-center">
+        <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-full bg-primary/10">
+          <Briefcase className="size-6 text-primary" />
         </div>
-        <div className="space-y-2">
-          <label htmlFor="password" className="text-sm font-medium">
-            Password
-          </label>
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            disabled={isLoading}
+        <CardTitle className="text-2xl">Logga in</CardTitle>
+        <CardDescription>
+          Ange din e-post och lösenord för att komma åt ditt konto
+        </CardDescription>
+      </CardHeader>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          form.handleSubmit();
+        }}
+        className="space-y-6"
+      >
+        <CardContent className="space-y-4 pb-0">
+          <form.Field
+            name="email"
+            children={(field) => (
+              <div className="space-y-2">
+                <Label htmlFor={field.name}>E-post</Label>
+                <Input
+                  id={field.name}
+                  type="email"
+                  placeholder="namn@exempel.se"
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  onBlur={field.handleBlur}
+                  disabled={form.state.isSubmitting}
+                />
+                {field.state.meta.errors.length > 0 && (
+                  <p className="text-sm text-destructive">
+                    {field.state.meta.errors[0]!.message}
+                  </p>
+                )}
+              </div>
+            )}
           />
-        </div>
-        {error && (
-          <div className="rounded-md bg-red-50 p-3 text-sm text-red-600">
-            {error}
-          </div>
-        )}
-        <button
-          type="submit"
-          disabled={isLoading}
-          className="w-full rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {isLoading ? "Signing in..." : "Sign In"}
-        </button>
+          <form.Field
+            name="password"
+            children={(field) => (
+              <div className="space-y-2">
+                <Label htmlFor={field.name}>Lösenord</Label>
+                <Input
+                  id={field.name}
+                  type="password"
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  onBlur={field.handleBlur}
+                  disabled={form.state.isSubmitting}
+                />
+                {field.state.meta.errors.length > 0 && (
+                  <p className="text-sm text-destructive">
+                    {field.state.meta.errors[0]!.message}
+                  </p>
+                )}
+              </div>
+            )}
+          />
+        </CardContent>
+        <CardFooter className="flex flex-col gap-4">
+          <form.Subscribe
+            selector={(state) => [state.canSubmit, state.isSubmitting]}
+            children={([canSubmit, isSubmitting]) => (
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={!canSubmit || isSubmitting}
+              >
+                {isSubmitting ? "Loggar in..." : "Logga in"}
+              </Button>
+            )}
+          />
+          <p className="text-center text-sm text-muted-foreground">
+            Har du inget konto?{" "}
+            <Link
+              to="/register"
+              className="font-medium text-primary hover:underline"
+            >
+              Registrera dig
+            </Link>
+          </p>
+        </CardFooter>
       </form>
-      <div className="text-center text-sm">
-        Don't have an account?{" "}
-        <Link to="/register" className="font-medium text-blue-600 hover:underline">
-          Sign up
-        </Link>
-      </div>
-    </div>
+    </Card>
   );
 }

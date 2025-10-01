@@ -2,6 +2,16 @@
 
 ## 🚨 HIGHEST PRIORITY RULES 🚨
 
+### User-Facing Language
+
+**ALL user-facing text MUST be in Swedish!**
+
+- This includes all UI labels, buttons, messages, descriptions, placeholders, and error messages
+- Form validation error messages must be in Swedish
+- Authentication error messages must be in Swedish
+- All user-visible content should be written in Swedish
+- Code comments and developer documentation remain in English
+
 ### ABSOLUTELY FORBIDDEN: try-catch in Effect.gen
 
 **NEVER use `try-catch` blocks inside `Effect.gen` generators!**
