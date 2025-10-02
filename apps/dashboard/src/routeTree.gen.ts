@@ -14,6 +14,8 @@ import { Route as appRouteRouteImport } from './routes/(app)/route'
 import { Route as appIndexRouteImport } from './routes/(app)/index'
 import { Route as authRegisterRouteImport } from './routes/(auth)/register'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
+import { Route as appCvTestRouteImport } from './routes/(app)/cv-test'
+import { Route as appCvRouteImport } from './routes/(app)/cv'
 import { Route as appJobIndexRouteImport } from './routes/(app)/job/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
@@ -40,6 +42,16 @@ const authLoginRoute = authLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => authRouteRoute,
 } as any)
+const appCvTestRoute = appCvTestRouteImport.update({
+  id: '/cv-test',
+  path: '/cv-test',
+  getParentRoute: () => appRouteRoute,
+} as any)
+const appCvRoute = appCvRouteImport.update({
+  id: '/cv',
+  path: '/cv',
+  getParentRoute: () => appRouteRoute,
+} as any)
 const appJobIndexRoute = appJobIndexRouteImport.update({
   id: '/job/',
   path: '/job/',
@@ -53,6 +65,8 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof appIndexRoute
+  '/cv': typeof appCvRoute
+  '/cv-test': typeof appCvTestRoute
   '/login': typeof authLoginRoute
   '/register': typeof authRegisterRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -60,6 +74,8 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof appIndexRoute
+  '/cv': typeof appCvRoute
+  '/cv-test': typeof appCvTestRoute
   '/login': typeof authLoginRoute
   '/register': typeof authRegisterRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -69,6 +85,8 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/(app)': typeof appRouteRouteWithChildren
   '/(auth)': typeof authRouteRouteWithChildren
+  '/(app)/cv': typeof appCvRoute
+  '/(app)/cv-test': typeof appCvTestRoute
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/register': typeof authRegisterRoute
   '/(app)/': typeof appIndexRoute
@@ -77,13 +95,22 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/register' | '/api/auth/$' | '/job'
+  fullPaths:
+    | '/'
+    | '/cv'
+    | '/cv-test'
+    | '/login'
+    | '/register'
+    | '/api/auth/$'
+    | '/job'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/register' | '/api/auth/$' | '/job'
+  to: '/' | '/cv' | '/cv-test' | '/login' | '/register' | '/api/auth/$' | '/job'
   id:
     | '__root__'
     | '/(app)'
     | '/(auth)'
+    | '/(app)/cv'
+    | '/(app)/cv-test'
     | '/(auth)/login'
     | '/(auth)/register'
     | '/(app)/'
@@ -134,6 +161,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authLoginRouteImport
       parentRoute: typeof authRouteRoute
     }
+    '/(app)/cv-test': {
+      id: '/(app)/cv-test'
+      path: '/cv-test'
+      fullPath: '/cv-test'
+      preLoaderRoute: typeof appCvTestRouteImport
+      parentRoute: typeof appRouteRoute
+    }
+    '/(app)/cv': {
+      id: '/(app)/cv'
+      path: '/cv'
+      fullPath: '/cv'
+      preLoaderRoute: typeof appCvRouteImport
+      parentRoute: typeof appRouteRoute
+    }
     '/(app)/job/': {
       id: '/(app)/job/'
       path: '/job'
@@ -152,11 +193,15 @@ declare module '@tanstack/react-router' {
 }
 
 interface appRouteRouteChildren {
+  appCvRoute: typeof appCvRoute
+  appCvTestRoute: typeof appCvTestRoute
   appIndexRoute: typeof appIndexRoute
   appJobIndexRoute: typeof appJobIndexRoute
 }
 
 const appRouteRouteChildren: appRouteRouteChildren = {
+  appCvRoute: appCvRoute,
+  appCvTestRoute: appCvTestRoute,
   appIndexRoute: appIndexRoute,
   appJobIndexRoute: appJobIndexRoute,
 }

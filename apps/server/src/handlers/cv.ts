@@ -5,7 +5,7 @@ import { Effect, Layer, Stream, DateTime } from "effect";
 import { ClaudeAgentService } from "../services/ClaudeAgentService.js";
 
 export const CvLiveHandler: Layer.Layer<
-  Rpc.Handler<"cv.get"> | Rpc.Handler<"cv.chat">,
+  Rpc.Handler<"cv.get"> | Rpc.Handler<"cv.chat"> | Rpc.Handler<"cv.getChatHistory">,
   never,
   Database | ClaudeAgentService
 > = CvRpcs.toLayer(
@@ -54,55 +54,105 @@ export const CvLiveHandler: Layer.Layer<
         }),
 
       "cv.chat": (input) =>
-        Effect.gen(function* () {
-          const messageStream = yield* agentService.chatStream(
-            input.userId,
-            input.cvId,
-            input.message,
-          );
-
-          let finalResponse = "";
-
-          yield* Stream.runForEach(messageStream, (message) =>
-            Effect.sync(() => {
-              if (message.type === "assistant") {
-                const textContent = message.message.content
-                  .filter((c: { type: string }) => c.type === "text")
-                  .map((c: { text?: string }) => ("text" in c ? c.text : ""))
-                  .join("");
-                finalResponse += textContent;
-              }
-            }),
-          );
-
-          yield* Effect.tryPromise({
-            try: () =>
-              db.cvChatMessage.create({
-                data: {
-                  cvId: input.cvId,
-                  role: "user",
-                  content: input.message,
-                },
-              }),
-            catch: (error) => String(error),
-          });
-
-          if (finalResponse) {
+        Stream.unwrap(
+          Effect.gen(function* () {
             yield* Effect.tryPromise({
               try: () =>
                 db.cvChatMessage.create({
                   data: {
                     cvId: input.cvId,
-                    role: "assistant",
-                    content: finalResponse,
+                    role: "user",
+                    content: input.message,
                   },
                 }),
               catch: (error) => String(error),
             });
-          }
 
-          return finalResponse;
-        }).pipe(Effect.mapError((error) => String(error))),
+            const messageStream = yield* agentService.chatStream(
+              input.userId,
+              input.cvId,
+              input.message,
+            ).pipe(Effect.mapError((error) => String(error)));
+
+            let fullAssistantMessage = "";
+
+            return Stream.mapEffect(messageStream, (message) =>
+              Effect.gen(function* () {
+                if (message.type === "assistant") {
+                  for (const block of message.message.content) {
+                    if (block.type === "text" && "text" in block) {
+                      fullAssistantMessage += block.text;
+                      return {
+                        type: "text" as const,
+                        content: block.text,
+                        toolName: undefined,
+                        toolInput: undefined,
+                      };
+                    }
+                    if (block.type === "tool_use" && "name" in block) {
+                      return {
+                        type: "tool_use" as const,
+                        content: `Using tool: ${block.name}`,
+                        toolName: block.name,
+                        toolInput: "input" in block ? block.input : undefined,
+                      };
+                    }
+                  }
+                }
+
+                return {
+                  type: "assistant_message" as const,
+                  content: "",
+                  toolName: undefined,
+                  toolInput: undefined,
+                };
+              }),
+            ).pipe(
+              Stream.tap(() =>
+                Effect.sync(() => {
+                  console.log("Stream chunk sent");
+                }),
+              ),
+              Stream.onDone(() =>
+                Effect.gen(function* () {
+                  if (fullAssistantMessage) {
+                    yield* Effect.tryPromise({
+                      try: () =>
+                        db.cvChatMessage.create({
+                          data: {
+                            cvId: input.cvId,
+                            role: "assistant",
+                            content: fullAssistantMessage,
+                          },
+                        }),
+                      catch: () => "Failed to save assistant message",
+                    }).pipe(Effect.ignore);
+                  }
+                }),
+              ),
+            );
+          }),
+        ).pipe(Stream.mapError((error) => String(error))),
+
+      "cv.getChatHistory": (input) =>
+        Effect.gen(function* () {
+          const messages = yield* Effect.tryPromise({
+            try: () =>
+              db.cvChatMessage.findMany({
+                where: { cvId: input.cvId },
+                orderBy: { createdAt: "asc" },
+              }),
+            catch: (error) => String(error),
+          });
+
+          return messages.map((msg) => ({
+            id: msg.id,
+            cvId: msg.cvId,
+            role: msg.role as "user" | "assistant",
+            content: msg.content,
+            createdAt: DateTime.unsafeMake(msg.createdAt.toISOString()),
+          }));
+        }),
     };
   }),
 );
