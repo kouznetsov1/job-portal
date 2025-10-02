@@ -1,0 +1,27 @@
+model Cv {
+  id           String   @id @default(cuid())
+  userId       String   @map("user_id")
+  typstSource  String?  @map("typst_source") @db.Text
+  pdfPath      String?  @map("pdf_path")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chatMessages CvChatMessage[]
+
+  @@index([userId])
+  @@map("cv")
+}
+
+model CvChatMessage {
+  id        String   @id @default(cuid())
+  cvId      String   @map("cv_id")
+  role      String
+  content   String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+
+  cv Cv @relation(fields: [cvId], references: [id], onDelete: Cascade)
+
+  @@index([cvId])
+  @@map("cv_chat_message")
+}

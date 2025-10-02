@@ -9,6 +9,7 @@ model User {
 
   sessions Session[]
   accounts Account[]
+  cvs      Cv[]
 
   @@map("user")
 }
