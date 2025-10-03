@@ -25,12 +25,10 @@ export const runAuth = createServerOnlyFn(
 export const isAuthenticated = createServerFn({ method: "GET" }).handler(
   async () => {
     const request = getRequest();
-    console.log("request", request);
     if (!request?.headers) return null;
 
     const auth = await runAuth(Auth);
     const session = await auth.api.getSession({ headers: request.headers });
-    console.log("session", session);
     return session ? true : false;
   },
 );

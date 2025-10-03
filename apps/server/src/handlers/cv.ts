@@ -5,9 +5,9 @@ import { Effect, Layer, Stream, DateTime } from "effect";
 import { ClaudeAgentService } from "../services/ClaudeAgentService.js";
 
 export const CvLiveHandler: Layer.Layer<
-  Rpc.Handler<"cv.get"> | Rpc.Handler<"cv.chat"> | Rpc.Handler<"cv.getChatHistory">,
-  never,
-  Database | ClaudeAgentService
+  | Rpc.Handler<"cv.get">
+  | Rpc.Handler<"cv.chat">
+  | Rpc.Handler<"cv.getChatHistory">
 > = CvRpcs.toLayer(
   Effect.gen(function* () {
     const db = yield* Database;
@@ -16,24 +16,14 @@ export const CvLiveHandler: Layer.Layer<
     return {
       "cv.get": (input) =>
         Effect.gen(function* () {
-          const cv = yield* Effect.tryPromise({
-            try: () =>
-              db.cv.findFirst({
-                where: { userId: input.userId },
-              }),
-            catch: (error) => String(error),
-          });
+          const cv = yield* db.use((_) =>
+            _.cv.findFirst({ where: { userId: input.userId } }),
+          );
 
           if (!cv) {
-            const newCv = yield* Effect.tryPromise({
-              try: () =>
-                db.cv.create({
-                  data: {
-                    userId: input.userId,
-                  },
-                }),
-              catch: (error) => String(error),
-            });
+            const newCv = yield* db.use((_) =>
+              _.cv.create({ data: { userId: input.userId } }),
+            );
 
             return {
               id: newCv.id,
@@ -56,23 +46,19 @@ export const CvLiveHandler: Layer.Layer<
       "cv.chat": (input) =>
         Stream.unwrap(
           Effect.gen(function* () {
-            yield* Effect.tryPromise({
-              try: () =>
-                db.cvChatMessage.create({
-                  data: {
-                    cvId: input.cvId,
-                    role: "user",
-                    content: input.message,
-                  },
-                }),
-              catch: (error) => String(error),
-            });
+            yield* db.use((_) =>
+              _.cvChatMessage.create({
+                data: {
+                  cvId: input.cvId,
+                  role: "user",
+                  content: input.message,
+                },
+              }),
+            );
 
-            const messageStream = yield* agentService.chatStream(
-              input.userId,
-              input.cvId,
-              input.message,
-            ).pipe(Effect.mapError((error) => String(error)));
+            const messageStream = yield* agentService
+              .chatStream(input.userId, input.cvId, input.message)
+              .pipe(Effect.mapError((error) => String(error)));
 
             let fullAssistantMessage = "";
 
@@ -116,17 +102,17 @@ export const CvLiveHandler: Layer.Layer<
               Stream.onDone(() =>
                 Effect.gen(function* () {
                   if (fullAssistantMessage) {
-                    yield* Effect.tryPromise({
-                      try: () =>
-                        db.cvChatMessage.create({
+                    yield* db
+                      .use((_) =>
+                        _.cvChatMessage.create({
                           data: {
                             cvId: input.cvId,
                             role: "assistant",
                             content: fullAssistantMessage,
                           },
                         }),
-                      catch: () => "Failed to save assistant message",
-                    }).pipe(Effect.ignore);
+                      )
+                      .pipe(Effect.ignore);
                   }
                 }),
               ),
@@ -136,14 +122,12 @@ export const CvLiveHandler: Layer.Layer<
 
       "cv.getChatHistory": (input) =>
         Effect.gen(function* () {
-          const messages = yield* Effect.tryPromise({
-            try: () =>
-              db.cvChatMessage.findMany({
-                where: { cvId: input.cvId },
-                orderBy: { createdAt: "asc" },
-              }),
-            catch: (error) => String(error),
-          });
+          const messages = yield* db.use((_) =>
+            _.cvChatMessage.findMany({
+              where: { cvId: input.cvId },
+              orderBy: { createdAt: "asc" },
+            }),
+          );
 
           return messages.map((msg) => ({
             id: msg.id,
@@ -155,4 +139,4 @@ export const CvLiveHandler: Layer.Layer<
         }),
     };
   }),
-);
+).pipe(Layer.provide(ClaudeAgentService.Default), Layer.provide(Database.Live));

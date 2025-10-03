@@ -3,6 +3,7 @@ export * from "./schemas/User";
 export * from "./schemas/JobAd";
 export * from "./schemas/JobAdSearchParams";
 export * from "./schemas/Cv";
+export * from "./schemas/Database";
 
 export * from "./rpcs/health";
 export * from "./rpcs/job";

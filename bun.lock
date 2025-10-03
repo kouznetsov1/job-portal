@@ -155,6 +155,7 @@
       },
       "devDependencies": {
         "@repo/config-typescript": "workspace:*",
+        "@repo/domain": "workspace:*",
         "eslint": "catalog:",
         "typescript": "catalog:",
       },
