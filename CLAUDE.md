@@ -1,5 +1,7 @@
 # Claude Instructions
 
+This is instructions for Claude when working in the repo for job portal named Searcha.
+
 ## 🚨 HIGHEST PRIORITY RULES 🚨
 
 ### User-Facing Language
@@ -393,3 +395,4 @@ The `.patterns/` directory contains comprehensive development patterns and best 
 - Prioritize clarity over premature optimization
 - Use appropriate data structures for the use case
 - Claude NEVER runs the dev server, the user already has it running
+

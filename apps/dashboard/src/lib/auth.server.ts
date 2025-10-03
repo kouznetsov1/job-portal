@@ -34,3 +34,14 @@ export const isAuthenticated = createServerFn({ method: "GET" }).handler(
     return session ? true : false;
   },
 );
+
+export const getAuthenticatedUser = createServerFn({ method: "GET" }).handler(
+  async () => {
+    const request = getRequest();
+    if (!request?.headers) return null;
+
+    const auth = await runAuth(Auth);
+    const session = await auth.api.getSession({ headers: request.headers });
+    return session?.user ?? null;
+  },
+);

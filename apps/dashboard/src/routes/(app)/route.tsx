@@ -1,11 +1,15 @@
-import { isAuthenticated } from "@/lib/auth.server";
+import { getAuthenticatedUser } from "@/lib/auth.server";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { SidebarProvider, SidebarInset } from "@repo/ui/components/sidebar";
 import { AppSidebar } from "./_components/sidebar";
 
 export const Route = createFileRoute("/(app)")({
   beforeLoad: async () => {
-    if (await isAuthenticated()) return;
+    const user = await getAuthenticatedUser();
+    if (!user) {
+      throw new Error("Not authenticated");
+    }
+    return { user };
   },
   component: RouteComponent,
 });
