@@ -13,6 +13,7 @@
     "better-auth": "catalog:",
     "effect": "catalog:",
     "@effect/platform": "catalog:",
+    "@effect/domain": "catalog:",
     "@effect/rpc": "catalog:",
     "@repo/db": "workspace:*"
   },

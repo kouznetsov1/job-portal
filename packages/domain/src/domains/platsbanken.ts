@@ -1,5 +1,10 @@
 import { Schema } from "effect";
 
+export const PlatsbankenSearchInput = Schema.Struct({
+  q: Schema.optional(Schema.String),
+  limit: Schema.optional(Schema.Number),
+});
+
 export const JobTechTaxonomyItem = Schema.Struct({
   concept_id: Schema.optional(Schema.NullOr(Schema.String)),
   label: Schema.optional(Schema.NullOr(Schema.String)),
@@ -49,15 +54,27 @@ export const WorkplaceAddress = Schema.Struct({
   street_address: Schema.optional(Schema.NullOr(Schema.String)),
   postcode: Schema.optional(Schema.NullOr(Schema.String)),
   city: Schema.optional(Schema.NullOr(Schema.String)),
-  coordinates: Schema.optional(Schema.NullOr(Schema.Array(Schema.NullOr(Schema.Number)))),
+  coordinates: Schema.optional(
+    Schema.NullOr(Schema.Array(Schema.NullOr(Schema.Number))),
+  ),
 });
 
 export const Requirements = Schema.Struct({
-  skills: Schema.optional(Schema.NullOr(Schema.Array(WeightedJobtechTaxonomyItem))),
-  languages: Schema.optional(Schema.NullOr(Schema.Array(WeightedJobtechTaxonomyItem))),
-  work_experiences: Schema.optional(Schema.NullOr(Schema.Array(WeightedJobtechTaxonomyItem))),
-  education: Schema.optional(Schema.NullOr(Schema.Array(WeightedJobtechTaxonomyItem))),
-  education_level: Schema.optional(Schema.NullOr(Schema.Array(WeightedJobtechTaxonomyItem))),
+  skills: Schema.optional(
+    Schema.NullOr(Schema.Array(WeightedJobtechTaxonomyItem)),
+  ),
+  languages: Schema.optional(
+    Schema.NullOr(Schema.Array(WeightedJobtechTaxonomyItem)),
+  ),
+  work_experiences: Schema.optional(
+    Schema.NullOr(Schema.Array(WeightedJobtechTaxonomyItem)),
+  ),
+  education: Schema.optional(
+    Schema.NullOr(Schema.Array(WeightedJobtechTaxonomyItem)),
+  ),
+  education_level: Schema.optional(
+    Schema.NullOr(Schema.Array(WeightedJobtechTaxonomyItem)),
+  ),
 });
 
 export const ApplicationContact = Schema.Struct({
@@ -100,14 +117,18 @@ export const JobAd = Schema.Struct({
   experience_required: Schema.optional(Schema.NullOr(Schema.Boolean)),
   access_to_own_car: Schema.optional(Schema.NullOr(Schema.Boolean)),
   driving_license_required: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  driving_license: Schema.optional(Schema.NullOr(Schema.Array(JobTechTaxonomyItem))),
+  driving_license: Schema.optional(
+    Schema.NullOr(Schema.Array(JobTechTaxonomyItem)),
+  ),
   occupation: Schema.optional(Schema.NullOr(JobTechTaxonomyItem)),
   occupation_group: Schema.optional(Schema.NullOr(JobTechTaxonomyItem)),
   occupation_field: Schema.optional(Schema.NullOr(JobTechTaxonomyItem)),
   workplace_address: Schema.optional(Schema.NullOr(WorkplaceAddress)),
   must_have: Schema.optional(Schema.NullOr(Requirements)),
   nice_to_have: Schema.optional(Schema.NullOr(Requirements)),
-  application_contacts: Schema.optional(Schema.NullOr(Schema.Array(ApplicationContact))),
+  application_contacts: Schema.optional(
+    Schema.NullOr(Schema.Array(ApplicationContact)),
+  ),
   publication_date: Schema.optional(Schema.NullOr(Schema.String)),
   last_publication_date: Schema.optional(Schema.NullOr(Schema.String)),
   removed: Schema.optional(Schema.NullOr(Schema.Boolean)),
@@ -145,8 +166,12 @@ export const FreetextConcepts = Schema.Struct({
   occupation_must: Schema.optional(Schema.NullOr(Schema.Array(Schema.String))),
   location_must: Schema.optional(Schema.NullOr(Schema.Array(Schema.String))),
   skill_must_not: Schema.optional(Schema.NullOr(Schema.Array(Schema.String))),
-  occupation_must_not: Schema.optional(Schema.NullOr(Schema.Array(Schema.String))),
-  location_must_not: Schema.optional(Schema.NullOr(Schema.Array(Schema.String))),
+  occupation_must_not: Schema.optional(
+    Schema.NullOr(Schema.Array(Schema.String)),
+  ),
+  location_must_not: Schema.optional(
+    Schema.NullOr(Schema.Array(Schema.String)),
+  ),
 });
 
 export const SearchResults = Schema.Struct({
@@ -166,8 +191,16 @@ export const TypeaheadItem = Schema.Struct({
   occurrences: Schema.optional(Schema.NullOr(Schema.Number)),
 });
 
+export const TypeaheadParams = Schema.Struct({
+  q: Schema.optional(Schema.String),
+  limit: Schema.optional(Schema.Number),
+  contextual: Schema.optional(Schema.Boolean),
+  label: Schema.optional(Schema.Array(Schema.String)),
+});
+
 export const TypeaheadResults = Schema.Struct({
   result_time_in_millis: Schema.optional(Schema.NullOr(Schema.Number)),
   time_in_millis: Schema.optional(Schema.NullOr(Schema.Number)),
   typeahead: Schema.optional(Schema.NullOr(Schema.Array(TypeaheadItem))),
 });
+

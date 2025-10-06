@@ -1,17 +1,9 @@
 import { Database } from "@repo/db";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { Context, Data, Effect, Layer } from "effect";
+import { Context, Effect, Layer } from "effect";
 import type { BetterAuthOptions } from "better-auth";
-
-class AuthError extends Data.TaggedError("AuthError")<{
-  readonly message: string;
-  readonly cause?: unknown;
-}> {}
-
-class SessionNotFoundError extends Data.TaggedError("SessionNotFoundError")<{
-  readonly message: string;
-}> {}
+import { AuthError, SessionNotFoundError } from "@repo/domain";
 
 export class Auth extends Context.Tag("Auth")<
   Auth,
@@ -64,5 +56,3 @@ export class Auth extends Context.Tag("Auth")<
       ),
     );
 }
-
-export { AuthError, SessionNotFoundError };

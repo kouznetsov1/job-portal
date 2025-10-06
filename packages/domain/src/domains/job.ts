@@ -1,6 +1,10 @@
 import { Rpc, RpcGroup } from "@effect/rpc";
 import { Schema } from "effect";
-import { Job } from "../schemas/Job";
+
+export const Job = Schema.Struct({
+  id: Schema.Number,
+  name: Schema.String,
+});
 
 export class JobsRpcs extends RpcGroup.make(
   Rpc.make("job.get", {

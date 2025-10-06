@@ -1,0 +1,414 @@
+[
+  {
+    "id": "30074869",
+    "external_id": "46-556218-6790-REQ_37015",
+    "original_id": null,
+    "label": "[]",
+    "webpage_url": "https://arbetsformedlingen.se/platsbanken/annonser/30074869",
+    "logo_url": "https://arbetsformedlingen.se/rest/agas/api/v1/organisation/5562186790/logotyper/logo.png",
+    "headline": "Utvecklare",
+    "application_deadline": "2025-10-10T23:59:59",
+    "number_of_vacancies": 1,
+    "description": {
+      "text": "Vi på Combitech och affärsområdet Kritiska System i Linköping arbetar idag med in-houseteam och teamleveranser. Hos oss är du en del av ett team som ansvarar för sin leverans, planering och problemlösning gentemot våra kunder. Hos oss får du möjlighet att arbeta med spännande projekt i teknikens framkant, där du är med och gör skillnad!\n\n \n\nVAD VI ERBJUDER\n\nSom konsult hos oss på Combitech kommer din personliga utveckling i fokus. Du erbjuds kontinuerlig kompetensutveckling i form av interna och externa kurser inom både tekniska ämnen men även personlig utveckling. Vi tror på kombinationskraft och att vi är som bäst när vi tar hjälp av varandra.\n\n \n\nDu kommer arbeta i ett självorganiserande team som tar ansvar och trivs med att fatta våra egna beslut. Våra tvärfunktionella team består av medlemmar med olika tekniska kompetenser som kompletterar varandra perfekt. Genom att följa agila metoder säkerställer vi flexibilitet och snabb anpassning.\n\n \n\nVi har en stark teamkänsla och en positiv arbetsmiljö där vi stöttar och inspirerar varandra. Dessutom gör vi ofta roliga aktiviteter tillsammans utanför jobbet, vilket stärker vår sammanhållning och gör att vi har kul tillsammans. En stor fördel med vår teamverksamhet är att du aldrig fastnar inom ett team, teknikområde eller domän, utan har möjligheten att kunna växla mellan team och tekniker.\n\n \n\n \n\nVAD ROLLEN INNEBÄR\n\nVi söker förstärkning i flera discipliner inom mjukvaru-/systemutveckling till något av följande team:\n\n * \n\nTeam 1 och 2 arbetar med system- och mjukvaruutveckling av flygsäkerhetskritiska system med programmering i C++, kravhantering, design, implementation och verifiering.\n * \n\nTeam 3-5 jobbar med system- och mjukvaruutveckling för militära produkter; där arbetar vi med kravhantering, systemdesign, implementation och verifiering.\n * \n\nTeam 6 arbetar med verifiering av delsystem för civila flygplan. Där jobbar vi med system- och mjukvaruverifiering, kravhantering, teststrategier och testimplementation.\n * \n\nTeam 7 är med och utvecklar autonoma helikoptrar med C++ och C# .Net och jobbar med hela spannet från system till verifiering.\n\n \n\nVAD VI SÖKER\n\nVi söker dig som är civil- eller högskoleingenjör med inriktning mot datateknik/teknisk fysik eller motsvarande och har minst tre års erfarenhet inom mjukvaru-/systemutveckling. Du har goda programmeringskunskaper och trivs med agila arbetsmetoder som Scrum och Kanban.\n\n \n\nFör att trivas och utvecklas i rollen vill vi att du motiveras av att lösa problem tillsammans med andra. Du uppskattar att arbeta tillsammans i team och vi tror även att du har en analytisk förmåga och en medvetenhet för kvalitet.\n\n \n\nVi vill bygga team av individer som tillsammans har ett brett spann av erfarenheter, personligheter och kompetenser för att komplettera varandra.\n\n \n\nDå tjänsten innebär arbete som omfattas av försvarssekretess krävs det att du genomför och godkänns i en säkerhetsprövning med registerkontroll. \n\n \n\nUrval sker löpande. Vi ser fram emot din ansökan!\n\n \n\nKontaktperson/Rekryterande chef: Sanna Manhem, sanna.manhem@combitech.com +46 734468484\n\n \n\nVi undanber oss rekryteringssamarbeten.",
+      "text_formatted": "Vi på Combitech och affärsområdet Kritiska System i Linköping arbetar idag med in-houseteam och teamleveranser. Hos oss är du en del av ett team som ansvarar för sin leverans, planering och problemlösning gentemot våra kunder. Hos oss får du möjlighet att arbeta med spännande projekt i teknikens framkant, där du är med och gör skillnad!\n\n \n\nVAD VI ERBJUDER\n\nSom konsult hos oss på Combitech kommer din personliga utveckling i fokus. Du erbjuds kontinuerlig kompetensutveckling i form av interna och externa kurser inom både tekniska ämnen men även personlig utveckling. Vi tror på kombinationskraft och att vi är som bäst när vi tar hjälp av varandra.\n\n \n\nDu kommer arbeta i ett självorganiserande team som tar ansvar och trivs med att fatta våra egna beslut. Våra tvärfunktionella team består av medlemmar med olika tekniska kompetenser som kompletterar varandra perfekt. Genom att följa agila metoder säkerställer vi flexibilitet och snabb anpassning.\n\n \n\nVi har en stark teamkänsla och en positiv arbetsmiljö där vi stöttar och inspirerar varandra. Dessutom gör vi ofta roliga aktiviteter tillsammans utanför jobbet, vilket stärker vår sammanhållning och gör att vi har kul tillsammans. En stor fördel med vår teamverksamhet är att du aldrig fastnar inom ett team, teknikområde eller domän, utan har möjligheten att kunna växla mellan team och tekniker.\n\n \n\n \n\nVAD ROLLEN INNEBÄR\n\nVi söker förstärkning i flera discipliner inom mjukvaru-/systemutveckling till något av följande team:\n\n * \n\nTeam 1 och 2 arbetar med system- och mjukvaruutveckling av flygsäkerhetskritiska system med programmering i C++, kravhantering, design, implementation och verifiering.\n * \n\nTeam 3-5 jobbar med system- och mjukvaruutveckling för militära produkter; där arbetar vi med kravhantering, systemdesign, implementation och verifiering.\n * \n\nTeam 6 arbetar med verifiering av delsystem för civila flygplan. Där jobbar vi med system- och mjukvaruverifiering, kravhantering, teststrategier och testimplementation.\n * \n\nTeam 7 är med och utvecklar autonoma helikoptrar med C++ och C# .Net och jobbar med hela spannet från system till verifiering.\n\n \n\nVAD VI SÖKER\n\nVi söker dig som är civil- eller högskoleingenjör med inriktning mot datateknik/teknisk fysik eller motsvarande och har minst tre års erfarenhet inom mjukvaru-/systemutveckling. Du har goda programmeringskunskaper och trivs med agila arbetsmetoder som Scrum och Kanban.\n\n \n\nFör att trivas och utvecklas i rollen vill vi att du motiveras av att lösa problem tillsammans med andra. Du uppskattar att arbeta tillsammans i team och vi tror även att du har en analytisk förmåga och en medvetenhet för kvalitet.\n\n \n\nVi vill bygga team av individer som tillsammans har ett brett spann av erfarenheter, personligheter och kompetenser för att komplettera varandra.\n\n \n\nDå tjänsten innebär arbete som omfattas av försvarssekretess krävs det att du genomför och godkänns i en säkerhetsprövning med registerkontroll. \n\n \n\nUrval sker löpande. Vi ser fram emot din ansökan!\n\n \n\nKontaktperson/Rekryterande chef: Sanna Manhem, sanna.manhem@combitech.com +46 734468484\n\n \n\nVi undanber oss rekryteringssamarbeten.",
+      "company_information": null,
+      "needs": null,
+      "requirements": null,
+      "conditions": "Heltid\r\nPermanent"
+    },
+    "employment_type": {
+      "concept_id": "PFZr_Syz_cUq",
+      "label": "Vanlig anställning",
+      "legacy_ams_taxonomy_id": "1"
+    },
+    "salary_type": {
+      "concept_id": "oG8G_9cW_nRf",
+      "label": "Fast månads- vecko- eller timlön",
+      "legacy_ams_taxonomy_id": "1"
+    },
+    "salary_description": "Not Specified",
+    "duration": {
+      "concept_id": "a7uU_j21_mkL",
+      "label": "Tills vidare",
+      "legacy_ams_taxonomy_id": "1"
+    },
+    "working_hours_type": {
+      "concept_id": "6YE1_gAC_R2G",
+      "label": "Heltid",
+      "legacy_ams_taxonomy_id": "1"
+    },
+    "scope_of_work": {
+      "min": 100,
+      "max": 100
+    },
+    "access": null,
+    "employer": {
+      "phone_number": null,
+      "email": null,
+      "url": null,
+      "organization_number": "5562186790",
+      "name": "Combitech AB",
+      "workplace": "Combitech"
+    },
+    "application_details": {
+      "information": null,
+      "reference": "REQ_37015",
+      "email": null,
+      "via_af": false,
+      "url": "https://www.aplitrak.com/?adid=bS5saW5kc3Rlbi43MzgwMy4zMTAxQHNhYWIuYXBsaXRyYWsuY29t",
+      "other": null
+    },
+    "experience_required": false,
+    "access_to_own_car": false,
+    "driving_license_required": false,
+    "driving_license": null,
+    "occupation": {
+      "concept_id": "rQds_YGd_quU",
+      "label": "Mjukvaruutvecklare",
+      "legacy_ams_taxonomy_id": "80"
+    },
+    "occupation_group": {
+      "concept_id": "DJh5_yyF_hEM",
+      "label": "Mjukvaru- och systemutvecklare m.fl.",
+      "legacy_ams_taxonomy_id": "2512"
+    },
+    "occupation_field": {
+      "concept_id": "apaJ_2ja_LuF",
+      "label": "Data/IT",
+      "legacy_ams_taxonomy_id": "3"
+    },
+    "workplace_address": {
+      "municipality": "Linköping",
+      "municipality_code": "0580",
+      "municipality_concept_id": "bm2x_1mr_Qhx",
+      "region": "Östergötlands län",
+      "region_code": "05",
+      "region_concept_id": "oLT3_Q9p_3nn",
+      "country": "Sverige",
+      "country_code": "199",
+      "country_concept_id": "i46j_HmG_v64",
+      "street_address": null,
+      "postcode": null,
+      "city": null,
+      "coordinates": [
+        15.621373,
+        58.41081
+      ]
+    },
+    "must_have": {
+      "skills": [],
+      "languages": [],
+      "work_experiences": [],
+      "education": [],
+      "education_level": []
+    },
+    "nice_to_have": {
+      "skills": [],
+      "languages": [],
+      "work_experiences": [],
+      "education": [],
+      "education_level": []
+    },
+    "application_contacts": [
+      {
+        "name": null,
+        "description": "Saab AB",
+        "email": null,
+        "telephone": null,
+        "contact_type": null
+      }
+    ],
+    "publication_date": "2025-09-26T10:04:21",
+    "last_publication_date": "2025-10-10T23:59:59",
+    "removed": false,
+    "removed_date": null,
+    "source_type": "VIA_PLATSBANKEN_DXA",
+    "timestamp": 1758886271556,
+    "relevance": 1
+  },
+  {
+    "id": "30093714",
+    "external_id": "46-556218-6790-REQ_37195",
+    "original_id": null,
+    "label": "[]",
+    "webpage_url": "https://arbetsformedlingen.se/platsbanken/annonser/30093714",
+    "logo_url": "https://arbetsformedlingen.se/rest/agas/api/v1/organisation/5562186790/logotyper/logo.png",
+    "headline": "Senior utvecklare",
+    "application_deadline": "2025-10-22T23:59:59",
+    "number_of_vacancies": 1,
+    "description": {
+      "text": "Är du en erfaren systemutvecklare som vill arbeta med teknik som gör skillnad - på riktigt? Hos oss på Combitech får du chansen att kombinera din passion för utveckling med att bidra till ett smartare och säkrare samhälle.\n\n \n\n \n\nVad vi erbjuder\n\nVi vet att våra medarbetare är vår största tillgång och vi vill att du ska växa med oss. Därför erbjuder vi kontinuerlig kompetensutveckling genom både utbildningar och spännande projekt. Vi främjar balans i livet med flexibla arbetstider och har förståelse för vardagen. Som en del av Saab-koncernen erbjuder vi trygghet och stabilitet med lång erfarenhet av högteknologi och forskning. Hos oss blir du en del av ett team där man stöttar varandra och har kul på jobbet.\n\nDu blir en del av ett långsiktigt uppdrag för Försvarsmakten som växer med nya utmaningar, där du får möjlighet att påverka och ta ansvar i en organisation med cirka 40 kollegor. Beslutsvägarna är korta och frihetsgraden stor.\n\n \n\n \n\nVad rollen innebär\n\nDu kommer in i ett engagerat och agilt team som utvecklar och vidareutvecklar en ny applikation. I rollen får du arbeta nära användare och verksamhetsspecialister, implementera ny funktionalitet och lösa tekniska utmaningar. Du får vara med och forma lösningar som verkligen används och gör skillnad.\n\n \n\nDå tjänsten innebär arbete som omfattas av försvarssekretess krävs det att du genomför och godkänns i en säkerhetsprövning med registerkontroll. \n\n \n\nUrval sker löpande, och vi ser fram emot din ansökan!\n\n \n\n \n\nVad vi söker\n\nVi letar efter dig som har flera års erfarenhet av systemutveckling och brinner för programmering, problemlösning och att lära dig nya saker. Du är kvalitetsmedveten, analytisk och nyfiken, samt en lagspelare som gillar att samarbeta och bidra till en god stämning.\n\n \n\nEn akademisk bakgrund inom datateknik eller motsvarande är meriterande.\n\n \n\nDet är också meriterande om du har erfarenhet av något inom vår tech stack\n\nVi arbetar med C#, .Net, SQL, Oracle, SQLLite, Azure DevOps, git och Blazor.\n\n \n\nExtra värdefullt är även förståelse för Försvarsmaktens verksamhet och ett högt säkerhetsmedvetande.\n\n \n\nVill du veta mer om hur det är att arbeta hos oss? Kolla in våra karriärsidor på vår webb!\n\n \n\nKontaktperson/Rekryterande chef: Peter Gustavsson: +46 73 4376207",
+      "text_formatted": "Är du en erfaren systemutvecklare som vill arbeta med teknik som gör skillnad - på riktigt? Hos oss på Combitech får du chansen att kombinera din passion för utveckling med att bidra till ett smartare och säkrare samhälle.\n\n \n\n \n\nVad vi erbjuder\n\nVi vet att våra medarbetare är vår största tillgång och vi vill att du ska växa med oss. Därför erbjuder vi kontinuerlig kompetensutveckling genom både utbildningar och spännande projekt. Vi främjar balans i livet med flexibla arbetstider och har förståelse för vardagen. Som en del av Saab-koncernen erbjuder vi trygghet och stabilitet med lång erfarenhet av högteknologi och forskning. Hos oss blir du en del av ett team där man stöttar varandra och har kul på jobbet.\n\nDu blir en del av ett långsiktigt uppdrag för Försvarsmakten som växer med nya utmaningar, där du får möjlighet att påverka och ta ansvar i en organisation med cirka 40 kollegor. Beslutsvägarna är korta och frihetsgraden stor.\n\n \n\n \n\nVad rollen innebär\n\nDu kommer in i ett engagerat och agilt team som utvecklar och vidareutvecklar en ny applikation. I rollen får du arbeta nära användare och verksamhetsspecialister, implementera ny funktionalitet och lösa tekniska utmaningar. Du får vara med och forma lösningar som verkligen används och gör skillnad.\n\n \n\nDå tjänsten innebär arbete som omfattas av försvarssekretess krävs det att du genomför och godkänns i en säkerhetsprövning med registerkontroll. \n\n \n\nUrval sker löpande, och vi ser fram emot din ansökan!\n\n \n\n \n\nVad vi söker\n\nVi letar efter dig som har flera års erfarenhet av systemutveckling och brinner för programmering, problemlösning och att lära dig nya saker. Du är kvalitetsmedveten, analytisk och nyfiken, samt en lagspelare som gillar att samarbeta och bidra till en god stämning.\n\n \n\nEn akademisk bakgrund inom datateknik eller motsvarande är meriterande.\n\n \n\nDet är också meriterande om du har erfarenhet av något inom vår tech stack\n\nVi arbetar med C#, .Net, SQL, Oracle, SQLLite, Azure DevOps, git och Blazor.\n\n \n\nExtra värdefullt är även förståelse för Försvarsmaktens verksamhet och ett högt säkerhetsmedvetande.\n\n \n\nVill du veta mer om hur det är att arbeta hos oss? Kolla in våra karriärsidor på vår webb!\n\n \n\nKontaktperson/Rekryterande chef: Peter Gustavsson: +46 73 4376207",
+      "company_information": null,
+      "needs": null,
+      "requirements": null,
+      "conditions": "Heltid\r\nPermanent"
+    },
+    "employment_type": {
+      "concept_id": "PFZr_Syz_cUq",
+      "label": "Vanlig anställning",
+      "legacy_ams_taxonomy_id": "1"
+    },
+    "salary_type": {
+      "concept_id": "oG8G_9cW_nRf",
+      "label": "Fast månads- vecko- eller timlön",
+      "legacy_ams_taxonomy_id": "1"
+    },
+    "salary_description": "Not Specified",
+    "duration": {
+      "concept_id": "a7uU_j21_mkL",
+      "label": "Tills vidare",
+      "legacy_ams_taxonomy_id": "1"
+    },
+    "working_hours_type": {
+      "concept_id": "6YE1_gAC_R2G",
+      "label": "Heltid",
+      "legacy_ams_taxonomy_id": "1"
+    },
+    "scope_of_work": {
+      "min": 100,
+      "max": 100
+    },
+    "access": null,
+    "employer": {
+      "phone_number": null,
+      "email": null,
+      "url": null,
+      "organization_number": "5562186790",
+      "name": "Combitech AB",
+      "workplace": "Combitech AB"
+    },
+    "application_details": {
+      "information": null,
+      "reference": "REQ_37195",
+      "email": null,
+      "via_af": false,
+      "url": "https://www.aplitrak.com/?adid=ZHdhbGxtYXJrLjE3OTAyLjMxMDFAc2FhYi5hcGxpdHJhay5jb20",
+      "other": null
+    },
+    "experience_required": true,
+    "access_to_own_car": false,
+    "driving_license_required": false,
+    "driving_license": null,
+    "occupation": {
+      "concept_id": "rQds_YGd_quU",
+      "label": "Mjukvaruutvecklare",
+      "legacy_ams_taxonomy_id": "80"
+    },
+    "occupation_group": {
+      "concept_id": "DJh5_yyF_hEM",
+      "label": "Mjukvaru- och systemutvecklare m.fl.",
+      "legacy_ams_taxonomy_id": "2512"
+    },
+    "occupation_field": {
+      "concept_id": "apaJ_2ja_LuF",
+      "label": "Data/IT",
+      "legacy_ams_taxonomy_id": "3"
+    },
+    "workplace_address": {
+      "municipality": "Växjö",
+      "municipality_code": "0780",
+      "municipality_concept_id": "mmot_H3A_auW",
+      "region": "Kronobergs län",
+      "region_code": "07",
+      "region_concept_id": "tF3y_MF9_h5G",
+      "country": "Sverige",
+      "country_code": "199",
+      "country_concept_id": "i46j_HmG_v64",
+      "street_address": null,
+      "postcode": null,
+      "city": null,
+      "coordinates": [
+        14.805852,
+        56.879005
+      ]
+    },
+    "must_have": {
+      "skills": [],
+      "languages": [],
+      "work_experiences": [
+        {
+          "concept_id": "rQds_YGd_quU",
+          "label": "Mjukvaruutvecklare",
+          "legacy_ams_taxonomy_id": "80",
+          "weight": 10
+        }
+      ],
+      "education": [],
+      "education_level": []
+    },
+    "nice_to_have": {
+      "skills": [],
+      "languages": [],
+      "work_experiences": [],
+      "education": [],
+      "education_level": []
+    },
+    "application_contacts": [
+      {
+        "name": null,
+        "description": "Saab AB",
+        "email": null,
+        "telephone": null,
+        "contact_type": null
+      }
+    ],
+    "publication_date": "2025-10-01T14:04:31",
+    "last_publication_date": "2025-10-22T23:59:59",
+    "removed": false,
+    "removed_date": null,
+    "source_type": "VIA_PLATSBANKEN_DXA",
+    "timestamp": 1759320271593,
+    "relevance": 0.9435422240821061
+  },
+  {
+    "id": "30087365",
+    "external_id": "46-202100-5448-854737",
+    "original_id": null,
+    "label": "[]",
+    "webpage_url": "https://arbetsformedlingen.se/platsbanken/annonser/30087365",
+    "logo_url": "https://arbetsformedlingen.se/rest/agas/api/v1/organisation/2021005448/logotyper/logo.png",
+    "headline": "Senior utvecklare",
+    "application_deadline": "2025-10-10T23:59:59",
+    "number_of_vacancies": 1,
+    "description": {
+      "text": "Vill du jobba med teknik i framkant, samtidigt som du bidrar till samhällsnyttan? Hos oss får du intressanta arbetsuppgifter i samhällets hjärta, kombinerat med utvecklingsmöjligheter och balans mellan arbete och fritid.\r\n\r\nVar med och gör samhället möjligt!\n\nOm jobbet\n\nDu arbetar med systemutveckling i ett agilt utvecklingsteam där ni tillsammans ansvarar för teamets leveranser samtidigt som ni ser till helheten och bidrar till ett väl fungerande samhälle. Ni arbetar tillsammans med att lösa uppgifter där olika discipliner såsom krav, utveckling, test, testautomation, dokumentation, release och driftsättning ingår. \n\nVår utvecklingsmiljö bjuder på spännande utmaningar och stimulerar till kreativa lösningar. Vår tekniska målmiljö är i huvudsak Linux med flera generationer av teknikstackar och plattformar så som Red Hat OpenShift (mikrotjänster), Mule Soft med Anypoint Studio och Oracle databaser. Vi arbetar med verktyg, teknik, programspråk och ramverk som Java, JUnit, Spring Boot, REST, Postman, AMQ, Git, Gradle, Tomcat, SQL, XML och JavaScript. Utvecklingen görs i huvudsak i windowsmiljö. \n\nHos oss får du möjlighet till ständig utveckling och lärande i arbetet. Vi jobbar aktivt med kompetens- och teknikutveckling genom exempelvis innovationssprintar. Du har kunniga kollegor som du utbyter erfarenheter med och du kan utveckla både bredd och spets hos oss. Tack vare att vi är en stor it-organisation kan vi erbjuda goda möjligheter till intern rörlighet. Det är viktigt för oss att du har balans mellan jobb och fritid och vi erbjuder bland annat flexibel arbetstid och möjlighet att jobba delvis hemifrån. Du får en friskvårdstimme i veckan och friskvårdsbidrag. \n\nSkatteverkets it-avdelning arbetar aktivt för att främja en inkluderande arbetsplats som präglas av jämställdhet och mångfald där alla medarbetare får lika möjligheter att bidra och utvecklas. Läs mer på https://skatteverket.se/omoss/jobbahososs/jobbamedithososs.4.13948c0e18e810bfa0c55ba.html%]\n\nDu tillhör it-avdelningen, med placering i Sundbyberg. \n\nOm dig\n\nFör att göra ett bra jobb och trivas hos oss på Skatteverket behöver du vara lyhörd, tänka nytt och ta ansvar. I arbetet är gott omdöme och förståelse för rättssäkerhet och säkerhet viktigt. Du ska också leva upp till vår https://skatteverket.se/medarbetarpolicy.\n\nI det här jobbet ska du:\n\n - ha god samarbetsförmåga, vara hjälpsam och ha ett gott bemötande\n - ha förmågan och viljan att lära dig nya saker, vara flexibel och öppen för förändringar\n - ha god problemlösningsförmåga, se mönster och kunna göra avgränsningar\n - vara målfokuserad och bidra till att syftet med verksamheten uppnås\n - uttrycka dig väl i tal och skrift på svenska.\n\nDu ska även ha:\n\n - relevant eftergymnasial utbildning inom it, alternativt flerårig relevant och aktuell arbetslivserfarenhet inom it-området \n - flerårig aktuell och relevant arbetslivserfarenhet som systemutvecklare \n\nDet är önskvärt om du har aktuell arbetslivserfarenhet av testdriven utveckling, testautomatisering och/eller Continious Integration/Continious Delivery (CI/CD). \nDet är också önskvärt med relevant kunskap om molnarkitektur, Docker och Kubernetes/Openshift. Det är även meriterande om du har relevant erfarenhet av att ha arbetat på myndighet och/eller systemutveckling i en agil utvecklingsmiljö (SAFe).\n\nBra att veta\n\nAnställningen är tillsvidare och kan inledas med provanställning i sex månader.\n\nEn anställning hos oss kan innebära placering i säkerhetsklass. En säkerhetsprövning med registerkontroll enligt säkerhetsskyddslagen (2018:585) kan därför komma att genomföras före beslut om anställning. För en del av våra arbetsuppgifter i säkerhetsklass krävs svenskt medborgarskap.\n\nPå https://skatteverket.se/jobb kan du exempelvis läsa om vår samhällsbärande roll, fördelarna med att jobba hos oss och hur det går till när du söker våra jobb.\n\nNär du ansöker bifogar du ditt cv. Vi använder inte personligt brev i våra rekryteringar och du ska därför inte bifoga det i din ansökan.\n\nVälkommen med din ansökan!\n\nSkatteverket har en samhällsbärande roll. Vårt arbete berör alla privatpersoner och företag och genom vårt uppdrag bidrar vi till ett väl fungerande samhälle. Vår utveckling är kunddriven och vi samverkar med andra för att skapa effektiva lösningar. Tillsammans gör vi samhället möjligt.",
+      "text_formatted": "Vill du jobba med teknik i framkant, samtidigt som du bidrar till samhällsnyttan? Hos oss får du intressanta arbetsuppgifter i samhällets hjärta, kombinerat med utvecklingsmöjligheter och balans mellan arbete och fritid.\r\n\r\nVar med och gör samhället möjligt!\n\nOm jobbet\n\nDu arbetar med systemutveckling i ett agilt utvecklingsteam där ni tillsammans ansvarar för teamets leveranser samtidigt som ni ser till helheten och bidrar till ett väl fungerande samhälle. Ni arbetar tillsammans med att lösa uppgifter där olika discipliner såsom krav, utveckling, test, testautomation, dokumentation, release och driftsättning ingår. \n\nVår utvecklingsmiljö bjuder på spännande utmaningar och stimulerar till kreativa lösningar. Vår tekniska målmiljö är i huvudsak Linux med flera generationer av teknikstackar och plattformar så som Red Hat OpenShift (mikrotjänster), Mule Soft med Anypoint Studio och Oracle databaser. Vi arbetar med verktyg, teknik, programspråk och ramverk som Java, JUnit, Spring Boot, REST, Postman, AMQ, Git, Gradle, Tomcat, SQL, XML och JavaScript. Utvecklingen görs i huvudsak i windowsmiljö. \n\nHos oss får du möjlighet till ständig utveckling och lärande i arbetet. Vi jobbar aktivt med kompetens- och teknikutveckling genom exempelvis innovationssprintar. Du har kunniga kollegor som du utbyter erfarenheter med och du kan utveckla både bredd och spets hos oss. Tack vare att vi är en stor it-organisation kan vi erbjuda goda möjligheter till intern rörlighet. Det är viktigt för oss att du har balans mellan jobb och fritid och vi erbjuder bland annat flexibel arbetstid och möjlighet att jobba delvis hemifrån. Du får en friskvårdstimme i veckan och friskvårdsbidrag. \n\nSkatteverkets it-avdelning arbetar aktivt för att främja en inkluderande arbetsplats som präglas av jämställdhet och mångfald där alla medarbetare får lika möjligheter att bidra och utvecklas. Läs mer på https://skatteverket.se/omoss/jobbahososs/jobbamedithososs.4.13948c0e18e810bfa0c55ba.html%]\n\nDu tillhör it-avdelningen, med placering i Sundbyberg. \n\nOm dig\n\nFör att göra ett bra jobb och trivas hos oss på Skatteverket behöver du vara lyhörd, tänka nytt och ta ansvar. I arbetet är gott omdöme och förståelse för rättssäkerhet och säkerhet viktigt. Du ska också leva upp till vår https://skatteverket.se/medarbetarpolicy.\n\nI det här jobbet ska du:\n\n - ha god samarbetsförmåga, vara hjälpsam och ha ett gott bemötande\n - ha förmågan och viljan att lära dig nya saker, vara flexibel och öppen för förändringar\n - ha god problemlösningsförmåga, se mönster och kunna göra avgränsningar\n - vara målfokuserad och bidra till att syftet med verksamheten uppnås\n - uttrycka dig väl i tal och skrift på svenska.\n\nDu ska även ha:\n\n - relevant eftergymnasial utbildning inom it, alternativt flerårig relevant och aktuell arbetslivserfarenhet inom it-området \n - flerårig aktuell och relevant arbetslivserfarenhet som systemutvecklare \n\nDet är önskvärt om du har aktuell arbetslivserfarenhet av testdriven utveckling, testautomatisering och/eller Continious Integration/Continious Delivery (CI/CD). \nDet är också önskvärt med relevant kunskap om molnarkitektur, Docker och Kubernetes/Openshift. Det är även meriterande om du har relevant erfarenhet av att ha arbetat på myndighet och/eller systemutveckling i en agil utvecklingsmiljö (SAFe).\n\nBra att veta\n\nAnställningen är tillsvidare och kan inledas med provanställning i sex månader.\n\nEn anställning hos oss kan innebära placering i säkerhetsklass. En säkerhetsprövning med registerkontroll enligt säkerhetsskyddslagen (2018:585) kan därför komma att genomföras före beslut om anställning. För en del av våra arbetsuppgifter i säkerhetsklass krävs svenskt medborgarskap.\n\nPå https://skatteverket.se/jobb kan du exempelvis läsa om vår samhällsbärande roll, fördelarna med att jobba hos oss och hur det går till när du söker våra jobb.\n\nNär du ansöker bifogar du ditt cv. Vi använder inte personligt brev i våra rekryteringar och du ska därför inte bifoga det i din ansökan.\n\nVälkommen med din ansökan!\n\nSkatteverket har en samhällsbärande roll. Vårt arbete berör alla privatpersoner och företag och genom vårt uppdrag bidrar vi till ett väl fungerande samhälle. Vår utveckling är kunddriven och vi samverkar med andra för att skapa effektiva lösningar. Tillsammans gör vi samhället möjligt.",
+      "company_information": null,
+      "needs": null,
+      "requirements": null,
+      "conditions": "100%. Tillträde: Enligt överenskommelse\r\nTillsvidareanställning"
+    },
+    "employment_type": {
+      "concept_id": "PFZr_Syz_cUq",
+      "label": "Vanlig anställning",
+      "legacy_ams_taxonomy_id": "1"
+    },
+    "salary_type": {
+      "concept_id": "oG8G_9cW_nRf",
+      "label": "Fast månads- vecko- eller timlön",
+      "legacy_ams_taxonomy_id": "1"
+    },
+    "salary_description": "Individuell lönesättning",
+    "duration": {
+      "concept_id": "a7uU_j21_mkL",
+      "label": "Tills vidare",
+      "legacy_ams_taxonomy_id": "1"
+    },
+    "working_hours_type": {
+      "concept_id": "6YE1_gAC_R2G",
+      "label": "Heltid",
+      "legacy_ams_taxonomy_id": "1"
+    },
+    "scope_of_work": {
+      "min": 100,
+      "max": 100
+    },
+    "access": null,
+    "employer": {
+      "phone_number": null,
+      "email": null,
+      "url": null,
+      "organization_number": "2021005448",
+      "name": "Skatteverket",
+      "workplace": "Skatteverket"
+    },
+    "application_details": {
+      "information": null,
+      "reference": "2025/715",
+      "email": null,
+      "via_af": false,
+      "url": "https://skatteverket.varbi.com/what:job/jobID:854737/type:job/where:1/apply:1",
+      "other": null
+    },
+    "experience_required": true,
+    "access_to_own_car": false,
+    "driving_license_required": false,
+    "driving_license": null,
+    "occupation": {
+      "concept_id": "7wdX_4rv_33z",
+      "label": "Backend-utvecklare",
+      "legacy_ams_taxonomy_id": "7632"
+    },
+    "occupation_group": {
+      "concept_id": "DJh5_yyF_hEM",
+      "label": "Mjukvaru- och systemutvecklare m.fl.",
+      "legacy_ams_taxonomy_id": "2512"
+    },
+    "occupation_field": {
+      "concept_id": "apaJ_2ja_LuF",
+      "label": "Data/IT",
+      "legacy_ams_taxonomy_id": "3"
+    },
+    "workplace_address": {
+      "municipality": "Sundbyberg",
+      "municipality_code": "0183",
+      "municipality_concept_id": "UTJZ_zHH_mJm",
+      "region": "Stockholms län",
+      "region_code": "01",
+      "region_concept_id": "CifL_Rzy_Mku",
+      "country": "Sverige",
+      "country_code": "199",
+      "country_concept_id": "i46j_HmG_v64",
+      "street_address": null,
+      "postcode": null,
+      "city": null,
+      "coordinates": [
+        17.966309,
+        59.367046
+      ]
+    },
+    "must_have": {
+      "skills": [],
+      "languages": [],
+      "work_experiences": [
+        {
+          "concept_id": "7wdX_4rv_33z",
+          "label": "Backend-utvecklare",
+          "legacy_ams_taxonomy_id": "7632",
+          "weight": 10
+        }
+      ],
+      "education": [],
+      "education_level": []
+    },
+    "nice_to_have": {
+      "skills": [],
+      "languages": [],
+      "work_experiences": [],
+      "education": [],
+      "education_level": []
+    },
+    "application_contacts": [
+      {
+        "name": null,
+        "description": "Jörgen Krüger, sektionschef",
+        "email": null,
+        "telephone": "jorgen.kruger@skatteverket.se",
+        "contact_type": null
+      },
+      {
+        "name": null,
+        "description": "Caroline Jänsby, hr-specialist",
+        "email": null,
+        "telephone": "caroline.jansby@skatteverket.se",
+        "contact_type": null
+      },
+      {
+        "name": null,
+        "description": "Asal Wennergren, hr-specialist",
+        "email": null,
+        "telephone": "asal.wennergren@skatteverket.se",
+        "contact_type": null
+      }
+    ],
+    "publication_date": "2025-09-30T11:20:41",
+    "last_publication_date": "2025-10-10T23:59:59",
+    "removed": false,
+    "removed_date": null,
+    "source_type": "VIA_PLATSBANKEN_DXA",
+    "timestamp": 1759224041608,
+    "relevance": 0.9435422240821061
+  }
+]

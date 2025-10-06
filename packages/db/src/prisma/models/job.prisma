@@ -1,0 +1,211 @@
+enum JobSource {
+  PLATSBANKEN
+  LINKEDIN
+  INDEED
+  STEPSTONE
+  GLASSDOOR
+}
+
+enum JobStatus {
+  ACTIVE
+  EXPIRED
+  REMOVED
+  FILLED
+}
+
+enum EmploymentType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  TEMPORARY
+  INTERNSHIP
+  VOLUNTEER
+}
+
+enum WorkArrangement {
+  ON_SITE
+  REMOTE
+  HYBRID
+}
+
+enum ExperienceLevel {
+  ENTRY
+  MID
+  SENIOR
+  LEAD
+  EXECUTIVE
+}
+
+model Job {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  status      JobStatus @default(ACTIVE)
+  publishedAt DateTime
+  expiresAt   DateTime?
+  removedAt   DateTime?
+  lastChecked DateTime?
+
+  title       String
+  description String    @db.Text
+  url         String?
+
+  companyId String?
+  company   Company? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+
+  employmentType   EmploymentType?
+  workArrangement  WorkArrangement?
+  experienceLevel  ExperienceLevel?
+
+  vacancies  Int?
+  startDate  DateTime?
+  duration   String?
+  workloadMin Float?
+  workloadMax Float?
+
+  salaryMin         Float?
+  salaryMax         Float?
+  salaryCurrency    String?
+  salaryPeriod      String?
+  salaryType        String?
+  salaryDescription String?
+
+  applicationDeadline      DateTime?
+  applicationInstructions  String?   @db.Text
+
+  streetAddress String?
+  city          String?
+  region        String?
+  postalCode    String?
+  country       String    @default("SE")
+  countryName   String?
+  locationFormatted String?
+  coordinates   Unsupported("geography(Point, 4326)")?
+
+  searchText      String? @db.Text
+  relevanceVector Unsupported("vector(1536)")?
+
+  sources            JobSourceLink[]
+  categories         JobCategory[]
+  skills             JobSkill[]
+  requirements       JobRequirement[]
+  applicationMethods JobApplicationMethod[]
+  contacts           JobContact[]
+
+  @@index([status, publishedAt])
+  @@index([companyId])
+  @@index([employmentType])
+  @@index([workArrangement])
+  @@index([city])
+  @@index([region])
+  @@index([country])
+  @@map("job")
+}
+
+model JobSourceLink {
+  id           String    @id @default(cuid())
+  jobId        String    @map("job_id")
+  job          Job       @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  source       JobSource
+  sourceId     String    @map("source_id")
+  sourceUrl    String?   @map("source_url")
+  discoveredAt DateTime  @default(now()) @map("discovered_at")
+
+  @@unique([source, sourceId])
+  @@index([jobId])
+  @@map("job_source_link")
+}
+
+model Company {
+  id                 String  @id @default(cuid())
+  name               String
+  organizationNumber String? @unique @map("organization_number")
+  website            String?
+  logo               String?
+  description        String? @db.Text
+  industry           String?
+  size               String?
+  contactPhone       String? @map("contact_phone")
+  contactEmail       String? @map("contact_email")
+
+  jobs Job[]
+
+  @@index([name])
+  @@map("company")
+}
+
+model JobCategory {
+  id         String    @id @default(cuid())
+  jobId      String    @map("job_id")
+  job        Job       @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  source     JobSource
+  categoryId String?   @map("category_id")
+  label      String
+  type       String
+  weight     Float?
+
+  @@index([jobId])
+  @@index([source, type, label])
+  @@map("job_category")
+}
+
+model JobSkill {
+  id          String    @id @default(cuid())
+  jobId       String    @map("job_id")
+  job         Job       @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  name        String
+  required    Boolean   @default(false)
+  proficiency String?
+  weight      Float?
+  source      JobSource
+
+  @@index([jobId])
+  @@index([name])
+  @@map("job_skill")
+}
+
+model JobRequirement {
+  id          String    @id @default(cuid())
+  jobId       String    @map("job_id")
+  job         Job       @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  type        String
+  value       String
+  required    Boolean   @default(false)
+  description String?   @db.Text
+
+  @@index([jobId])
+  @@map("job_requirement")
+}
+
+model JobApplicationMethod {
+  id     String @id @default(cuid())
+  jobId  String @map("job_id")
+  job    Job    @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  type   String
+  value  String
+  label  String?
+
+  @@index([jobId])
+  @@map("job_application_method")
+}
+
+model JobContact {
+  id          String  @id @default(cuid())
+  jobId       String  @map("job_id")
+  job         Job     @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  name        String?
+  role        String?
+  email       String?
+  phone       String?
+  description String? @db.Text
+
+  @@index([jobId])
+  @@map("job_contact")
+}

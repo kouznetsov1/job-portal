@@ -10,29 +10,23 @@ const WebSocketRoute = RpcServer.layerHttpRouter({
   group: Rpcs,
   path: "/",
   protocol: "websocket",
-}).pipe(
-  Layer.provide(RpcHandlers),
-  Layer.provide(RpcSerialization.layerJson)
-);
+}).pipe(Layer.provide(RpcHandlers), Layer.provide(RpcSerialization.layerJson));
 
 // HTTP protocol for cacheable requests (http://localhost:9090/)
 const HttpRoute = RpcServer.layerHttpRouter({
   group: Rpcs,
   path: "/",
   protocol: "http",
-}).pipe(
-  Layer.provide(RpcHandlers),
-  Layer.provide(RpcSerialization.layerJson)
-);
+}).pipe(Layer.provide(RpcHandlers), Layer.provide(RpcSerialization.layerJson));
 
 // Combine routes and add CORS middleware
 const Routes = Layer.mergeAll(WebSocketRoute, HttpRoute).pipe(
-  Layer.provide(HttpLayerRouter.cors())
+  Layer.provide(HttpLayerRouter.cors()),
 );
 
 // Serve the routes
 const Main = HttpLayerRouter.serve(Routes).pipe(
-  Layer.provide(BunHttpServer.layer({ port: 9090 }))
+  Layer.provide(BunHttpServer.layer({ port: 9090 })),
 );
 
 BunRuntime.runMain(Layer.launch(Main));

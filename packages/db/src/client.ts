@@ -1,12 +1,8 @@
 import { PrismaPg } from "@prisma/adapter-pg";
 import type { PrismaPromise } from "./generated/prisma/internal/prismaNamespace";
 import { PrismaClient } from "./generated/prisma/client";
-import { Config, ConfigProvider, Data, Effect, Layer } from "effect";
-
-export class DatabaseError extends Data.TaggedError("DatabaseError")<{
-  message: string;
-  cause?: unknown;
-}> {}
+import { Config, ConfigProvider, Effect, Layer } from "effect";
+import { DatabaseError } from "@repo/domain";
 
 export class Database extends Effect.Service<Database>()("Database", {
   effect: Effect.gen(function* () {
