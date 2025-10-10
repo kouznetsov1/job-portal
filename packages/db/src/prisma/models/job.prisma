@@ -6,100 +6,89 @@ enum JobSource {
   GLASSDOOR
 }
 
-enum JobStatus {
-  ACTIVE
-  EXPIRED
-  REMOVED
-  FILLED
-}
-
-enum EmploymentType {
-  FULL_TIME
-  PART_TIME
-  CONTRACT
-  TEMPORARY
-  INTERNSHIP
-  VOLUNTEER
-}
-
-enum WorkArrangement {
-  ON_SITE
-  REMOTE
-  HYBRID
-}
-
-enum ExperienceLevel {
-  ENTRY
-  MID
-  SENIOR
-  LEAD
-  EXECUTIVE
-}
-
 model Job {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  status      JobStatus @default(ACTIVE)
-  publishedAt DateTime
-  expiresAt   DateTime?
-  removedAt   DateTime?
-  lastChecked DateTime?
+  removed               Boolean   @default(false)
+  removedAt             DateTime?
+  publishedAt           DateTime
+  lastPublicationDate   DateTime?  @map("last_publication_date")
+  expiresAt             DateTime?
+  lastChecked           DateTime?
 
   title       String
-  description String    @db.Text
+  description String @db.Text
   url         String?
 
   companyId String?
-  company   Company? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  company   Company? @relation(fields: [companyId], references: [id])
 
-  employmentType   EmploymentType?
-  workArrangement  WorkArrangement?
-  experienceLevel  ExperienceLevel?
+  employmentType    String?  @map("employment_type")
+  workingHoursType  String?  @map("working_hours_type")
+  duration          String?
 
-  vacancies  Int?
-  startDate  DateTime?
-  duration   String?
-  workloadMin Float?
-  workloadMax Float?
+  vacancies   Int?
+  startDate   DateTime?  @map("start_date")
+  workloadMin Float?     @map("workload_min")
+  workloadMax Float?     @map("workload_max")
 
   salaryMin         Float?
   salaryMax         Float?
-  salaryCurrency    String?
-  salaryPeriod      String?
-  salaryType        String?
-  salaryDescription String?
+  salaryCurrency    String?  @map("salary_currency")
+  salaryPeriod      String?  @map("salary_period")
+  salaryType        String?  @map("salary_type")
+  salaryDescription String?  @map("salary_description")
 
-  applicationDeadline      DateTime?
-  applicationInstructions  String?   @db.Text
+  occupation      String? @map("occupation")
+  occupationGroup String? @map("occupation_group")
+  occupationField String? @map("occupation_field")
 
-  streetAddress String?
-  city          String?
-  region        String?
-  postalCode    String?
-  country       String    @default("SE")
-  countryName   String?
-  locationFormatted String?
-  coordinates   Unsupported("geography(Point, 4326)")?
+  experienceRequired     Boolean @default(false) @map("experience_required")
+  drivingLicenseRequired Boolean @default(false) @map("driving_license_required")
+  accessToOwnCar         Boolean @default(false) @map("access_to_own_car")
 
-  searchText      String? @db.Text
-  relevanceVector Unsupported("vector(1536)")?
+  applicationDeadline     DateTime? @map("application_deadline")
+  applicationInstructions String?   @db.Text @map("application_instructions")
+  applicationUrl          String?   @map("application_url")
+  applicationEmail        String?   @map("application_email")
+  applicationReference    String?   @map("application_reference")
+  applicationViaAf        Boolean   @default(false) @map("application_via_af")
+  applicationOther        String?   @map("application_other")
 
-  sources            JobSourceLink[]
-  categories         JobCategory[]
-  skills             JobSkill[]
-  requirements       JobRequirement[]
-  applicationMethods JobApplicationMethod[]
-  contacts           JobContact[]
+  workplace         String?
+  remote            Boolean  @default(false)
+  streetAddress     String?  @map("street_address")
+  city              String?
+  municipality      String?
+  municipalityCode  String?  @map("municipality_code")
+  region            String?
+  regionCode        String?  @map("region_code")
+  postalCode        String?  @map("postal_code")
+  country           String   @default("SE")
+  countryCode       String?  @map("country_code")
+  locationFormatted String?  @map("location_formatted")
+  coordinates       Unsupported("geometry(Point, 4326)")?
 
-  @@index([status, publishedAt])
+  searchText      String?                      @db.Text @map("search_text")
+  relevanceVector Unsupported("vector(1536)")? @map("relevance_vector")
+
+  sources      JobSourceLink[]
+  requirements JobRequirement[]
+  contacts     JobContact[]
+
+  @@index([removed, publishedAt])
   @@index([companyId])
   @@index([employmentType])
-  @@index([workArrangement])
+  @@index([remote])
   @@index([city])
+  @@index([municipality])
   @@index([region])
   @@index([country])
+  @@index([occupation])
+  @@index([occupationGroup])
+  @@index([occupationField])
   @@map("job")
 }
 
@@ -119,80 +108,44 @@ model JobSourceLink {
 }
 
 model Company {
-  id                 String  @id @default(cuid())
+  id                 String   @id @default(cuid())
   name               String
-  organizationNumber String? @unique @map("organization_number")
+  organizationNumber String?  @unique @map("organization_number")
   website            String?
   logo               String?
-  description        String? @db.Text
+  description        String?  @db.Text
   industry           String?
   size               String?
-  contactPhone       String? @map("contact_phone")
-  contactEmail       String? @map("contact_email")
+  contactPhone       String?  @map("contact_phone")
+  contactEmail       String?  @map("contact_email")
 
   jobs Job[]
 
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
   @@index([name])
+  @@index([organizationNumber])
   @@map("company")
 }
 
-model JobCategory {
-  id         String    @id @default(cuid())
-  jobId      String    @map("job_id")
-  job        Job       @relation(fields: [jobId], references: [id], onDelete: Cascade)
-
-  source     JobSource
-  categoryId String?   @map("category_id")
-  label      String
-  type       String
-  weight     Float?
-
-  @@index([jobId])
-  @@index([source, type, label])
-  @@map("job_category")
-}
-
-model JobSkill {
-  id          String    @id @default(cuid())
-  jobId       String    @map("job_id")
-  job         Job       @relation(fields: [jobId], references: [id], onDelete: Cascade)
-
-  name        String
-  required    Boolean   @default(false)
-  proficiency String?
-  weight      Float?
-  source      JobSource
-
-  @@index([jobId])
-  @@index([name])
-  @@map("job_skill")
-}
-
 model JobRequirement {
-  id          String    @id @default(cuid())
-  jobId       String    @map("job_id")
-  job         Job       @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  id String @id @default(cuid())
 
-  type        String
-  value       String
-  required    Boolean   @default(false)
-  description String?   @db.Text
+  job   Job    @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  jobId String @map("job_id")
+
+  requirementType String @map("requirement_type")
+  category        String
+
+  label  String
+  weight Int?
 
   @@index([jobId])
+  @@index([category])
+  @@index([requirementType])
+  @@index([label])
   @@map("job_requirement")
-}
-
-model JobApplicationMethod {
-  id     String @id @default(cuid())
-  jobId  String @map("job_id")
-  job    Job    @relation(fields: [jobId], references: [id], onDelete: Cascade)
-
-  type   String
-  value  String
-  label  String?
-
-  @@index([jobId])
-  @@map("job_application_method")
 }
 
 model JobContact {
