@@ -11,35 +11,35 @@ model Job {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  removed               Boolean   @default(false)
-  removedAt             DateTime?
-  publishedAt           DateTime
-  lastPublicationDate   DateTime?  @map("last_publication_date")
-  expiresAt             DateTime?
-  lastChecked           DateTime?
+  removed             Boolean   @default(false)
+  removedAt           DateTime? @map("removed_at")
+  publishedAt         DateTime  @map("published_at")
+  lastPublicationDate DateTime? @map("last_publication_date")
+  expiresAt           DateTime? @map("expires_at")
+  lastChecked         DateTime? @map("last_checked")
 
   title       String
-  description String @db.Text
+  description String  @db.Text
   url         String?
 
-  companyId String?
+  companyId String?  @map("company_id")
   company   Company? @relation(fields: [companyId], references: [id])
 
-  employmentType    String?  @map("employment_type")
-  workingHoursType  String?  @map("working_hours_type")
-  duration          String?
+  employmentType   String? @map("employment_type")
+  workingHoursType String? @map("working_hours_type")
+  duration         String?
 
   vacancies   Int?
-  startDate   DateTime?  @map("start_date")
-  workloadMin Float?     @map("workload_min")
-  workloadMax Float?     @map("workload_max")
+  startDate   DateTime? @map("start_date")
+  workloadMin Float?    @map("workload_min")
+  workloadMax Float?    @map("workload_max")
 
-  salaryMin         Float?
-  salaryMax         Float?
-  salaryCurrency    String?  @map("salary_currency")
-  salaryPeriod      String?  @map("salary_period")
-  salaryType        String?  @map("salary_type")
-  salaryDescription String?  @map("salary_description")
+  salaryMin         Float?  @map("salary_min")
+  salaryMax         Float?  @map("salary_max")
+  salaryCurrency    String? @map("salary_currency")
+  salaryPeriod      String? @map("salary_period")
+  salaryType        String? @map("salary_type")
+  salaryDescription String? @map("salary_description")
 
   occupation      String? @map("occupation")
   occupationGroup String? @map("occupation_group")
@@ -50,7 +50,7 @@ model Job {
   accessToOwnCar         Boolean @default(false) @map("access_to_own_car")
 
   applicationDeadline     DateTime? @map("application_deadline")
-  applicationInstructions String?   @db.Text @map("application_instructions")
+  applicationInstructions String?   @map("application_instructions") @db.Text
   applicationUrl          String?   @map("application_url")
   applicationEmail        String?   @map("application_email")
   applicationReference    String?   @map("application_reference")
@@ -58,20 +58,20 @@ model Job {
   applicationOther        String?   @map("application_other")
 
   workplace         String?
-  remote            Boolean  @default(false)
-  streetAddress     String?  @map("street_address")
+  remote            Boolean                               @default(false)
+  streetAddress     String?                               @map("street_address")
   city              String?
   municipality      String?
-  municipalityCode  String?  @map("municipality_code")
+  municipalityCode  String?                               @map("municipality_code")
   region            String?
-  regionCode        String?  @map("region_code")
-  postalCode        String?  @map("postal_code")
-  country           String   @default("SE")
-  countryCode       String?  @map("country_code")
-  locationFormatted String?  @map("location_formatted")
+  regionCode        String?                               @map("region_code")
+  postalCode        String?                               @map("postal_code")
+  country           String                                @default("SE")
+  countryCode       String?                               @map("country_code")
+  locationFormatted String?                               @map("location_formatted")
   coordinates       Unsupported("geometry(Point, 4326)")?
 
-  searchText      String?                      @db.Text @map("search_text")
+  searchText      String?                      @map("search_text") @db.Text
   relevanceVector Unsupported("vector(1536)")? @map("relevance_vector")
 
   sources      JobSourceLink[]
@@ -93,9 +93,9 @@ model Job {
 }
 
 model JobSourceLink {
-  id           String    @id @default(cuid())
-  jobId        String    @map("job_id")
-  job          Job       @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  id    String @id @default(cuid())
+  jobId String @map("job_id")
+  job   Job    @relation(fields: [jobId], references: [id], onDelete: Cascade)
 
   source       JobSource
   sourceId     String    @map("source_id")
@@ -108,16 +108,16 @@ model JobSourceLink {
 }
 
 model Company {
-  id                 String   @id @default(cuid())
+  id                 String  @id @default(cuid())
   name               String
-  organizationNumber String?  @unique @map("organization_number")
+  organizationNumber String? @unique @map("organization_number")
   website            String?
   logo               String?
-  description        String?  @db.Text
+  description        String? @db.Text
   industry           String?
   size               String?
-  contactPhone       String?  @map("contact_phone")
-  contactEmail       String?  @map("contact_email")
+  contactPhone       String? @map("contact_phone")
+  contactEmail       String? @map("contact_email")
 
   jobs Job[]
 
@@ -149,9 +149,9 @@ model JobRequirement {
 }
 
 model JobContact {
-  id          String  @id @default(cuid())
-  jobId       String  @map("job_id")
-  job         Job     @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  id    String @id @default(cuid())
+  jobId String @map("job_id")
+  job   Job    @relation(fields: [jobId], references: [id], onDelete: Cascade)
 
   name        String?
   role        String?

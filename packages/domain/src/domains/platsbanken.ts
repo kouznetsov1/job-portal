@@ -3,6 +3,7 @@ import { Schema } from "effect";
 export const PlatsbankenSearchInput = Schema.Struct({
   q: Schema.optional(Schema.String),
   limit: Schema.optional(Schema.Number),
+  offset: Schema.optional(Schema.Number),
 });
 
 export const JobTechTaxonomyItem = Schema.Struct({
@@ -98,7 +99,12 @@ export const JobAd = Schema.Struct({
   id: Schema.String,
   external_id: Schema.optional(Schema.NullOr(Schema.String)),
   original_id: Schema.optional(Schema.NullOr(Schema.String)),
-  label: Schema.optional(Schema.NullOr(Schema.String)),
+  label: Schema.optional(
+    Schema.Union(
+      Schema.NullOr(Schema.String),
+      Schema.Array(Schema.Unknown).pipe(Schema.transform(Schema.Undefined, { decode: () => undefined, encode: () => [] }))
+    )
+  ),
   webpage_url: Schema.optional(Schema.Unknown),
   logo_url: Schema.optional(Schema.NullOr(Schema.String)),
   headline: Schema.optional(Schema.NullOr(Schema.String)),
