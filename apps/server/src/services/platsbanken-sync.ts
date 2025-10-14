@@ -12,7 +12,7 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
         fetchAndTransformJobs: (query?: string) =>
           Effect.gen(function* () {
             yield* Console.log(
-              `Hämtar jobb från Platsbanken${query ? ` för: ${query}` : ""}...`,
+              `Fetching jobs from Platsbanken${query ? ` for: ${query}` : ""}...`,
             );
 
             const results = yield* jobAdsService.search({
@@ -21,7 +21,7 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
             });
 
             yield* Console.log(
-              `Hittade ${results.total.value} jobb, transformerar ${results.hits.length}...`,
+              `Found ${results.total.value} jobs, transforming ${results.hits.length}...`,
             );
 
             const transformed = yield* Effect.all(

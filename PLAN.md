@@ -1,9 +1,9 @@
 # Plan
 
-## Tomorrow (2025-10-14)
+## Tomorrow (2025-10-15)
 
-1. Fix remaining schema validation errors (fields returning empty arrays instead of null/string)
-2. Implement data transformation from Platsbanken API format to our database models
-3. Save jobs to database with proper upsert logic for Company and JobSourceLink
-4. Add date range filtering (published_after parameter) to fetch only new jobs since last sync
-5. Set up scheduled job to run sync periodically
+1. Clean up test files and remove temporary/unused scripts
+2. Refactor and clean up any messy code or "AI slop"
+3. Implement hourly job sync using stream() endpoint with proper date tracking
+4. Set up scheduled job runner for automatic hourly updates
+5. Implement database upsert logic for incremental job updates

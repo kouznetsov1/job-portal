@@ -116,8 +116,6 @@ model Company {
   description        String? @db.Text
   industry           String?
   size               String?
-  contactPhone       String? @map("contact_phone")
-  contactEmail       String? @map("contact_email")
 
   jobs Job[]
 

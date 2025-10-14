@@ -100,10 +100,25 @@ export const JobAd = Schema.Struct({
   external_id: Schema.optional(Schema.NullOr(Schema.String)),
   original_id: Schema.optional(Schema.NullOr(Schema.String)),
   label: Schema.optional(
-    Schema.Union(
-      Schema.NullOr(Schema.String),
-      Schema.Array(Schema.Unknown).pipe(Schema.transform(Schema.Undefined, { decode: () => undefined, encode: () => [] }))
-    )
+    Schema.NullOr(
+      Schema.Union(
+        Schema.Array(Schema.String),
+        Schema.transform(Schema.String, Schema.Array(Schema.String), {
+          decode: (str) => {
+            if (str === "[]") return [];
+            if (str.startsWith("[") && str.endsWith("]")) {
+              try {
+                return JSON.parse(str.replace(/'/g, '"'));
+              } catch {
+                return [];
+              }
+            }
+            return [];
+          },
+          encode: (arr) => JSON.stringify(arr),
+        }),
+      ),
+    ),
   ),
   webpage_url: Schema.optional(Schema.Unknown),
   logo_url: Schema.optional(Schema.NullOr(Schema.String)),
@@ -209,4 +224,7 @@ export const TypeaheadResults = Schema.Struct({
   time_in_millis: Schema.optional(Schema.NullOr(Schema.Number)),
   typeahead: Schema.optional(Schema.NullOr(Schema.Array(TypeaheadItem))),
 });
+
+// JobStream API schemas
+export const JobStreamResponse = Schema.Array(JobAd);
 

@@ -1,5 +1,9 @@
 # Development Log
 
+## 2025-10-14
+
+Migrated from Platsbanken JobSearch API to JobStream API, implementing snapshot() for full data fetches and stream() for incremental date-based updates with occupation/location filtering, improved error handling with Effect.retry predicates, and fixed label field schema parsing.
+
 ## 2025-10-13
 
 Implemented pagination with Stream.paginateChunkEffect and rate limit handling using catchTag, fetched 2100 jobs before hitting schema validation errors.

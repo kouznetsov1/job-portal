@@ -41,3 +41,6 @@ yarn-error.log*
 tsconfig.tsbuildinfo
 
 plan.md
+
+# Large snapshot files
+platsbanken-snapshot-*.json
