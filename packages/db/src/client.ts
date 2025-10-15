@@ -25,7 +25,7 @@ export class Database extends Effect.Service<Database>()("Database", {
     return {
       client,
       use,
-    } as const;
+    };
   }),
 }) {
   static readonly Live = Database.Default.pipe(

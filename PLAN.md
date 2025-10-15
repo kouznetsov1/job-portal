@@ -1,9 +1,8 @@
 # Plan
 
-## Tomorrow (2025-10-15)
+## Tomorrow (2025-10-16)
 
-1. Clean up test files and remove temporary/unused scripts
-2. Refactor and clean up any messy code or "AI slop"
-3. Implement hourly job sync using stream() endpoint with proper date tracking
-4. Set up scheduled job runner for automatic hourly updates
-5. Implement database upsert logic for incremental job updates
+1. Test and verify the Effect Cron scheduler is working correctly
+2. Refactor scheduler out of main server file into a dedicated module
+3. Design and implement RPC endpoints for the new job structure
+4. Create RPC handlers for job queries (search, getById, filters)

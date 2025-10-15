@@ -3,7 +3,7 @@ import { Console, Data, DateTime, Duration, Effect, Schema } from "effect";
 import { JobStreamResponse } from "@repo/domain";
 import { HttpClientResponse } from "@effect/platform/HttpClientResponse";
 
-class RateLimitError extends Data.TaggedError("RateLimitError")<{
+export class RateLimitError extends Data.TaggedError("RateLimitError")<{
   readonly retryAfterSeconds: number;
 }> {
   override get message(): string {

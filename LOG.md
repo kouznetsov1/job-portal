@@ -1,5 +1,9 @@
 # Development Log
 
+## 2025-10-15
+
+Built consolidated PlatsbankenSyncService with hourly Effect Cron scheduler, smart removal handling for deleted jobs, reliable timestamp tracking via lastChecked field, refactored all Prisma calls to db.use pattern for consistent error handling, cleaned up test files, and fixed TypeScript errors by exporting RateLimitError.
+
 ## 2025-10-14
 
 Migrated from Platsbanken JobSearch API to JobStream API, implementing snapshot() for full data fetches and stream() for incremental date-based updates with occupation/location filtering, improved error handling with Effect.retry predicates, and fixed label field schema parsing.
