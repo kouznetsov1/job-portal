@@ -7,17 +7,18 @@ import { cn } from "@repo/ui/lib/utils";
 
 export interface JobCardData {
   id: string;
-  headline: string;
-  employer?: { name: string; logo_url?: string };
-  workplace_address?: {
-    municipality?: string;
-    region?: string;
-  };
-  employment_type?: { label: string };
-  application_deadline?: string;
-  description?: { text: string };
+  title: string;
+  company?: {
+    name: string;
+    logo?: string | null;
+  } | null;
+  municipality?: string | null;
+  region?: string | null;
+  employmentType?: string | null;
+  applicationDeadline?: string | null;
+  description?: string;
   relevance?: number;
-  publication_date?: string;
+  publishedAt?: string;
 }
 
 interface JobCardProps {
@@ -40,15 +41,15 @@ export function JobCard({
   const matchPercentage = job.relevance ? Math.round(job.relevance * 100) : null;
 
   const location = [
-    job.workplace_address?.municipality,
-    job.workplace_address?.region,
+    job.municipality,
+    job.region,
   ]
     .filter(Boolean)
     .join(", ");
 
-  const daysUntilDeadline = job.application_deadline
+  const daysUntilDeadline = job.applicationDeadline
     ? Math.ceil(
-        (new Date(job.application_deadline).getTime() - Date.now()) /
+        (new Date(job.applicationDeadline).getTime() - Date.now()) /
           (1000 * 60 * 60 * 24)
       )
     : null;
@@ -68,10 +69,10 @@ export function JobCard({
         <div className="flex items-start gap-3 flex-1 min-w-0">
           {/* Company Logo Placeholder */}
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md border border-border bg-muted">
-            {job.employer?.logo_url ? (
+            {job.company?.logo ? (
               <img
-                src={job.employer.logo_url}
-                alt={`${job.employer.name} logotyp`}
+                src={job.company.logo}
+                alt={`${job.company.name} logotyp`}
                 className="h-full w-full rounded-md object-contain"
               />
             ) : (
@@ -82,13 +83,13 @@ export function JobCard({
           <div className="flex-1 min-w-0">
             {/* Job Title */}
             <h3 className="text-lg font-semibold text-foreground line-clamp-2 mb-1">
-              {job.headline || "Ej angiven tjänst"}
+              {job.title || "Ej angiven tjänst"}
             </h3>
 
             {/* Company Name */}
-            {job.employer?.name && (
+            {job.company?.name && (
               <p className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors cursor-pointer">
-                {job.employer.name}
+                {job.company.name}
               </p>
             )}
           </div>
@@ -123,13 +124,13 @@ export function JobCard({
           </div>
         )}
 
-        {job.employment_type?.label && (
+        {job.employmentType && (
           <Badge variant="outline" className="bg-muted/50">
-            {job.employment_type.label}
+            {job.employmentType}
           </Badge>
         )}
 
-        {job.application_deadline && (
+        {job.applicationDeadline && (
           <div
             className={cn(
               "flex items-center gap-1.5 text-xs",
@@ -139,17 +140,20 @@ export function JobCard({
             <Calendar className="h-3.5 w-3.5" />
             <span>
               Ansök senast:{" "}
-              {new Date(job.application_deadline).toLocaleDateString("sv-SE")}
+              {new Date(job.applicationDeadline).toLocaleDateString("sv-SE")}
             </span>
           </div>
         )}
       </div>
 
       {/* Description Preview */}
-      {job.description?.text && (
-        <p className="mb-4 line-clamp-2 text-sm text-muted-foreground">
-          {job.description.text}
-        </p>
+      {job.description && (
+        <p
+          className="mb-4 line-clamp-2 text-sm text-muted-foreground"
+          dangerouslySetInnerHTML={{
+            __html: job.description.replace(/<[^>]*>/g, ' ').substring(0, 200)
+          }}
+        />
       )}
 
       {/* Action Buttons */}

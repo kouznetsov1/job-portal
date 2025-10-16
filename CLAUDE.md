@@ -356,6 +356,14 @@ Code is considered complete only when:
   - `effect-usage.md` - Core Effect patterns
   - `error-handling.md` - Structured error management patterns
 
+### Source Code References
+
+- `vendor/effect/` - Complete Effect-TS source repository (gitignored)
+  - Available for exploring implementation details, internal types, and advanced patterns
+  - When online docs are insufficient, explore the source code directly
+  - Main packages are in `vendor/effect/packages/` (effect, schema, platform, etc.)
+  - Update with: `cd vendor/effect && git pull`
+
 ## Development Patterns Reference
 
 The `.patterns/` directory contains comprehensive development patterns and best practices for the Effect library. **Always reference these patterns before implementing new functionality** to ensure consistency with established codebase conventions.

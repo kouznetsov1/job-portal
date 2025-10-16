@@ -1,5 +1,4 @@
 import { HealthRpcs } from "./domains/health";
-import { JobsRpcs } from "./domains/job";
-import { JobAdsRpcs } from "./domains/job-ads";
+import { JobsRpcs } from "./domains/jobs";
 
-export const Rpcs = HealthRpcs.merge(JobsRpcs).merge(JobAdsRpcs);
+export const Rpcs = HealthRpcs.merge(JobsRpcs);

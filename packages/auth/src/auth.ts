@@ -15,7 +15,7 @@ export class Auth extends Context.Tag("Auth")<
       const db = yield* Database;
 
       const config: BetterAuthOptions = {
-        database: prismaAdapter(db, {
+        database: prismaAdapter(db.client, {
           provider: "postgresql",
         }),
         emailAndPassword: {

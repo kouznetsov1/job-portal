@@ -54,8 +54,6 @@ export function LoginForm() {
             onChange: result.error.message || "Inloggning misslyckades",
           },
         }));
-      } else {
-        navigate({ to: "/" });
       }
     },
   });

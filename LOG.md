@@ -1,5 +1,9 @@
 # Development Log
 
+## 2025-10-16
+
+Consolidated job domains from jobads to unified jobs architecture with new JobService, extracted scheduler logic into dedicated module, updated UI components and RPC routing to match new flat job schema structure, and removed deprecated CV routes.
+
 ## 2025-10-15
 
 Built consolidated PlatsbankenSyncService with hourly Effect Cron scheduler, smart removal handling for deleted jobs, reliable timestamp tracking via lastChecked field, refactored all Prisma calls to db.use pattern for consistent error handling, cleaned up test files, and fixed TypeScript errors by exporting RateLimitError.

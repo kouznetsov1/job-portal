@@ -44,3 +44,6 @@ plan.md
 
 # Large snapshot files
 platsbanken-snapshot-*.json
+
+# Vendor - external source code for reference
+vendor/effect

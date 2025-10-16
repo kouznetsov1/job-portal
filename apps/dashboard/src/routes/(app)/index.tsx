@@ -34,19 +34,22 @@ function JobSearchPage() {
 
   const searchResults = useAtomValue(
     wsApi.query(
-      "jobads.search",
+      "jobs.search",
       {
-        q: submittedQuery || " ",
-        limit: 20,
-        sort: sortBy,
+        q: submittedQuery || undefined,
+        pageSize: 20,
+        page: 1,
         ...(filters.employmentTypes.length > 0 && {
-          "employment-type": filters.employmentTypes,
+          employmentType: filters.employmentTypes[0],
         }),
         ...(filters.remote && { remote: true }),
-        ...(filters.experienceRequired && { experience: true }),
+        ...(filters.experienceRequired && { experienceRequired: true }),
+        ...(filters.municipalities.length > 0 && {
+          municipality: filters.municipalities[0],
+        }),
       },
       {
-        reactivityKeys: [`jobads-search-${submittedQuery}-${sortBy}`],
+        reactivityKeys: [`jobs-search-${submittedQuery}-${sortBy}`],
       }
     )
   );
@@ -115,7 +118,7 @@ function JobSearchPage() {
               onViewModeChange={setViewMode}
               onFilterToggle={() => setFilterOpen(true)}
               {...(Result.match(searchResults, {
-                onSuccess: (data) => ({ resultsCount: data.value.total?.value ?? 0 }),
+                onSuccess: (data) => ({ resultsCount: data.value.total ?? 0 }),
                 onInitial: () => ({}),
                 onFailure: () => ({}),
               }))}
@@ -141,7 +144,7 @@ function JobSearchPage() {
                 ),
                 onSuccess: (data) => (
                   <div>
-                    {data.value.hits && data.value.hits.length > 0 ? (
+                    {data.value.jobs && data.value.jobs.length > 0 ? (
                       <div
                         className={cn(
                           viewMode === "list" && "space-y-4",
@@ -149,7 +152,7 @@ function JobSearchPage() {
                             "grid grid-cols-1 md:grid-cols-2 gap-4"
                         )}
                       >
-                        {data.value.hits.map((job) => (
+                        {data.value.jobs.map((job) => (
                           <JobCard
                             key={job.id}
                             job={job as JobCardData}
