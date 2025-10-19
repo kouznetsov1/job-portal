@@ -1,5 +1,9 @@
 # Development Log
 
+## 2025-10-19
+
+Updated dependencies across all packages and reorganized Prisma schema into separate domain-specific files (auth.prisma, cv.prisma, job.prisma, user.prisma) for better maintainability.
+
 ## 2025-10-16
 
 Consolidated job domains from jobads to unified jobs architecture with new JobService, extracted scheduler logic into dedicated module, updated UI components and RPC routing to match new flat job schema structure, and removed deprecated CV routes.
