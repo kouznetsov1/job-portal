@@ -6,13 +6,13 @@
   "scripts": {
     "build": "bun build src/index.ts --outdir=dist --target=bun --minify",
     "build:types": "tsc --emitDeclarationOnly",
-    "dev": "bun --watch run src/index.ts",
+    "dev": "bun --env-file=../../.env --watch run src/index.ts",
     "test": "vitest run",
     "type-check": "tsc --noEmit",
     "clean": "git clean -xdf .cache .turbo dist node_modules"
   },
   "dependencies": {
-    "@anthropic-ai/claude-agent-sdk": "^0.1.1",
+    "@anthropic-ai/claude-agent-sdk": "^0.1.22",
     "@effect/language-service": "catalog:",
     "@effect/platform": "catalog:",
     "@effect/platform-bun": "^0.80.0",

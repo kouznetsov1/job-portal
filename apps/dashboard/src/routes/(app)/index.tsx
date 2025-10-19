@@ -149,13 +149,13 @@ function JobSearchPage() {
                         className={cn(
                           viewMode === "list" && "space-y-4",
                           viewMode === "grid" &&
-                            "grid grid-cols-1 md:grid-cols-2 gap-4"
+                          "grid grid-cols-1 md:grid-cols-2 gap-4"
                         )}
                       >
                         {data.value.jobs.map((job) => (
                           <JobCard
                             key={job.id}
-                            job={job as JobCardData}
+                            job={job}
                             onSave={handleJobSave}
                             onHide={handleJobHide}
                             onApply={handleJobApply}

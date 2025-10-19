@@ -12,7 +12,8 @@
     "prismagenerate": "prisma generate",
     "studio": "prisma studio",
     "up": "docker compose up",
-    "push": "prisma db push"
+    "push": "prisma db push",
+    "deploy": "prisma migrate deploy"
   },
   "devDependencies": {
     "@repo/config-typescript": "workspace:*",

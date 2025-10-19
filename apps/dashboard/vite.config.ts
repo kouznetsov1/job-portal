@@ -19,8 +19,13 @@ export default defineConfig(({ mode }) => {
       },
     },
     ssr: {
-      noExternal: ["@repo/db", "@repo/auth", "@repo/ui"],
-      external: ["@prisma/client"],
+      noExternal: ["@repo/ui"],
+      external: ["@repo/db", "@repo/auth", "@prisma/client"],
+    },
+    build: {
+      rollupOptions: {
+        external: ["@repo/db", "@repo/auth", "@prisma/client"],
+      },
     },
     optimizeDeps: {
       exclude: ["@prisma/client"],
