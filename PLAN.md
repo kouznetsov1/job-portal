@@ -1,9 +1,8 @@
 # Plan
 
-## Tomorrow (2025-10-20)
+## Tomorrow (2025-10-22)
 
-1. Review and understand the RPC architecture and data flow
-2. Review and understand the current job sync flow end-to-end
-3. Identify any redundant services, integrations, or utilities based on learnings
-4. Clean up any temporary scripts or test files that are no longer needed
-5. Audit codebase for unused/dead code and remove it
+1. Review Effect RPC README documentation to understand correct patterns
+2. Audit and fix server index.ts file based on RPC best practices
+3. Ensure RPC setup follows Effect's recommended architecture
+4. Test the corrected server configuration

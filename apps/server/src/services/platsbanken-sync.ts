@@ -31,41 +31,37 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
 
         if (lastJob?.lastChecked) {
           const lastSyncDate = DateTime.unsafeFromDate(lastJob.lastChecked);
-          yield* Console.log(`Last sync: ${DateTime.formatIso(lastSyncDate)}`);
           return lastSyncDate;
         }
 
         const defaultStartDate = DateTime.unsafeNow().pipe(
           DateTime.subtractDuration(Duration.days(7)),
         );
-        yield* Console.log(
-          `No previous sync found, using 7 days ago: ${DateTime.formatIso(defaultStartDate)}`,
-        );
         return defaultStartDate;
       });
 
-      const upsertJob = (transformedJob: TransformedJob) =>
+      const upsertJob = (job: TransformedJob) =>
         Effect.gen(function* () {
           let company;
 
-          if (transformedJob.company.organizationNumber) {
+          if (job.company.organizationNumber) {
             company = yield* db.use((p) =>
               p.company.upsert({
                 where: {
-                  organizationNumber:
-                    transformedJob.company.organizationNumber!,
+                  organizationNumber: job.company.organizationNumber!,
                 },
                 update: {
-                  name: transformedJob.company.name,
-                  website: transformedJob.company.website,
-                  description: transformedJob.company.description,
+                  name: job.company.name,
+                  website: job.company.website,
+                  description: job.company.description,
+                  logo: job.company.logo,
                 },
                 create: {
-                  name: transformedJob.company.name,
-                  organizationNumber:
-                    transformedJob.company.organizationNumber,
-                  website: transformedJob.company.website,
-                  description: transformedJob.company.description,
+                  name: job.company.name,
+                  organizationNumber: job.company.organizationNumber,
+                  website: job.company.website,
+                  description: job.company.description,
+                  logo: job.company.logo,
                 },
               }),
             );
@@ -73,10 +69,11 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
             company = yield* db.use((p) =>
               p.company.create({
                 data: {
-                  name: transformedJob.company.name,
+                  name: job.company.name,
                   organizationNumber: null,
-                  website: transformedJob.company.website,
-                  description: transformedJob.company.description,
+                  website: job.company.website,
+                  description: job.company.description,
+                  logo: job.company.logo,
                 },
               }),
             );
@@ -89,23 +86,19 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
               where: {
                 source_sourceId: {
                   source: "PLATSBANKEN",
-                  sourceId: transformedJob.sourceId,
+                  sourceId: job.sourceId,
                 },
               },
               include: { job: true },
             }),
           );
 
-          const locationFormatted = [
-            transformedJob.city,
-            transformedJob.municipality,
-            transformedJob.region,
-          ]
+          const locationFormatted = [job.city, job.municipality, job.region]
             .filter(Boolean)
             .join(", ");
 
-          const coordinatesWKT = transformedJob.coordinates
-            ? `POINT(${transformedJob.coordinates[0]} ${transformedJob.coordinates[1]})`
+          const coordinatesWKT = job.coordinates
+            ? `POINT(${job.coordinates[0]} ${job.coordinates[1]})`
             : null;
 
           if (existingJobSource) {
@@ -113,59 +106,55 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
               p.job.update({
                 where: { id: existingJobSource.job.id },
                 data: {
-                  removed: transformedJob.removed,
-                  removedAt: transformedJob.removedAt,
-                  lastPublicationDate: transformedJob.lastPublicationDate,
+                  removed: job.removed,
+                  removedAt: job.removedAt,
+                  lastPublicationDate: job.lastPublicationDate,
                   lastChecked: new Date(),
 
-                  title: transformedJob.title,
-                  description: transformedJob.description,
-                  url: transformedJob.sourceUrl,
+                  title: job.title,
+                  description: job.description,
+                  url: job.sourceUrl,
                   companyId,
 
-                  employmentType: transformedJob.employmentType,
-                  workingHoursType: transformedJob.workingHoursType,
-                  duration: transformedJob.duration,
+                  employmentType: job.employmentType,
+                  workingHoursType: job.workingHoursType,
+                  duration: job.duration,
 
-                  vacancies: transformedJob.vacancies,
-                  startDate: transformedJob.startDate
-                    ? new Date(transformedJob.startDate)
-                    : null,
-                  workloadMin: transformedJob.workloadMin,
-                  workloadMax: transformedJob.workloadMax,
+                  vacancies: job.vacancies,
+                  startDate: job.startDate ? new Date(job.startDate) : null,
+                  workloadMin: job.workloadMin,
+                  workloadMax: job.workloadMax,
 
-                  salaryType: transformedJob.salaryType,
-                  salaryDescription: transformedJob.salaryDescription,
+                  salaryType: job.salaryType,
+                  salaryDescription: job.salaryDescription,
 
-                  occupation: transformedJob.occupation,
-                  occupationGroup: transformedJob.occupationGroup,
-                  occupationField: transformedJob.occupationField,
+                  occupation: job.occupation,
+                  occupationGroup: job.occupationGroup,
+                  occupationField: job.occupationField,
 
-                  experienceRequired: transformedJob.experienceRequired,
-                  drivingLicenseRequired:
-                    transformedJob.drivingLicenseRequired,
-                  accessToOwnCar: transformedJob.accessToOwnCar,
+                  experienceRequired: job.experienceRequired,
+                  drivingLicenseRequired: job.drivingLicenseRequired,
+                  accessToOwnCar: job.accessToOwnCar,
 
-                  applicationDeadline: transformedJob.applicationDeadline,
-                  applicationInstructions:
-                    transformedJob.applicationInstructions,
-                  applicationUrl: transformedJob.applicationUrl,
-                  applicationEmail: transformedJob.applicationEmail,
-                  applicationReference: transformedJob.applicationReference,
-                  applicationViaAf: transformedJob.applicationViaAf,
-                  applicationOther: transformedJob.applicationOther,
+                  applicationDeadline: job.applicationDeadline,
+                  applicationInstructions: job.applicationInstructions,
+                  applicationUrl: job.applicationUrl,
+                  applicationEmail: job.applicationEmail,
+                  applicationReference: job.applicationReference,
+                  applicationViaAf: job.applicationViaAf,
+                  applicationOther: job.applicationOther,
 
-                  workplace: transformedJob.workplace,
-                  remote: transformedJob.remote,
-                  streetAddress: transformedJob.streetAddress,
-                  city: transformedJob.city,
-                  municipality: transformedJob.municipality,
-                  municipalityCode: transformedJob.municipalityCode,
-                  region: transformedJob.region,
-                  regionCode: transformedJob.regionCode,
-                  postalCode: transformedJob.postalCode,
-                  country: transformedJob.country,
-                  countryCode: transformedJob.countryCode,
+                  workplace: job.workplace,
+                  remote: job.remote,
+                  streetAddress: job.streetAddress,
+                  city: job.city,
+                  municipality: job.municipality,
+                  municipalityCode: job.municipalityCode,
+                  region: job.region,
+                  regionCode: job.regionCode,
+                  postalCode: job.postalCode,
+                  country: job.country,
+                  countryCode: job.countryCode,
                   locationFormatted,
                 },
               }),
@@ -191,73 +180,99 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
               }),
             );
 
+            if (job.requirements.length > 0) {
+              yield* db.use((p) =>
+                p.jobRequirement.createMany({
+                  data: job.requirements.map((req) => ({
+                    jobId: updatedJob.id,
+                    requirementType: req.requirementType,
+                    category: req.category,
+                    label: req.label,
+                    weight: req.weight,
+                  })),
+                }),
+              );
+            }
+
+            if (job.contacts.length > 0) {
+              yield* db.use((p) =>
+                p.jobContact.createMany({
+                  data: job.contacts.map((contact) => ({
+                    jobId: updatedJob.id,
+                    name: contact.name,
+                    role: contact.role,
+                    email: contact.email,
+                    phone: contact.phone,
+                    description: contact.description,
+                  })),
+                }),
+              );
+            }
+
             return updatedJob;
           }
 
           const newJob = yield* db.use((p) =>
             p.job.create({
               data: {
-                publishedAt: transformedJob.publishedAt,
-                lastPublicationDate: transformedJob.lastPublicationDate,
-                expiresAt: transformedJob.expiresAt,
-                removed: transformedJob.removed,
-                removedAt: transformedJob.removedAt,
+                publishedAt: job.publishedAt,
+                lastPublicationDate: job.lastPublicationDate,
+                expiresAt: job.expiresAt,
+                removed: job.removed,
+                removedAt: job.removedAt,
                 lastChecked: new Date(),
 
-                title: transformedJob.title,
-                description: transformedJob.description,
-                url: transformedJob.sourceUrl,
+                title: job.title,
+                description: job.description,
+                url: job.sourceUrl,
                 companyId,
 
-                employmentType: transformedJob.employmentType,
-                workingHoursType: transformedJob.workingHoursType,
-                duration: transformedJob.duration,
+                employmentType: job.employmentType,
+                workingHoursType: job.workingHoursType,
+                duration: job.duration,
 
-                vacancies: transformedJob.vacancies,
-                startDate: transformedJob.startDate
-                  ? new Date(transformedJob.startDate)
-                  : null,
-                workloadMin: transformedJob.workloadMin,
-                workloadMax: transformedJob.workloadMax,
+                vacancies: job.vacancies,
+                startDate: job.startDate ? new Date(job.startDate) : null,
+                workloadMin: job.workloadMin,
+                workloadMax: job.workloadMax,
 
-                salaryType: transformedJob.salaryType,
-                salaryDescription: transformedJob.salaryDescription,
+                salaryType: job.salaryType,
+                salaryDescription: job.salaryDescription,
 
-                occupation: transformedJob.occupation,
-                occupationGroup: transformedJob.occupationGroup,
-                occupationField: transformedJob.occupationField,
+                occupation: job.occupation,
+                occupationGroup: job.occupationGroup,
+                occupationField: job.occupationField,
 
-                experienceRequired: transformedJob.experienceRequired,
-                drivingLicenseRequired: transformedJob.drivingLicenseRequired,
-                accessToOwnCar: transformedJob.accessToOwnCar,
+                experienceRequired: job.experienceRequired,
+                drivingLicenseRequired: job.drivingLicenseRequired,
+                accessToOwnCar: job.accessToOwnCar,
 
-                applicationDeadline: transformedJob.applicationDeadline,
-                applicationInstructions:
-                  transformedJob.applicationInstructions,
-                applicationUrl: transformedJob.applicationUrl,
-                applicationEmail: transformedJob.applicationEmail,
-                applicationReference: transformedJob.applicationReference,
-                applicationViaAf: transformedJob.applicationViaAf,
-                applicationOther: transformedJob.applicationOther,
+                applicationDeadline: job.applicationDeadline,
+                applicationInstructions: job.applicationInstructions,
+                applicationUrl: job.applicationUrl,
+                applicationEmail: job.applicationEmail,
+                applicationReference: job.applicationReference,
+                applicationViaAf: job.applicationViaAf,
+                applicationOther: job.applicationOther,
 
-                workplace: transformedJob.workplace,
-                remote: transformedJob.remote,
-                streetAddress: transformedJob.streetAddress,
-                city: transformedJob.city,
-                municipality: transformedJob.municipality,
-                municipalityCode: transformedJob.municipalityCode,
-                region: transformedJob.region,
-                regionCode: transformedJob.regionCode,
-                postalCode: transformedJob.postalCode,
-                country: transformedJob.country,
-                countryCode: transformedJob.countryCode,
+                workplace: job.workplace,
+                remote: job.remote,
+                streetAddress: job.streetAddress,
+                city: job.city,
+                municipality: job.municipality,
+                municipalityCode: job.municipalityCode,
+                region: job.region,
+                regionCode: job.regionCode,
+                postalCode: job.postalCode,
+                country: job.country,
+                countryCode: job.countryCode,
                 locationFormatted,
 
                 sources: {
                   create: {
                     source: "PLATSBANKEN",
-                    sourceId: transformedJob.sourceId,
-                    sourceUrl: transformedJob.sourceUrl,
+                    sourceId: job.sourceId,
+                    sourceUrl: job.sourceUrl,
                   },
                 },
               },
@@ -272,10 +287,10 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
             );
           }
 
-          if (transformedJob.requirements.length > 0) {
+          if (job.requirements.length > 0) {
             yield* db.use((p) =>
               p.jobRequirement.createMany({
-                data: transformedJob.requirements.map((req) => ({
+                data: job.requirements.map((req) => ({
                   jobId: newJob.id,
                   requirementType: req.requirementType,
                   category: req.category,
@@ -286,10 +301,10 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
             );
           }
 
-          if (transformedJob.contacts.length > 0) {
+          if (job.contacts.length > 0) {
             yield* db.use((p) =>
               p.jobContact.createMany({
-                data: transformedJob.contacts.map((contact) => ({
+                data: job.contacts.map((contact) => ({
                   jobId: newJob.id,
                   name: contact.name,
                   role: contact.role,
@@ -337,8 +352,6 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
         });
 
       const syncJobs = Effect.gen(function* () {
-        yield* Console.log("Starting hourly job sync from Platsbanken...");
-
         const lastSyncTime = yield* getLastSyncTime;
 
         const jobAds = yield* platsbankenService.stream({
@@ -346,16 +359,11 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
         });
 
         if (jobAds.length === 0) {
-          yield* Console.log("No new jobs to sync");
           return { imported: 0, removed: 0, failed: 0 };
         }
 
         const activeAds = jobAds.filter((ad) => !ad.removed);
         const removedAds = jobAds.filter((ad) => ad.removed);
-
-        yield* Console.log(
-          `Processing ${activeAds.length} active jobs and ${removedAds.length} removed jobs...`,
-        );
 
         let removedCount = 0;
         for (const removedAd of removedAds) {
@@ -371,16 +379,12 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
           }
         }
 
-        yield* Console.log(`Marked ${removedCount} jobs as removed`);
-
         if (activeAds.length === 0) {
           yield* Console.log("No active jobs to import");
           return { imported: 0, removed: removedCount, failed: 0 };
         }
 
-        yield* Console.log(`Transforming ${activeAds.length} active jobs...`);
-
-        const transformedJobs = [];
+        const jobs = [];
         let transformErrors = 0;
 
         for (const jobAd of activeAds) {
@@ -389,7 +393,7 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
           );
 
           if (result._tag === "Right") {
-            transformedJobs.push(result.right);
+            jobs.push(result.right);
           } else {
             transformErrors++;
             yield* Console.error(
@@ -398,12 +402,7 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
           }
         }
 
-        yield* Console.log(
-          `Transformed ${transformedJobs.length} jobs (${transformErrors} errors)`,
-        );
-
-        if (transformedJobs.length === 0) {
-          yield* Console.log("No jobs to import after transformation");
+        if (jobs.length === 0) {
           return {
             imported: 0,
             removed: removedCount,
@@ -411,23 +410,14 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
           };
         }
 
-        yield* Console.log(
-          `Importing ${transformedJobs.length} jobs to database...`,
-        );
-
         let successCount = 0;
         let errorCount = 0;
 
-        for (const job of transformedJobs) {
+        for (const job of jobs) {
           const result = yield* Effect.either(upsertJob(job));
 
           if (result._tag === "Right") {
             successCount++;
-            if (successCount % 100 === 0) {
-              yield* Console.log(
-                `Progress: ${successCount}/${transformedJobs.length} jobs imported`,
-              );
-            }
           } else {
             errorCount++;
             yield* Console.error(

@@ -227,4 +227,3 @@ export const TypeaheadResults = Schema.Struct({
 
 // JobStream API schemas
 export const JobStreamResponse = Schema.Array(JobAd);
-

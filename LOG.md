@@ -1,5 +1,9 @@
 # Development Log
 
+## 2025-10-21
+
+Refactored JobService to use Schema validation with proper tagged errors (JobSearchError, JobNotFoundError), updated PlatsbankenSyncService to handle company logos and improved job upsertion logic, and cleaned up Vite config by removing unnecessary SSR externals.
+
 ## 2025-10-19
 
 Updated dependencies across all packages and reorganized Prisma schema into separate domain-specific files (auth.prisma, cv.prisma, job.prisma, user.prisma) for better maintainability.

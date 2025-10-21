@@ -16,20 +16,12 @@ const parseCoordinates = (
   return [lon, lat];
 };
 
-const detectRemoteWork = (description: string): boolean => {
-  const lowerDesc = description.toLowerCase();
-  return (
-    lowerDesc.includes("distans") ||
-    lowerDesc.includes("remote") ||
-    lowerDesc.includes("hemarbete")
-  );
-};
-
 export const TransformedCompanySchema = Schema.Struct({
   name: Schema.String,
   organizationNumber: Schema.NullOr(Schema.String),
   website: Schema.NullOr(Schema.String),
   description: Schema.NullOr(Schema.String),
+  logo: Schema.NullOr(Schema.String),
 });
 
 export const TransformedRequirementSchema = Schema.Struct({
@@ -133,11 +125,12 @@ export const PlatsbankenJobTransform = Schema.transformOrFail(
           );
         }
 
-        const company = {
+        const company: typeof TransformedCompanySchema.Type = {
           name: employer.name || "Okänd arbetsgivare",
           organizationNumber: employer.organization_number ?? null,
           website: employer.url ?? null,
           description: jobAd.description?.company_information ?? null,
+          logo: jobAd.logo_url ?? null,
         };
 
         const extractRequirementsFromCategory = (
@@ -275,7 +268,7 @@ export const PlatsbankenJobTransform = Schema.transformOrFail(
           applicationOther: jobAd.application_details?.other ?? null,
 
           workplace: jobAd.employer?.workplace ?? null,
-          remote: detectRemoteWork(description),
+          remote: null,
           streetAddress: jobAd.workplace_address?.street_address ?? null,
           city: jobAd.workplace_address?.city ?? null,
           municipality: jobAd.workplace_address?.municipality ?? null,

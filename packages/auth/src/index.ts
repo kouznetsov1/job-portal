@@ -1,1 +1,2 @@
-export { Auth, AuthError, SessionNotFoundError } from "./auth";
+export { Auth } from "./auth";
+

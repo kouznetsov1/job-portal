@@ -18,17 +18,8 @@ export default defineConfig(({ mode }) => {
         "#": path.resolve(__dirname, "./src"),
       },
     },
-    ssr: {
-      noExternal: ["@repo/ui"],
-      external: ["@repo/db", "@repo/auth", "@prisma/client"],
-    },
-    build: {
-      rollupOptions: {
-        external: ["@repo/db", "@repo/auth", "@prisma/client"],
-      },
-    },
     optimizeDeps: {
-      exclude: ["@prisma/client"],
+      include: ["@repo/domain"],
     },
   };
 });

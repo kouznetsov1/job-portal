@@ -1,26 +1,39 @@
 import { Rpc, RpcGroup } from "@effect/rpc";
 import { Schema } from "effect";
 
-export const JobId = Schema.String.pipe(Schema.brand("JobId"));
-export type JobId = Schema.Schema.Type<typeof JobId>;
+export class JobNotFoundError extends Schema.TaggedError<JobNotFoundError>()(
+  "JobNotFoundError",
+  {
+    jobId: Schema.String,
+  },
+) {}
 
-export const CompanyId = Schema.String.pipe(Schema.brand("CompanyId"));
-export type CompanyId = Schema.Schema.Type<typeof CompanyId>;
+export class JobSearchError extends Schema.TaggedError<JobSearchError>()(
+  "JobSearchError",
+  {
+    message: Schema.String,
+  },
+) {}
 
-export const UserId = Schema.String.pipe(Schema.brand("UserId"));
-export type UserId = Schema.Schema.Type<typeof UserId>;
-
-export const JobRequirementId = Schema.String.pipe(Schema.brand("JobRequirementId"));
-export type JobRequirementId = Schema.Schema.Type<typeof JobRequirementId>;
-
-export const JobContactId = Schema.String.pipe(Schema.brand("JobContactId"));
-export type JobContactId = Schema.Schema.Type<typeof JobContactId>;
-
-export const JobSourceLinkId = Schema.String.pipe(Schema.brand("JobSourceLinkId"));
-export type JobSourceLinkId = Schema.Schema.Type<typeof JobSourceLinkId>;
+export const JobSearchParams = Schema.Struct({
+  q: Schema.optional(Schema.String),
+  occupation: Schema.optional(Schema.String),
+  occupationGroup: Schema.optional(Schema.String),
+  occupationField: Schema.optional(Schema.String),
+  city: Schema.optional(Schema.String),
+  municipality: Schema.optional(Schema.String),
+  region: Schema.optional(Schema.String),
+  employmentType: Schema.optional(Schema.String),
+  workingHoursType: Schema.optional(Schema.String),
+  remote: Schema.optional(Schema.Boolean),
+  experienceRequired: Schema.optional(Schema.Boolean),
+  page: Schema.optional(Schema.Number),
+  pageSize: Schema.optional(Schema.Number),
+});
+export type JobSearchParams = Schema.Schema.Type<typeof JobSearchParams>;
 
 export const Company = Schema.Struct({
-  id: CompanyId,
+  id: Schema.String,
   name: Schema.String,
   organizationNumber: Schema.NullOr(Schema.String),
   website: Schema.NullOr(Schema.String),
@@ -34,8 +47,8 @@ export const Company = Schema.Struct({
 export type Company = Schema.Schema.Type<typeof Company>;
 
 export const JobRequirement = Schema.Struct({
-  id: JobRequirementId,
-  jobId: JobId,
+  id: Schema.String,
+  jobId: Schema.String,
   requirementType: Schema.String,
   category: Schema.String,
   label: Schema.String,
@@ -44,8 +57,8 @@ export const JobRequirement = Schema.Struct({
 export type JobRequirement = Schema.Schema.Type<typeof JobRequirement>;
 
 export const JobContact = Schema.Struct({
-  id: JobContactId,
-  jobId: JobId,
+  id: Schema.String,
+  jobId: Schema.String,
   name: Schema.NullOr(Schema.String),
   role: Schema.NullOr(Schema.String),
   email: Schema.NullOr(Schema.String),
@@ -64,8 +77,8 @@ export const JobSource = Schema.Literal(
 export type JobSource = Schema.Schema.Type<typeof JobSource>;
 
 export const JobSourceLink = Schema.Struct({
-  id: JobSourceLinkId,
-  jobId: JobId,
+  id: Schema.String,
+  jobId: Schema.String,
   source: JobSource,
   sourceId: Schema.String,
   sourceUrl: Schema.NullOr(Schema.String),
@@ -74,7 +87,7 @@ export const JobSourceLink = Schema.Struct({
 export type JobSourceLink = Schema.Schema.Type<typeof JobSourceLink>;
 
 export const Job = Schema.Struct({
-  id: JobId,
+  id: Schema.String,
   createdAt: Schema.DateTimeUtc,
   updatedAt: Schema.DateTimeUtc,
 
@@ -89,7 +102,7 @@ export const Job = Schema.Struct({
   description: Schema.String,
   url: Schema.NullOr(Schema.String),
 
-  companyId: Schema.NullOr(CompanyId),
+  companyId: Schema.NullOr(Schema.String),
   company: Schema.NullOr(Company),
 
   employmentType: Schema.NullOr(Schema.String),
@@ -154,7 +167,7 @@ export type JobSearchResult = Schema.Schema.Type<typeof JobSearchResult>;
 export class JobsRpcs extends RpcGroup.make(
   Rpc.make("jobs.search", {
     success: JobSearchResult,
-    error: Schema.String,
+    error: JobSearchError,
     payload: {
       q: Schema.optional(Schema.String),
       occupation: Schema.optional(Schema.String),
@@ -175,9 +188,9 @@ export class JobsRpcs extends RpcGroup.make(
   }),
   Rpc.make("jobs.getById", {
     success: Job,
-    error: Schema.String,
+    error: Schema.Union(JobNotFoundError, JobSearchError),
     payload: {
-      id: JobId,
+      id: Schema.String,
     },
   }),
 ) {}
