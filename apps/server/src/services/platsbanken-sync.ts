@@ -114,7 +114,7 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
                   title: job.title,
                   description: job.description,
                   url: job.sourceUrl,
-                  companyId,
+                  companyId: companyId,
 
                   employmentType: job.employmentType,
                   workingHoursType: job.workingHoursType,
@@ -145,7 +145,7 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
                   applicationOther: job.applicationOther,
 
                   workplace: job.workplace,
-                  remote: job.remote,
+                  remote: job.remote ?? undefined,
                   streetAddress: job.streetAddress,
                   city: job.city,
                   municipality: job.municipality,
@@ -225,7 +225,7 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
                 title: job.title,
                 description: job.description,
                 url: job.sourceUrl,
-                companyId,
+                companyId: companyId,
 
                 employmentType: job.employmentType,
                 workingHoursType: job.workingHoursType,
@@ -256,7 +256,7 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
                 applicationOther: job.applicationOther,
 
                 workplace: job.workplace,
-                remote: job.remote,
+                remote: job.remote ?? undefined,
                 streetAddress: job.streetAddress,
                 city: job.city,
                 municipality: job.municipality,

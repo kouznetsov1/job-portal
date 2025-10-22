@@ -2,6 +2,7 @@ import { Effect, Schema } from "effect";
 import { Database, Prisma } from "@repo/db";
 import {
   Job,
+  JobSearchResult,
   JobSearchError,
   JobNotFoundError,
   JobSearchParams,
@@ -11,7 +12,9 @@ export class JobService extends Effect.Service<JobService>()("JobService", {
   scoped: Effect.gen(function* () {
     const db = yield* Database;
 
-    const buildWhereClause = (params: JobSearchParams): Prisma.JobWhereInput => {
+    const buildWhereClause = (
+      params: JobSearchParams,
+    ): Prisma.JobWhereInput => {
       const where: Prisma.JobWhereInput = { removed: false };
 
       if (params.q) {
@@ -48,6 +51,12 @@ export class JobService extends Effect.Service<JobService>()("JobService", {
 
     const search = (params: JobSearchParams) =>
       Effect.gen(function* () {
+        yield* Effect.annotateCurrentSpan({
+          page: params.page ?? 1,
+          pageSize: params.pageSize ?? 20,
+          hasQuery: !!params.q,
+        });
+
         const page = params.page ?? 1;
         const pageSize = params.pageSize ?? 20;
         const skip = (page - 1) * pageSize;
@@ -71,17 +80,28 @@ export class JobService extends Effect.Service<JobService>()("JobService", {
           db.use((p) => p.job.count({ where })),
         ]);
 
-        const jobs = yield* Effect.all(
-          rawJobs.map((job) => Schema.decodeUnknown(Job)(job)),
+        yield* Effect.annotateCurrentSpan({ jobCount: rawJobs.length, total });
+
+        const result = yield* Schema.decodeUnknown(JobSearchResult)(
+          JSON.parse(JSON.stringify({ jobs: rawJobs, total, page, pageSize })),
         );
 
-        return { jobs, total, page, pageSize };
+        return result;
       }).pipe(
-        Effect.mapError(() => new JobSearchError({ message: "Sökningen misslyckades" })),
+        Effect.withSpan("JobService.search"),
+        Effect.annotateLogs("service", "JobService"),
+        Effect.tapError((error) =>
+          Effect.logError("Job search operation failed", error),
+        ),
+        Effect.mapError(
+          () => new JobSearchError({ message: "Sökningen misslyckades" }),
+        ),
       );
 
     const getById = (id: string) =>
       Effect.gen(function* () {
+        yield* Effect.annotateCurrentSpan({ jobId: id });
+
         const rawJob = yield* db.use((p) =>
           p.job.findUnique({
             where: { id },
@@ -98,9 +118,20 @@ export class JobService extends Effect.Service<JobService>()("JobService", {
           return yield* Effect.fail(new JobNotFoundError({ jobId: id }));
         }
 
-        return yield* Schema.decodeUnknown(Job)(rawJob);
+        const job = yield* Schema.decodeUnknown(Job)(
+          JSON.parse(JSON.stringify(rawJob)),
+        );
+
+        return job;
       }).pipe(
-        Effect.mapError(() => new JobSearchError({ message: "Kunde inte hämta jobb" })),
+        Effect.withSpan("JobService.getById"),
+        Effect.annotateLogs({ service: "JobService", jobId: id }),
+        Effect.tapError((error) =>
+          Effect.logError("Get job by ID operation failed", error),
+        ),
+        Effect.mapError(
+          () => new JobSearchError({ message: "Kunde inte hämta jobb" }),
+        ),
       );
 
     return { search, getById };

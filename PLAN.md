@@ -1,8 +1,10 @@
 # Plan
 
-## Tomorrow (2025-10-22)
+## Tomorrow (2025-10-23)
 
-1. Review Effect RPC README documentation to understand correct patterns
-2. Audit and fix server index.ts file based on RPC best practices
-3. Ensure RPC setup follows Effect's recommended architecture
-4. Test the corrected server configuration
+1. Research Vercel AI SDK integration patterns with Effect-TS
+2. Set up AI SDK dependencies and configuration
+3. Create AI chat service with Effect patterns
+4. Build chat UI component with TanStack Form
+5. Implement RPC endpoints for chat functionality
+6. Test end-to-end AI chat interaction

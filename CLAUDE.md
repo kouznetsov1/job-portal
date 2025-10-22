@@ -330,6 +330,17 @@ const safeValidation = Effect.gen(function* () {
 - Use `Data.TaggedError` for custom error types
 - Implement resource safety with automatic cleanup patterns
 
+### Logging and Tracing
+
+**Keep it minimal:**
+- Only log errors, not start/complete/debug noise
+- Log errors once at the operation level with `Effect.tapError` before `mapError`
+- Add logging at the service level (e.g., Database), not at call sites
+- Use spans for tracing: `Effect.withSpan("operation.name")`
+- Annotate spans with useful metadata: `Effect.annotateCurrentSpan({ id, count })`
+- Annotate logs with context: `Effect.annotateLogs({ service: "ServiceName", id })`
+- Don't add redundant attributes to spans (e.g., `{ operation: "search" }` when span is named "search")
+
 ### Code Organization
 
 - No comments unless explicitly requested

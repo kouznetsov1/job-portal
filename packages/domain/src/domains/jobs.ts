@@ -138,7 +138,7 @@ export const Job = Schema.Struct({
   applicationOther: Schema.NullOr(Schema.String),
 
   workplace: Schema.NullOr(Schema.String),
-  remote: Schema.Boolean,
+  remote: Schema.NullOr(Schema.Boolean),
   streetAddress: Schema.NullOr(Schema.String),
   city: Schema.NullOr(Schema.String),
   municipality: Schema.NullOr(Schema.String),

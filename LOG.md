@@ -1,5 +1,9 @@
 # Development Log
 
+## 2025-10-22
+
+Refactored RPC architecture by removing WebSocket protocol in favor of HTTP-only, fixed client imports to use proper Effect module paths, enhanced JobService with tracing spans and error logging, cleaned up job sync scheduler, and added logging/tracing guidelines to CLAUDE.md.
+
 ## 2025-10-21
 
 Refactored JobService to use Schema validation with proper tagged errors (JobSearchError, JobNotFoundError), updated PlatsbankenSyncService to handle company logos and improved job upsertion logic, and cleaned up Vite config by removing unnecessary SSR externals.

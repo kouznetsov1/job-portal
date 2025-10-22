@@ -19,7 +19,11 @@ export class Database extends Effect.Service<Database>()("Database", {
               message: error instanceof Error ? error.message : String(error),
               cause: error,
             }),
-        });
+        }).pipe(
+          Effect.tapError((error) =>
+            Effect.logError("Database query failed", error),
+          ),
+        );
       })();
 
     return {

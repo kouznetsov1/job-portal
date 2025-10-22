@@ -8,8 +8,6 @@ const hourlySchedule = Schedule.cron(Cron.unsafeParse("0 * * * *"));
 export const JobSyncScheduler = Effect.gen(function* () {
   const syncService = yield* PlatsbankenSyncService;
 
-  yield* Console.log("Job sync scheduler started");
-
   const runSync = syncService.syncJobs.pipe(
     Effect.catchAll((error) =>
       Effect.gen(function* () {
@@ -28,24 +26,3 @@ export const JobSyncScheduler = Effect.gen(function* () {
 );
 
 export const JobSyncSchedulerLayer = Layer.effectDiscard(JobSyncScheduler);
-
-export const getCronScheduleInfo = () => {
-  const cron = Cron.unsafeParse("0 * * * *");
-  const now = new Date();
-  const nextRun = Cron.next(cron, now);
-  const upcomingRuns = [];
-
-  let currentDate = now;
-  for (let i = 0; i < 5; i++) {
-    const nextDate = Cron.next(cron, currentDate);
-    upcomingRuns.push(nextDate);
-    currentDate = nextDate;
-  }
-
-  return {
-    cron: "0 * * * *",
-    description: "Every hour at minute 0",
-    nextRun,
-    upcomingRuns,
-  };
-};
