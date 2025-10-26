@@ -1,19 +1,22 @@
 # Plan
 
-## Today (2025-10-26)
+## Tomorrow (2025-10-27)
 
-### Priority: Option Refactoring (Replace nullable patterns with Effect Option)
+### Priority: PDF Generation with Typst + AI Integration
 
-1. Refactor domain schemas to use Schema.Option instead of Schema.NullOr
-   - Start with packages/domain/src/domains/jobs.ts (40+ fields)
-   - Then packages/domain/src/domains/platsbanken.ts (50+ fields)
-2. Update service methods to handle Option types
-   - apps/server/src/services/platsbanken-sync.ts (3 nullable DB results)
-   - apps/server/src/services/job-service.ts (1 nullable DB result)
-3. Refactor transformation utilities to use Option
-   - apps/server/src/services/platsbanken-job-transform.ts (3 nullable functions)
-4. Run linter and type checks to ensure everything passes
+1. Review chat implementation PR
+   - Understand OpenAI streaming integration with NDJSON protocol
+   - Review AI service architecture and chat domain schemas
+   - Understand how chat UI communicates with backend
 
-### Stretch: AI Chat Integration (if time permits)
-- Research Vercel AI SDK + Effect-TS integration patterns
-- Set up basic AI SDK dependencies
+2. Create Typst compiler service for PDFs
+   - Set up Typst CLI integration as Effect service
+   - Implement compilation from Typst source to PDF
+   - Add proper error handling and resource management
+   - Test basic PDF generation
+
+3. Integrate AI and Typst for chat-based PDF generation
+   - Create AI agent that generates Typst markup
+   - Connect chat interface to Typst compilation service
+   - Implement streaming workflow: prompt → AI → Typst → PDF
+   - Add proper error handling and user feedback
