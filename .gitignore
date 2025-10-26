@@ -49,4 +49,4 @@ platsbanken-snapshot-*.json
 packages/db/data
 
 # Vendor - external source code for reference
-vendor/effect
+vendor/
