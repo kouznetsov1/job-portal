@@ -15,6 +15,118 @@ const parseCoordinates = (
     ),
   );
 
+const extractRequirementsFromCategory = (
+  items:
+    | readonly {
+        readonly label?: string | null | undefined;
+        readonly weight?: number | null | undefined;
+      }[]
+    | null
+    | undefined,
+  category: string,
+  requirementType: "must_have" | "nice_to_have",
+) =>
+  Option.fromNullable(items).pipe(
+    Option.map((arr) =>
+      arr.flatMap((item) =>
+        Option.fromNullable(item?.label).pipe(
+          Option.map((label) => ({
+            requirementType,
+            category,
+            label,
+            weight: Option.fromNullable(item?.weight).pipe(Option.getOrNull),
+          })),
+          Option.match({
+            onNone: () => [],
+            onSome: (req) => [req],
+          }),
+        ),
+      ),
+    ),
+    Option.getOrElse(() => []),
+  );
+
+const extractAllRequirements = (jobAd: typeof JobAd.Type) => {
+  const mustHaveReqs = [
+    ...extractRequirementsFromCategory(
+      jobAd.must_have?.skills,
+      "skill",
+      "must_have",
+    ),
+    ...extractRequirementsFromCategory(
+      jobAd.must_have?.languages,
+      "language",
+      "must_have",
+    ),
+    ...extractRequirementsFromCategory(
+      jobAd.must_have?.work_experiences,
+      "work_experience",
+      "must_have",
+    ),
+    ...extractRequirementsFromCategory(
+      jobAd.must_have?.education,
+      "education",
+      "must_have",
+    ),
+    ...extractRequirementsFromCategory(
+      jobAd.must_have?.education_level,
+      "education_level",
+      "must_have",
+    ),
+  ];
+
+  const niceToHaveReqs = [
+    ...extractRequirementsFromCategory(
+      jobAd.nice_to_have?.skills,
+      "skill",
+      "nice_to_have",
+    ),
+    ...extractRequirementsFromCategory(
+      jobAd.nice_to_have?.languages,
+      "language",
+      "nice_to_have",
+    ),
+    ...extractRequirementsFromCategory(
+      jobAd.nice_to_have?.work_experiences,
+      "work_experience",
+      "nice_to_have",
+    ),
+    ...extractRequirementsFromCategory(
+      jobAd.nice_to_have?.education,
+      "education",
+      "nice_to_have",
+    ),
+    ...extractRequirementsFromCategory(
+      jobAd.nice_to_have?.education_level,
+      "education_level",
+      "nice_to_have",
+    ),
+  ];
+
+  return [...mustHaveReqs, ...niceToHaveReqs];
+};
+
+const transformCompany = (
+  jobAd: typeof JobAd.Type,
+): typeof TransformedCompanySchema.Type => ({
+  name: jobAd.employer?.name || "Okänd arbetsgivare",
+  organizationNumber: jobAd.employer?.organization_number ?? null,
+  website: jobAd.employer?.url ?? null,
+  description: jobAd.description?.company_information ?? null,
+  logo: jobAd.logo_url ?? null,
+});
+
+const transformContacts = (jobAd: typeof JobAd.Type) =>
+  (jobAd.application_contacts ?? [])
+    .filter((c) => c !== null)
+    .map((contact) => ({
+      name: contact.name ?? contact.description ?? null,
+      role: contact.contact_type ?? null,
+      email: contact.email ?? null,
+      phone: contact.telephone ?? null,
+      description: contact.description ?? null,
+    }));
+
 export const TransformedCompanySchema = Schema.Struct({
   name: Schema.String,
   organizationNumber: Schema.NullOr(Schema.String),
@@ -113,123 +225,17 @@ export const PlatsbankenJobTransform = Schema.transformOrFail(
           );
         }
 
-        const description =
-          jobAd.description?.text_formatted || jobAd.description?.text || "";
-
-        const employer = jobAd.employer;
-
-        if (!employer) {
+        if (!jobAd.employer) {
           return yield* ParseResult.fail(
             new ParseResult.Type(ast, jobAd, "Missing employer"),
           );
         }
 
-        const company: typeof TransformedCompanySchema.Type = {
-          name: employer.name || "Okänd arbetsgivare",
-          organizationNumber: employer.organization_number ?? null,
-          website: employer.url ?? null,
-          description: jobAd.description?.company_information ?? null,
-          logo: jobAd.logo_url ?? null,
-        };
-
-        const extractRequirementsFromCategory = (
-          items:
-            | readonly {
-                readonly label?: string | null | undefined;
-                readonly weight?: number | null | undefined;
-              }[]
-            | null
-            | undefined,
-          category: string,
-          requirementType: "must_have" | "nice_to_have",
-        ) =>
-          Option.fromNullable(items).pipe(
-            Option.map((arr) =>
-              arr.flatMap((item) =>
-                Option.fromNullable(item?.label).pipe(
-                  Option.map((label) => ({
-                    requirementType,
-                    category,
-                    label,
-                    weight: Option.fromNullable(item?.weight).pipe(
-                      Option.getOrNull,
-                    ),
-                  })),
-                  Option.match({
-                    onNone: () => [],
-                    onSome: (req) => [req],
-                  }),
-                ),
-              ),
-            ),
-            Option.getOrElse(() => []),
-          );
-
-        const mustHaveReqs = [
-          ...extractRequirementsFromCategory(
-            jobAd.must_have?.skills,
-            "skill",
-            "must_have",
-          ),
-          ...extractRequirementsFromCategory(
-            jobAd.must_have?.languages,
-            "language",
-            "must_have",
-          ),
-          ...extractRequirementsFromCategory(
-            jobAd.must_have?.work_experiences,
-            "work_experience",
-            "must_have",
-          ),
-          ...extractRequirementsFromCategory(
-            jobAd.must_have?.education,
-            "education",
-            "must_have",
-          ),
-          ...extractRequirementsFromCategory(
-            jobAd.must_have?.education_level,
-            "education_level",
-            "must_have",
-          ),
-        ];
-
-        const niceToHaveReqs = [
-          ...extractRequirementsFromCategory(
-            jobAd.nice_to_have?.skills,
-            "skill",
-            "nice_to_have",
-          ),
-          ...extractRequirementsFromCategory(
-            jobAd.nice_to_have?.languages,
-            "language",
-            "nice_to_have",
-          ),
-          ...extractRequirementsFromCategory(
-            jobAd.nice_to_have?.work_experiences,
-            "work_experience",
-            "nice_to_have",
-          ),
-          ...extractRequirementsFromCategory(
-            jobAd.nice_to_have?.education,
-            "education",
-            "nice_to_have",
-          ),
-          ...extractRequirementsFromCategory(
-            jobAd.nice_to_have?.education_level,
-            "education_level",
-            "nice_to_have",
-          ),
-        ];
-
-        const contacts = (jobAd.application_contacts ?? [])
-          .filter((c) => c !== null)
-          .map((contact) => ({
-            name: contact.name ?? contact.description ?? null,
-            role: contact.contact_type ?? null,
-            email: contact.email ?? null,
-            phone: contact.telephone ?? null,
-            description: contact.description ?? null,
-          }));
+        const description =
+          jobAd.description?.text_formatted || jobAd.description?.text || "";
+        const company = transformCompany(jobAd);
+        const requirements = extractAllRequirements(jobAd);
+        const contacts = transformContacts(jobAd);
 
         return yield* ParseResult.succeed({
           sourceId: jobAd.id,
@@ -306,7 +312,7 @@ export const PlatsbankenJobTransform = Schema.transformOrFail(
             Option.getOrNull,
           ),
 
-          requirements: [...mustHaveReqs, ...niceToHaveReqs],
+          requirements,
           contacts,
         });
       }),

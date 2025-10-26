@@ -27,17 +27,22 @@
         "noHeadElement": "off"
       },
       "performance": {
-        "noNamespaceImport": "off"
+        "noNamespaceImport": "off",
+        "noBarrelFile": "off"
       },
       "correctness": {
         "noChildrenProp": "off"
+      },
+      "complexity": {
+        "noExcessiveCognitiveComplexity": "warn"
       },
       "suspicious": {
         "noConsole": {
           "level": "warn",
           "options": { "allow": ["error", "info"] }
         },
-        "noUnknownAtRules": "off"
+        "noUnknownAtRules": "off",
+        "noEmptyBlockStatements": "off"
       }
     }
   },
@@ -46,6 +51,19 @@
       "includes": ["**/.nitro/**"],
       "linter": {
         "enabled": false
+      }
+    },
+    {
+      "includes": ["packages/ui/src/components/**"],
+      "linter": {
+        "rules": {
+          "nursery": {
+            "noShadow": "off"
+          },
+          "suspicious": {
+            "noDocumentCookie": "off"
+          }
+        }
       }
     }
   ]

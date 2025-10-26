@@ -385,7 +385,7 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
           return { imported: 0, removed: removedCount, failed: 0 };
         }
 
-        const jobs = [];
+        const jobs: TransformedJob[] = [];
         let transformErrors = 0;
 
         for (const jobAd of activeAds) {

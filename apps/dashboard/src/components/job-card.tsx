@@ -74,6 +74,8 @@ export function JobCard({
                 src={job.company.logo}
                 alt={`${job.company.name} logotyp`}
                 className="h-full w-full rounded-md object-contain"
+                width={48}
+                height={48}
               />
             ) : (
               <Building2 className="h-5 w-5 text-muted-foreground" />
@@ -108,6 +110,7 @@ export function JobCard({
               matchPercentage < 40 &&
                 "border-border bg-muted/50 text-muted-foreground"
             )}
+            role="img"
             aria-label={`Matchning: ${matchPercentage} procent`}
           >
             {matchPercentage}%
@@ -148,12 +151,9 @@ export function JobCard({
 
       {/* Description Preview */}
       {job.description && (
-        <p
-          className="mb-4 line-clamp-2 text-muted-foreground text-sm"
-          dangerouslySetInnerHTML={{
-            __html: job.description.replace(/<[^>]*>/g, ' ').substring(0, 200)
-          }}
-        />
+        <p className="mb-4 line-clamp-2 text-muted-foreground text-sm">
+          {job.description.replace(/<[^>]*>/g, ' ').substring(0, 200)}
+        </p>
       )}
 
       {/* Action Buttons */}

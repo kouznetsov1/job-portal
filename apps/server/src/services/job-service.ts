@@ -42,7 +42,7 @@ export class JobService extends Effect.Service<JobService>()("JobService", {
         "workingHoursType",
       ] as const;
 
-      stringFilters.forEach((field) => {
+      for (const field of stringFilters) {
         Option.fromNullable(params[field]).pipe(
           Option.match({
             onNone: () => {},
@@ -51,7 +51,7 @@ export class JobService extends Effect.Service<JobService>()("JobService", {
             },
           }),
         );
-      });
+      }
 
       Option.fromNullable(params.remote).pipe(
         Option.match({
