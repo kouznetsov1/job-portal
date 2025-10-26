@@ -3,7 +3,6 @@ import { Database, type Prisma } from "@repo/db";
 import {
   Job,
   JobSearchResult,
-  JobSearchError,
   JobNotFoundError,
   type JobSearchParams,
 } from "@repo/domain";
@@ -118,26 +117,25 @@ export class JobService extends Effect.Service<JobService>()("JobService", {
         Effect.tapError((error) =>
           Effect.logError("Job search operation failed", error),
         ),
-        Effect.mapError(
-          () => new JobSearchError({ message: "Sökningen misslyckades" }),
-        ),
       );
 
     const getById = (id: string) =>
       Effect.gen(function* () {
         yield* Effect.annotateCurrentSpan({ jobId: id });
 
-        const rawJobOption = yield* db.use((p) =>
-          p.job.findUnique({
-            where: { id },
-            include: {
-              company: true,
-              sources: true,
-              requirements: true,
-              contacts: true,
-            },
-          }),
-        ).pipe(Effect.map(Option.fromNullable));
+        const rawJobOption = yield* db
+          .use((p) =>
+            p.job.findUnique({
+              where: { id },
+              include: {
+                company: true,
+                sources: true,
+                requirements: true,
+                contacts: true,
+              },
+            }),
+          )
+          .pipe(Effect.map(Option.fromNullable));
 
         const rawJob = yield* Option.match(rawJobOption, {
           onNone: () => Effect.fail(new JobNotFoundError({ jobId: id })),
@@ -154,9 +152,6 @@ export class JobService extends Effect.Service<JobService>()("JobService", {
         Effect.annotateLogs({ service: "JobService", jobId: id }),
         Effect.tapError((error) =>
           Effect.logError("Get job by ID operation failed", error),
-        ),
-        Effect.mapError(
-          () => new JobSearchError({ message: "Kunde inte hämta jobb" }),
         ),
       );
 

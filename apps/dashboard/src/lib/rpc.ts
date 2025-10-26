@@ -14,13 +14,13 @@ export class httpApi extends AtomRpc.Tag<httpApi>()("httpApi", {
     url: `http://${SERVER_URL}/`,
   }).pipe(
     Layer.provide(FetchHttpClient.layer),
-    Layer.provide(RpcSerialization.layerJson),
+    Layer.provide(RpcSerialization.layerNdjson),
   ),
 }) {}
 
 export const ProtocolLive = RpcClient.layerProtocolHttp({
   url: `http://${SERVER_URL}/`,
-}).pipe(Layer.provide([FetchHttpClient.layer, RpcSerialization.layerJson]));
+}).pipe(Layer.provide([FetchHttpClient.layer, RpcSerialization.layerNdjson]));
 
 export class ApiClient extends Effect.Service<ApiClient>()("ApiClient", {
   scoped: Effect.gen(function* () {

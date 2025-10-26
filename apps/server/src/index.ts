@@ -10,7 +10,7 @@ const HttpRoute = RpcServer.layerHttpRouter({
   group: Rpcs,
   path: "/",
   protocol: "http",
-}).pipe(Layer.provide(RpcHandlers), Layer.provide(RpcSerialization.layerJson));
+}).pipe(Layer.provide(RpcHandlers), Layer.provide(RpcSerialization.layerNdjson));
 
 const Routes = Layer.mergeAll(HttpRoute).pipe(
   Layer.provide(HttpLayerRouter.cors()),
