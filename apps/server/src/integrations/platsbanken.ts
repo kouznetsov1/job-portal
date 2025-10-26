@@ -1,7 +1,7 @@
 import { FetchHttpClient, HttpClient } from "@effect/platform";
 import { Console, Data, DateTime, Duration, Effect, Schema } from "effect";
 import { JobStreamResponse } from "@repo/domain";
-import { HttpClientResponse } from "@effect/platform/HttpClientResponse";
+import type { HttpClientResponse } from "@effect/platform/HttpClientResponse";
 
 export class RateLimitError extends Data.TaggedError("RateLimitError")<{
   readonly retryAfterSeconds: number;
@@ -12,14 +12,12 @@ export class RateLimitError extends Data.TaggedError("RateLimitError")<{
 }
 
 const parseRetryAfter = (retryAfter: string | undefined) => {
-  if (!retryAfter) return 1;
+  if (!retryAfter) { return 1; }
   const seconds = Number.parseInt(retryAfter, 10);
   return Number.isNaN(seconds) ? 1 : Math.max(1, seconds);
 };
 
-const formatDateTime = (dt: DateTime.DateTime): string => {
-  return DateTime.formatIso(dt).split(".")[0]!;
-};
+const formatDateTime = (dt: DateTime.DateTime): string => DateTime.formatIso(dt).split(".")[0]!;
 
 export class PlatsbankenService extends Effect.Service<PlatsbankenService>()(
   "PlatsbankenService",

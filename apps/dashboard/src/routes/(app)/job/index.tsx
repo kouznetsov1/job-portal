@@ -5,7 +5,6 @@ import { Result, useAtomValue } from "@effect-atom/atom-react";
 
 export const Route = createFileRoute("/(app)/job/")({
   component: RouteComponent,
-  loader: () => {},
 });
 
 function RouteComponent() {

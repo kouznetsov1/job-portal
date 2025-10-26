@@ -1,5 +1,5 @@
 import { Rpc, RpcGroup } from "@effect/rpc";
-import { Effect, Schema, Layer } from "effect";
+import { Effect, Schema, type Layer } from "effect";
 
 export class HealthRpcs extends RpcGroup.make(
   Rpc.make("health", { success: Schema.Boolean }),

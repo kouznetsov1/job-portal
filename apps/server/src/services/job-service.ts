@@ -1,11 +1,11 @@
-import { Effect, Schema } from "effect";
-import { Database, Prisma } from "@repo/db";
+import { Effect, Schema, Option } from "effect";
+import { Database, type Prisma } from "@repo/db";
 import {
   Job,
   JobSearchResult,
   JobSearchError,
   JobNotFoundError,
-  JobSearchParams,
+  type JobSearchParams,
 } from "@repo/domain";
 
 export class JobService extends Effect.Service<JobService>()("JobService", {
@@ -17,13 +17,19 @@ export class JobService extends Effect.Service<JobService>()("JobService", {
     ): Prisma.JobWhereInput => {
       const where: Prisma.JobWhereInput = { removed: false };
 
-      if (params.q) {
-        where.OR = [
-          { title: { contains: params.q, mode: "insensitive" } },
-          { description: { contains: params.q, mode: "insensitive" } },
-          { company: { name: { contains: params.q, mode: "insensitive" } } },
-        ];
-      }
+      Option.fromNullable(params.q).pipe(
+        Option.filter((q) => q.trim().length > 0),
+        Option.match({
+          onNone: () => {},
+          onSome: (query) => {
+            where.OR = [
+              { title: { contains: query, mode: "insensitive" } },
+              { description: { contains: query, mode: "insensitive" } },
+              { company: { name: { contains: query, mode: "insensitive" } } },
+            ];
+          },
+        }),
+      );
 
       const stringFilters = [
         "occupation",
@@ -36,15 +42,34 @@ export class JobService extends Effect.Service<JobService>()("JobService", {
         "workingHoursType",
       ] as const;
 
-      for (const field of stringFilters) {
-        if (params[field]) {
-          where[field] = { contains: params[field], mode: "insensitive" };
-        }
-      }
+      stringFilters.forEach((field) => {
+        Option.fromNullable(params[field]).pipe(
+          Option.match({
+            onNone: () => {},
+            onSome: (value) => {
+              where[field] = { contains: value, mode: "insensitive" };
+            },
+          }),
+        );
+      });
 
-      if (params.remote !== undefined) where.remote = params.remote;
-      if (params.experienceRequired !== undefined)
-        where.experienceRequired = params.experienceRequired;
+      Option.fromNullable(params.remote).pipe(
+        Option.match({
+          onNone: () => {},
+          onSome: (value) => {
+            where.remote = value;
+          },
+        }),
+      );
+
+      Option.fromNullable(params.experienceRequired).pipe(
+        Option.match({
+          onNone: () => {},
+          onSome: (value) => {
+            where.experienceRequired = value;
+          },
+        }),
+      );
 
       return where;
     };
@@ -102,7 +127,7 @@ export class JobService extends Effect.Service<JobService>()("JobService", {
       Effect.gen(function* () {
         yield* Effect.annotateCurrentSpan({ jobId: id });
 
-        const rawJob = yield* db.use((p) =>
+        const rawJobOption = yield* db.use((p) =>
           p.job.findUnique({
             where: { id },
             include: {
@@ -112,11 +137,12 @@ export class JobService extends Effect.Service<JobService>()("JobService", {
               contacts: true,
             },
           }),
-        );
+        ).pipe(Effect.map(Option.fromNullable));
 
-        if (!rawJob) {
-          return yield* Effect.fail(new JobNotFoundError({ jobId: id }));
-        }
+        const rawJob = yield* Option.match(rawJobOption, {
+          onNone: () => Effect.fail(new JobNotFoundError({ jobId: id })),
+          onSome: Effect.succeed,
+        });
 
         const job = yield* Schema.decodeUnknown(Job)(
           JSON.parse(JSON.stringify(rawJob)),

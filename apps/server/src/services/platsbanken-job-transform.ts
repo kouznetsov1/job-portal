@@ -1,20 +1,19 @@
-import { Schema, Effect, ParseResult } from "effect";
+import { Schema, Effect, ParseResult, Option } from "effect";
 import { JobAd } from "@repo/domain";
 
 const extractTaxonomyLabel = (
   item: { readonly label?: string | null | undefined } | null | undefined,
-): string | null => (item?.label !== undefined ? item.label : null);
+): Option.Option<string> => Option.fromNullable(item?.label);
 
 const parseCoordinates = (
   coords: readonly (number | null)[] | null | undefined,
-): [number, number] | null => {
-  if (!coords || coords.length !== 2) return null;
-  const lon = coords[0];
-  const lat = coords[1];
-  if (lon === null || lat === null || lon === undefined || lat === undefined)
-    return null;
-  return [lon, lat];
-};
+): Option.Option<[number, number]> =>
+  Option.fromNullable(coords).pipe(
+    Option.filter((arr) => arr.length === 2),
+    Option.flatMap((arr) =>
+      Option.all([Option.fromNullable(arr[0]), Option.fromNullable(arr[1])]),
+    ),
+  );
 
 export const TransformedCompanySchema = Schema.Struct({
   name: Schema.String,
@@ -143,17 +142,28 @@ export const PlatsbankenJobTransform = Schema.transformOrFail(
             | undefined,
           category: string,
           requirementType: "must_have" | "nice_to_have",
-        ) => {
-          if (!items || !Array.isArray(items)) return [];
-          return items
-            .filter((item) => item?.label !== undefined && item.label !== null)
-            .map((item) => ({
-              requirementType,
-              category,
-              label: item.label!,
-              weight: item.weight !== undefined ? item.weight : null,
-            }));
-        };
+        ) =>
+          Option.fromNullable(items).pipe(
+            Option.map((arr) =>
+              arr.flatMap((item) =>
+                Option.fromNullable(item?.label).pipe(
+                  Option.map((label) => ({
+                    requirementType,
+                    category,
+                    label,
+                    weight: Option.fromNullable(item?.weight).pipe(
+                      Option.getOrNull,
+                    ),
+                  })),
+                  Option.match({
+                    onNone: () => [],
+                    onSome: (req) => [req],
+                  }),
+                ),
+              ),
+            ),
+            Option.getOrElse(() => []),
+          );
 
         const mustHaveReqs = [
           ...extractRequirementsFromCategory(
@@ -238,21 +248,35 @@ export const PlatsbankenJobTransform = Schema.transformOrFail(
 
           company,
 
-          employmentType: extractTaxonomyLabel(jobAd.employment_type),
-          workingHoursType: extractTaxonomyLabel(jobAd.working_hours_type),
-          duration: extractTaxonomyLabel(jobAd.duration),
+          employmentType: extractTaxonomyLabel(jobAd.employment_type).pipe(
+            Option.getOrNull,
+          ),
+          workingHoursType: extractTaxonomyLabel(jobAd.working_hours_type).pipe(
+            Option.getOrNull,
+          ),
+          duration: extractTaxonomyLabel(jobAd.duration).pipe(
+            Option.getOrNull,
+          ),
 
           vacancies: jobAd.number_of_vacancies ?? null,
           startDate: jobAd.access ?? null,
           workloadMin: jobAd.scope_of_work?.min ?? null,
           workloadMax: jobAd.scope_of_work?.max ?? null,
 
-          salaryType: extractTaxonomyLabel(jobAd.salary_type),
+          salaryType: extractTaxonomyLabel(jobAd.salary_type).pipe(
+            Option.getOrNull,
+          ),
           salaryDescription: jobAd.salary_description ?? null,
 
-          occupation: extractTaxonomyLabel(jobAd.occupation),
-          occupationGroup: extractTaxonomyLabel(jobAd.occupation_group),
-          occupationField: extractTaxonomyLabel(jobAd.occupation_field),
+          occupation: extractTaxonomyLabel(jobAd.occupation).pipe(
+            Option.getOrNull,
+          ),
+          occupationGroup: extractTaxonomyLabel(jobAd.occupation_group).pipe(
+            Option.getOrNull,
+          ),
+          occupationField: extractTaxonomyLabel(jobAd.occupation_field).pipe(
+            Option.getOrNull,
+          ),
 
           experienceRequired: jobAd.experience_required ?? false,
           drivingLicenseRequired: jobAd.driving_license_required ?? false,
@@ -278,7 +302,9 @@ export const PlatsbankenJobTransform = Schema.transformOrFail(
           postalCode: jobAd.workplace_address?.postcode ?? null,
           country: jobAd.workplace_address?.country || "Sverige",
           countryCode: jobAd.workplace_address?.country_code ?? null,
-          coordinates: parseCoordinates(jobAd.workplace_address?.coordinates),
+          coordinates: parseCoordinates(jobAd.workplace_address?.coordinates).pipe(
+            Option.getOrNull,
+          ),
 
           requirements: [...mustHaveReqs, ...niceToHaveReqs],
           contacts,

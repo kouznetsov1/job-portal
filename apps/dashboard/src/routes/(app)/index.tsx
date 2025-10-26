@@ -11,7 +11,7 @@ function Home() {
 }
 
 function JobSearchPage() {
-  const searchResults = useAtomValue(api.query("jobs.search", { q: "s" }));
+  const _searchResults = useAtomValue(api.query("jobs.search", { q: "s" }));
 
-  return <div className="flex h-full w-full "></div>;
+  return <div className="flex h-full w-full" />;
 }

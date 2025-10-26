@@ -42,7 +42,7 @@ function RootComponent() {
 
 function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
   return (
-    <html>
+    <html lang="sv">
       <head>
         <HeadContent />
       </head>

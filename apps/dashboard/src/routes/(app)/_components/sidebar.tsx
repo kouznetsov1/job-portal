@@ -20,13 +20,13 @@ export function AppSidebar() {
             <Briefcase className="h-4 w-4" />
           </div>
           <div className="flex flex-col gap-0.5">
-            <span className="text-sm font-semibold">Jobbportal</span>
-            <span className="text-xs text-muted-foreground">Dashboard</span>
+            <span className="font-semibold text-sm">Jobbportal</span>
+            <span className="text-muted-foreground text-xs">Dashboard</span>
           </div>
         </div>
       </SidebarHeader>
 
-      <div className="flex flex-col flex-1">
+      <div className="flex flex-1 flex-col">
         <SidebarGroup>
           <SidebarGroupLabel>Navigation</SidebarGroupLabel>
           <SidebarGroupContent>

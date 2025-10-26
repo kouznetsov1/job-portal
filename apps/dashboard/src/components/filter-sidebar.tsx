@@ -11,15 +11,15 @@ import {
 } from "@repo/ui/components/sheet";
 import { cn } from "@repo/ui/lib/utils";
 
-export interface FilterState {
+export type FilterState = {
   employmentTypes: string[];
   remote: boolean;
   experienceRequired: boolean;
   datePosted: "24h" | "week" | "month" | "all";
   municipalities: string[];
-}
+};
 
-interface FilterSidebarProps {
+type FilterSidebarProps = {
   filters: FilterState;
   onFiltersChange: (filters: FilterState) => void;
   onClearAll: () => void;
@@ -27,7 +27,7 @@ interface FilterSidebarProps {
   onOpenChange?: (open: boolean) => void;
   isMobile?: boolean;
   className?: string;
-}
+};
 
 const EMPLOYMENT_TYPES = [
   { value: "heltid", label: "Heltid" },
@@ -70,7 +70,7 @@ export function FilterSidebar({
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-foreground">Filter</h2>
+        <h2 className="font-semibold text-foreground text-lg">Filter</h2>
         {hasActiveFilters && (
           <Button
             variant="ghost"
@@ -87,22 +87,22 @@ export function FilterSidebar({
 
       {/* Employment Type */}
       <div className="space-y-3">
-        <Label className="text-sm font-semibold text-foreground">
+        <Label className="font-semibold text-foreground text-sm">
           Anställningstyp
         </Label>
         <div className="space-y-2">
           {EMPLOYMENT_TYPES.map((type) => (
             <label
               key={type.value}
-              className="flex items-center gap-2 cursor-pointer group"
+              className="group flex cursor-pointer items-center gap-2"
             >
               <input
                 type="checkbox"
                 checked={filters.employmentTypes.includes(type.value)}
                 onChange={() => toggleEmploymentType(type.value)}
-                className="h-4 w-4 rounded border-border text-primary focus:ring-2 focus:ring-ring focus:ring-offset-2 transition-colors"
+                className="h-4 w-4 rounded border-border text-primary transition-colors focus:ring-2 focus:ring-ring focus:ring-offset-2"
               />
-              <span className="text-sm text-foreground group-hover:text-foreground/80">
+              <span className="text-foreground text-sm group-hover:text-foreground/80">
                 {type.label}
               </span>
             </label>
@@ -114,11 +114,11 @@ export function FilterSidebar({
 
       {/* Remote Work */}
       <div className="space-y-3">
-        <Label className="text-sm font-semibold text-foreground">
+        <Label className="font-semibold text-foreground text-sm">
           Arbetsplats
         </Label>
-        <label className="flex items-center justify-between cursor-pointer group">
-          <span className="text-sm text-foreground">Distansarbete</span>
+        <label className="group flex cursor-pointer items-center justify-between">
+          <span className="text-foreground text-sm">Distansarbete</span>
           <button
             type="button"
             role="switch"
@@ -145,11 +145,11 @@ export function FilterSidebar({
 
       {/* Experience Required */}
       <div className="space-y-3">
-        <Label className="text-sm font-semibold text-foreground">
+        <Label className="font-semibold text-foreground text-sm">
           Erfarenhet
         </Label>
-        <label className="flex items-center justify-between cursor-pointer group">
-          <span className="text-sm text-foreground">Kräver erfarenhet</span>
+        <label className="group flex cursor-pointer items-center justify-between">
+          <span className="text-foreground text-sm">Kräver erfarenhet</span>
           <button
             type="button"
             role="switch"
@@ -179,14 +179,14 @@ export function FilterSidebar({
 
       {/* Date Posted */}
       <div className="space-y-3">
-        <Label className="text-sm font-semibold text-foreground">
+        <Label className="font-semibold text-foreground text-sm">
           Publicerad
         </Label>
         <div className="space-y-2">
           {DATE_OPTIONS.map((option) => (
             <label
               key={option.value}
-              className="flex items-center gap-2 cursor-pointer group"
+              className="group flex cursor-pointer items-center gap-2"
             >
               <input
                 type="radio"
@@ -195,9 +195,9 @@ export function FilterSidebar({
                 onChange={() =>
                   onFiltersChange({ ...filters, datePosted: option.value })
                 }
-                className="h-4 w-4 border-border text-primary focus:ring-2 focus:ring-ring focus:ring-offset-2 transition-colors"
+                className="h-4 w-4 border-border text-primary transition-colors focus:ring-2 focus:ring-ring focus:ring-offset-2"
               />
-              <span className="text-sm text-foreground group-hover:text-foreground/80">
+              <span className="text-foreground text-sm group-hover:text-foreground/80">
                 {option.label}
               </span>
             </label>
@@ -209,7 +209,7 @@ export function FilterSidebar({
       {hasActiveFilters && (
         <>
           <Separator />
-          <div className="text-xs text-muted-foreground">
+          <div className="text-muted-foreground text-xs">
             {filters.employmentTypes.length +
               (filters.remote ? 1 : 0) +
               (filters.experienceRequired ? 1 : 0) +
@@ -223,7 +223,7 @@ export function FilterSidebar({
 
   if (isMobile) {
     return (
-      <Sheet open={open} onOpenChange={onOpenChange ?? (() => {})}>
+      <Sheet open={open} onOpenChange={onOpenChange ?? (() => { /* noop */ })}>
         <SheetContent side="left" className="w-80">
           <SheetHeader>
             <SheetTitle>Filter</SheetTitle>
@@ -237,10 +237,9 @@ export function FilterSidebar({
   return (
     <aside
       className={cn(
-        "sticky top-0 h-screen w-80 shrink-0 border-r border-border bg-card p-6 overflow-y-auto",
+        "sticky top-0 h-screen w-80 shrink-0 overflow-y-auto border-border border-r bg-card p-6",
         className
       )}
-      role="complementary"
       aria-label="Jobbfilter"
     >
       {FilterContent}

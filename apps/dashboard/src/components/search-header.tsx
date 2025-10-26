@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import type * as React from "react";
 import { Search, SlidersHorizontal, LayoutGrid, LayoutList } from "lucide-react";
 import { Input } from "@repo/ui/components/input";
 import { Button } from "@repo/ui/components/button";
@@ -9,7 +9,7 @@ import { cn } from "@repo/ui/lib/utils";
 export type SortOption = "relevance" | "pubdate-desc" | "pubdate-asc";
 export type ViewMode = "list" | "grid";
 
-interface SearchHeaderProps {
+type SearchHeaderProps = {
   searchQuery: string;
   onSearchChange: (query: string) => void;
   onSearchSubmit: () => void;
@@ -20,7 +20,7 @@ interface SearchHeaderProps {
   onFilterToggle: () => void;
   resultsCount?: number;
   className?: string;
-}
+};
 
 export function SearchHeader({
   searchQuery,
@@ -43,13 +43,13 @@ export function SearchHeader({
     <div className={cn("space-y-4", className)}>
       {/* Search Bar */}
       <form onSubmit={handleSubmit} className="relative">
-        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <Search className="-translate-y-1/2 absolute top-1/2 left-3 h-4 w-4 text-muted-foreground" />
         <Input
           type="text"
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder="Sök efter jobb, företag eller kompetens..."
-          className="h-12 pl-10 pr-4 text-base"
+          className="h-12 pr-4 pl-10 text-base"
           aria-label="Sök jobb"
         />
       </form>
@@ -71,7 +71,7 @@ export function SearchHeader({
 
           {/* Sort Dropdown */}
           <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">Sortera:</span>
+            <span className="text-muted-foreground text-sm">Sortera:</span>
             <select
               value={sortBy}
               onChange={(e) => onSortChange(e.target.value as SortOption)}
@@ -88,7 +88,7 @@ export function SearchHeader({
         <div className="flex items-center gap-3">
           {/* Results Count */}
           {resultsCount !== undefined && (
-            <span className="text-sm text-muted-foreground">
+            <span className="text-muted-foreground text-sm">
               {resultsCount} {resultsCount === 1 ? "jobb" : "jobb"}
             </span>
           )}

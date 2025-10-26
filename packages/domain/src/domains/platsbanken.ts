@@ -105,7 +105,7 @@ export const JobAd = Schema.Struct({
         Schema.Array(Schema.String),
         Schema.transform(Schema.String, Schema.Array(Schema.String), {
           decode: (str) => {
-            if (str === "[]") return [];
+            if (str === "[]") { return []; }
             if (str.startsWith("[") && str.endsWith("]")) {
               try {
                 return JSON.parse(str.replace(/'/g, '"'));

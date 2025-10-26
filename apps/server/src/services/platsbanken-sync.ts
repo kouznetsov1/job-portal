@@ -1,4 +1,4 @@
-import { Effect, Console, DateTime, Duration, Schema } from "effect";
+import { Effect, Console, DateTime, Duration, Schema, Option } from "effect";
 import { Database } from "@repo/db";
 import { PlatsbankenService } from "../integrations/platsbanken";
 import {
@@ -14,7 +14,7 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
       const platsbankenService = yield* PlatsbankenService;
 
       const getLastSyncTime = Effect.gen(function* () {
-        const lastJob = yield* db.use((p) =>
+        const lastJobOption = yield* db.use((p) =>
           p.job.findFirst({
             where: {
               sources: {
@@ -27,57 +27,58 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
             orderBy: { lastChecked: "desc" },
             select: { lastChecked: true },
           }),
-        );
+        ).pipe(Effect.map(Option.fromNullable));
 
-        if (lastJob?.lastChecked) {
-          const lastSyncDate = DateTime.unsafeFromDate(lastJob.lastChecked);
-          return lastSyncDate;
-        }
-
-        const defaultStartDate = DateTime.unsafeNow().pipe(
-          DateTime.subtractDuration(Duration.days(7)),
+        return lastJobOption.pipe(
+          Option.flatMapNullable((job) => job.lastChecked),
+          Option.map(DateTime.unsafeFromDate),
+          Option.getOrElse(() =>
+            DateTime.unsafeNow().pipe(DateTime.subtractDuration(Duration.days(7))),
+          ),
         );
-        return defaultStartDate;
       });
 
       const upsertJob = (job: TransformedJob) =>
         Effect.gen(function* () {
-          let company;
+          const orgNumberOption = Option.fromNullable(
+            job.company.organizationNumber,
+          );
 
-          if (job.company.organizationNumber) {
-            company = yield* db.use((p) =>
-              p.company.upsert({
-                where: {
-                  organizationNumber: job.company.organizationNumber!,
-                },
-                update: {
-                  name: job.company.name,
-                  website: job.company.website,
-                  description: job.company.description,
-                  logo: job.company.logo,
-                },
-                create: {
-                  name: job.company.name,
-                  organizationNumber: job.company.organizationNumber,
-                  website: job.company.website,
-                  description: job.company.description,
-                  logo: job.company.logo,
-                },
-              }),
-            );
-          } else {
-            company = yield* db.use((p) =>
-              p.company.create({
-                data: {
-                  name: job.company.name,
-                  organizationNumber: null,
-                  website: job.company.website,
-                  description: job.company.description,
-                  logo: job.company.logo,
-                },
-              }),
-            );
-          }
+          const company = yield* Option.match(orgNumberOption, {
+            onSome: (orgNumber) =>
+              db.use((p) =>
+                p.company.upsert({
+                  where: {
+                    organizationNumber: orgNumber,
+                  },
+                  update: {
+                    name: job.company.name,
+                    website: job.company.website,
+                    description: job.company.description,
+                    logo: job.company.logo,
+                  },
+                  create: {
+                    name: job.company.name,
+                    organizationNumber: orgNumber,
+                    website: job.company.website,
+                    description: job.company.description,
+                    logo: job.company.logo,
+                  },
+                }),
+              ),
+            onNone: () =>
+              db.use((p) =>
+                p.company.create({
+                  data: {
+                    name: job.company.name,
+                    organizationNumber: null,
+                    website: job.company.website,
+                    description: job.company.description,
+                    logo: job.company.logo,
+                  },
+                }),
+              ),
+          });
 
           const companyId = company.id;
 
@@ -114,7 +115,7 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
                   title: job.title,
                   description: job.description,
                   url: job.sourceUrl,
-                  companyId: companyId,
+                  companyId,
 
                   employmentType: job.employmentType,
                   workingHoursType: job.workingHoursType,
@@ -225,7 +226,7 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
                 title: job.title,
                 description: job.description,
                 url: job.sourceUrl,
-                companyId: companyId,
+                companyId,
 
                 employmentType: job.employmentType,
                 workingHoursType: job.workingHoursType,
@@ -321,7 +322,7 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
 
       const markJobAsRemoved = (sourceId: string, removedAt: Date | null) =>
         Effect.gen(function* () {
-          const existingJobSource = yield* db.use((p) =>
+          const existingJobSourceOption = yield* db.use((p) =>
             p.jobSourceLink.findUnique({
               where: {
                 source_sourceId: {
@@ -331,24 +332,24 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
               },
               include: { job: true },
             }),
-          );
+          ).pipe(Effect.map(Option.fromNullable));
 
-          if (!existingJobSource) {
-            return null;
-          }
-
-          yield* db.use((p) =>
-            p.job.update({
-              where: { id: existingJobSource.job.id },
-              data: {
-                removed: true,
-                removedAt: removedAt || new Date(),
-                lastChecked: new Date(),
-              },
-            }),
-          );
-
-          return existingJobSource.job.id;
+          return yield* Option.match(existingJobSourceOption, {
+            onNone: () => Effect.succeed(Option.none<string>()),
+            onSome: (jobSource) =>
+              db.use((p) =>
+                p.job.update({
+                  where: { id: jobSource.job.id },
+                  data: {
+                    removed: true,
+                    removedAt: Option.fromNullable(removedAt).pipe(
+                      Option.getOrElse(() => new Date()),
+                    ),
+                    lastChecked: new Date(),
+                  },
+                }),
+              ).pipe(Effect.map(() => Option.some(jobSource.job.id))),
+          });
         });
 
       const syncJobs = Effect.gen(function* () {
@@ -374,7 +375,7 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
             ),
           );
 
-          if (result._tag === "Right" && result.right !== null) {
+          if (result._tag === "Right" && Option.isSome(result.right)) {
             removedCount++;
           }
         }

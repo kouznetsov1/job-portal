@@ -30,7 +30,7 @@ const LoginFormSchema = Schema.Struct({
 const FormSchema = Schema.standardSchemaV1(LoginFormSchema);
 
 export function LoginForm() {
-  const navigate = useNavigate();
+  const _navigate = useNavigate();
 
   const form = useForm({
     defaultValues: {
@@ -93,7 +93,7 @@ export function LoginForm() {
                   disabled={form.state.isSubmitting}
                 />
                 {field.state.meta.errors.length > 0 && (
-                  <p className="text-sm text-destructive">
+                  <p className="text-destructive text-sm">
                     {field.state.meta.errors[0]!.message}
                   </p>
                 )}
@@ -114,7 +114,7 @@ export function LoginForm() {
                   disabled={form.state.isSubmitting}
                 />
                 {field.state.meta.errors.length > 0 && (
-                  <p className="text-sm text-destructive">
+                  <p className="text-destructive text-sm">
                     {field.state.meta.errors[0]!.message}
                   </p>
                 )}
@@ -135,7 +135,7 @@ export function LoginForm() {
               </Button>
             )}
           />
-          <p className="text-center text-sm text-muted-foreground">
+          <p className="text-center text-muted-foreground text-sm">
             Har du inget konto?{" "}
             <Link
               to="/register"

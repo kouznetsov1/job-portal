@@ -51,7 +51,7 @@ export class TypstService extends Effect.Service<TypstService>()(
               new Promise<void>((resolve, reject) => {
                 ChildProcess.exec(
                   `typst compile "${typFile}" "${pdfFile}"`,
-                  (error, stdout, stderr) => {
+                  (error, _stdout, stderr) => {
                     if (error) {
                       reject(
                         new TypstCompilationError({

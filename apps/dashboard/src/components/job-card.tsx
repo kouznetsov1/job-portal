@@ -5,7 +5,7 @@ import { Button } from "@repo/ui/components/button";
 import { Badge } from "@repo/ui/components/badge";
 import { cn } from "@repo/ui/lib/utils";
 
-export interface JobCardData {
+export type JobCardData = {
   id: string;
   title: string;
   company?: {
@@ -19,16 +19,16 @@ export interface JobCardData {
   description?: string;
   relevance?: number;
   publishedAt?: string;
-}
+};
 
-interface JobCardProps {
+type JobCardProps = {
   job: JobCardData;
   onSave?: (jobId: string) => void;
   onHide?: (jobId: string) => void;
   onApply?: (jobId: string) => void;
   className?: string;
   isSaved?: boolean;
-}
+};
 
 export function JobCard({
   job,
@@ -60,13 +60,13 @@ export function JobCard({
     <article
       className={cn(
         "group relative rounded-lg border border-border bg-card p-6 transition-all duration-200",
-        "hover:shadow-md hover:border-border/80",
+        "hover:border-border/80 hover:shadow-md",
         className
       )}
     >
       {/* Header: Company Logo + Match Badge */}
       <div className="mb-4 flex items-start justify-between gap-4">
-        <div className="flex items-start gap-3 flex-1 min-w-0">
+        <div className="flex min-w-0 flex-1 items-start gap-3">
           {/* Company Logo Placeholder */}
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md border border-border bg-muted">
             {job.company?.logo ? (
@@ -80,15 +80,15 @@ export function JobCard({
             )}
           </div>
 
-          <div className="flex-1 min-w-0">
+          <div className="min-w-0 flex-1">
             {/* Job Title */}
-            <h3 className="text-lg font-semibold text-foreground line-clamp-2 mb-1">
+            <h3 className="mb-1 line-clamp-2 font-semibold text-foreground text-lg">
               {job.title || "Ej angiven tjänst"}
             </h3>
 
             {/* Company Name */}
             {job.company?.name && (
-              <p className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors cursor-pointer">
+              <p className="cursor-pointer font-medium text-foreground/80 text-sm transition-colors hover:text-primary">
                 {job.company.name}
               </p>
             )}
@@ -99,7 +99,7 @@ export function JobCard({
         {matchPercentage !== null && (
           <div
             className={cn(
-              "flex h-12 w-12 shrink-0 items-center justify-center rounded-full border text-xs font-semibold",
+              "flex h-12 w-12 shrink-0 items-center justify-center rounded-full border font-semibold text-xs",
               matchPercentage >= 70 &&
                 "border-primary/20 bg-primary/10 text-primary",
               matchPercentage >= 40 &&
@@ -116,7 +116,7 @@ export function JobCard({
       </div>
 
       {/* Metadata Row */}
-      <div className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
+      <div className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-muted-foreground text-sm">
         {location && (
           <div className="flex items-center gap-1.5">
             <MapPin className="h-3.5 w-3.5" />
@@ -149,7 +149,7 @@ export function JobCard({
       {/* Description Preview */}
       {job.description && (
         <p
-          className="mb-4 line-clamp-2 text-sm text-muted-foreground"
+          className="mb-4 line-clamp-2 text-muted-foreground text-sm"
           dangerouslySetInnerHTML={{
             __html: job.description.replace(/<[^>]*>/g, ' ').substring(0, 200)
           }}
