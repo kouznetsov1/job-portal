@@ -1,5 +1,9 @@
 # Development Log
 
+## 2025-10-27
+
+Migrated chat system from Vercel AI SDK to @effect/ai with OpenAI provider, implemented Prisma-backed persistence layer for chat history with 30-day TTL, created OpenAI language model layer with FetchHttpClient, and updated RPC schemas and handlers to use Chat.Persistence with streaming responses.
+
 ## 2025-10-26
 
 Added AI chat streaming with OpenAI integration using NDJSON protocol, refactored codebase with Option patterns and improved linter configuration, implemented accessibility fixes with safer type annotations, and created slash commands for project management workflow.

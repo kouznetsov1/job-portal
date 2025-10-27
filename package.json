@@ -33,6 +33,9 @@
     "catalog": {
       "eslint": "^9.34.0",
       "effect": "3.18.4",
+      "@effect/ai": "^0.31.1",
+      "@effect/ai-openai": "^0.34.0",
+      "@effect/experimental": "^0.56.0",
       "@effect/platform": "0.92.1",
       "@effect/platform-bun": "0.81.1",
       "@effect/platform-browser": "^0.71.0",

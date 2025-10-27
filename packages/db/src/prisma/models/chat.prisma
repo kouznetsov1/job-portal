@@ -1,0 +1,16 @@
+model Chat {
+  id        String   @id
+  userId    String
+
+  /// Full conversation history serialized as JSON
+  /// Contains: messages array with role, content, options
+  promptHistory Json
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  expiresAt DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}

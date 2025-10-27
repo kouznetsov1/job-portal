@@ -112,7 +112,7 @@ function StreamingMessage({
       const { done, items } = result.value;
 
       if (done) {
-        onComplete(items.join(""));
+        onComplete(items.map((item) => item.content).join(""));
       } else if (!result.waiting) {
         pull();
       }
@@ -126,7 +126,9 @@ function StreamingMessage({
     return (
       <div className="mr-auto max-w-[80%] rounded bg-gray-100 p-3">
         <div className="font-semibold text-gray-600 text-xs">AI</div>
-        <div className="whitespace-pre-wrap">{result.value.items.join("")}</div>
+        <div className="whitespace-pre-wrap">
+          {result.value.items.map((item) => item.content).join("")}
+        </div>
       </div>
     );
   }
