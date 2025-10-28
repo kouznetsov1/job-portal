@@ -1,5 +1,9 @@
 # Development Log
 
+## 2025-10-28
+
+Refactored Platsbanken integration by consolidating all services into a dedicated services/platsbanken/ directory, renamed JobSyncSchedulerLayer to PlatsbankenSyncSchedulerLayer, and removed legacy integration files.
+
 ## 2025-10-27
 
 Migrated chat system from Vercel AI SDK to @effect/ai with OpenAI provider, implemented Prisma-backed persistence layer for chat history with 30-day TTL, created OpenAI language model layer with FetchHttpClient, and updated RPC schemas and handlers to use Chat.Persistence with streaming responses.

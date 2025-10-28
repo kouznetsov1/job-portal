@@ -1,4 +1,7 @@
-import { BackingPersistence, PersistenceBackingError } from "@effect/experimental/Persistence";
+import {
+  BackingPersistence,
+  PersistenceBackingError,
+} from "@effect/experimental/Persistence";
 import { Effect, Layer, Option, Duration } from "effect";
 import { Database } from "@repo/db";
 
@@ -25,7 +28,10 @@ export const PrismaPersistenceLayer = Layer.effect(
               )
               .pipe(
                 Effect.map((chat) => {
-                  if (!chat || (chat.expiresAt && chat.expiresAt < new Date())) {
+                  if (
+                    !chat ||
+                    (chat.expiresAt && chat.expiresAt < new Date())
+                  ) {
                     return Option.none();
                   }
                   return Option.some(chat.promptHistory);
@@ -33,7 +39,11 @@ export const PrismaPersistenceLayer = Layer.effect(
                 handleError("get"),
               ),
 
-          set: (chatId: string, value: unknown, ttl: Option.Option<Duration.Duration>) =>
+          set: (
+            chatId: string,
+            value: unknown,
+            ttl: Option.Option<Duration.Duration>,
+          ) =>
             db
               .use((prisma) =>
                 prisma.chat.upsert({
@@ -42,14 +52,16 @@ export const PrismaPersistenceLayer = Layer.effect(
                     id: chatId,
                     userId: "user_placeholder", // TODO: Get from auth context
                     promptHistory: value,
-                    expiresAt: Option.map(ttl, (d) =>
-                      new Date(Date.now() + Duration.toMillis(d)),
+                    expiresAt: Option.map(
+                      ttl,
+                      (d) => new Date(Date.now() + Duration.toMillis(d)),
                     ).pipe(Option.getOrUndefined),
                   },
                   update: {
                     promptHistory: value,
-                    expiresAt: Option.map(ttl, (d) =>
-                      new Date(Date.now() + Duration.toMillis(d)),
+                    expiresAt: Option.map(
+                      ttl,
+                      (d) => new Date(Date.now() + Duration.toMillis(d)),
                     ).pipe(Option.getOrUndefined),
                   },
                 }),
