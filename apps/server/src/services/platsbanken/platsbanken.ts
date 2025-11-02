@@ -1,4 +1,4 @@
-import { FetchHttpClient, HttpClient } from "@effect/platform";
+import { HttpClient } from "@effect/platform";
 import { Console, DateTime, Effect, Schedule, Schema } from "effect";
 import { JobStreamResponse } from "@repo/domain";
 
@@ -8,7 +8,6 @@ const formatDateTime = (dt: DateTime.DateTime): string =>
 export class PlatsbankenService extends Effect.Service<PlatsbankenService>()(
   "PlatsbankenService",
   {
-    dependencies: [FetchHttpClient.layer],
     effect: Effect.gen(function* () {
       const client = yield* HttpClient.HttpClient;
       const baseUrl = "https://jobstream.api.jobtechdev.se";

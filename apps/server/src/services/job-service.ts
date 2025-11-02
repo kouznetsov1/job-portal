@@ -4,6 +4,7 @@ import {
   Job,
   JobSearchResult,
   JobNotFoundError,
+  JobSearchError,
   type JobSearchParams,
 } from "@repo/domain";
 
@@ -108,6 +109,13 @@ export class JobService extends Effect.Service<JobService>()("JobService", {
 
         const result = yield* Schema.decodeUnknown(JobSearchResult)(
           JSON.parse(JSON.stringify({ jobs: rawJobs, total, page, pageSize })),
+        ).pipe(
+          Effect.mapError(
+            (error) =>
+              new JobSearchError({
+                message: `Failed to validate search results: ${error.message}`,
+              }),
+          ),
         );
 
         return result;
@@ -144,6 +152,13 @@ export class JobService extends Effect.Service<JobService>()("JobService", {
 
         const job = yield* Schema.decodeUnknown(Job)(
           JSON.parse(JSON.stringify(rawJob)),
+        ).pipe(
+          Effect.mapError(
+            (error) =>
+              new JobSearchError({
+                message: `Failed to validate job data: ${error.message}`,
+              }),
+          ),
         );
 
         return job;

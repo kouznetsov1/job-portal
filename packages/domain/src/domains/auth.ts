@@ -1,12 +1,16 @@
-import { Data } from "effect";
+import { Schema } from "effect";
 
-export class AuthError extends Data.TaggedError("AuthError")<{
-  readonly message: string;
-  readonly cause?: unknown;
-}> {}
+export class AuthError extends Schema.TaggedError<AuthError>()(
+  "AuthError",
+  {
+    message: Schema.String,
+    cause: Schema.optional(Schema.Unknown),
+  },
+) {}
 
-export class SessionNotFoundError extends Data.TaggedError(
+export class SessionNotFoundError extends Schema.TaggedError<SessionNotFoundError>()(
   "SessionNotFoundError",
-)<{
-  readonly message: string;
-}> {}
+  {
+    message: Schema.String,
+  },
+) {}

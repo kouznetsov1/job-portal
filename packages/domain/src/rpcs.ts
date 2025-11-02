@@ -1,5 +1,4 @@
-import { ChatRpcs } from "./domains/chat";
 import { HealthRpcs } from "./domains/health";
 import { JobsRpcs } from "./domains/jobs";
 
-export const Rpcs = HealthRpcs.merge(JobsRpcs).merge(ChatRpcs);
+export const Rpcs = HealthRpcs.merge(JobsRpcs);

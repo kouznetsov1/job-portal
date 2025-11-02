@@ -389,16 +389,16 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
         return stats;
       });
 
-      const startScheduler = Effect.gen(function* () {
-        yield* syncJobs.pipe(
+      const startScheduler = Effect.asVoid(
+        syncJobs.pipe(
           Effect.catchAll((error) =>
             Console.error(`Sync failed: ${error}`).pipe(
               Effect.as({ imported: 0, removed: 0, failed: 0 }),
             ),
           ),
           Effect.repeat(Schedule.fixed("1 hour")),
-        );
-      });
+        ),
+      );
 
       return {
         startScheduler,
