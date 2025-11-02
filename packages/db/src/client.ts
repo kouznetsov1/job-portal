@@ -11,7 +11,7 @@ export class Database extends Effect.Service<Database>()("Database", {
     const client = new PrismaClient({ adapter });
 
     const use = <A>(f: (p: PrismaClient) => PrismaPromise<A>) =>
-      Effect.fn("databaseUse")(function* () {
+      Effect.fn("database.use")(function* () {
         return yield* Effect.tryPromise({
           try: () => f(client),
           catch: (error) =>
@@ -19,11 +19,7 @@ export class Database extends Effect.Service<Database>()("Database", {
               message: error instanceof Error ? error.message : String(error),
               cause: error,
             }),
-        }).pipe(
-          Effect.tapError((error) =>
-            Effect.logError("Database query failed", error),
-          ),
-        );
+        });
       })();
 
     return {
