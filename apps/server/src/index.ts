@@ -1,4 +1,4 @@
-import { HttpLayerRouter } from "@effect/platform";
+import { FetchHttpClient, HttpLayerRouter } from "@effect/platform";
 import { BunHttpServer, BunRuntime } from "@effect/platform-bun";
 import { Layer } from "effect";
 import { RpcSerialization, RpcServer } from "@effect/rpc";
@@ -24,6 +24,6 @@ const Main = Layer.mergeAll(
     Layer.provide(BunHttpServer.layer({ port: 9090 })),
   ),
   PlatsbankenSyncSchedulerLayer,
-);
+).pipe(Layer.provide(FetchHttpClient.layer));
 
 BunRuntime.runMain(Layer.launch(Main));
