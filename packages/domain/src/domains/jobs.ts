@@ -1,5 +1,6 @@
 import { Rpc, RpcGroup } from "@effect/rpc";
 import { Schema } from "effect";
+import { DatabaseError } from "./database";
 
 export class JobNotFoundError extends Schema.TaggedError<JobNotFoundError>()(
   "JobNotFoundError",
@@ -164,10 +165,16 @@ export const JobSearchResult = Schema.Struct({
 });
 export type JobSearchResult = Schema.Schema.Type<typeof JobSearchResult>;
 
+export const JobRpcError = Schema.Union(
+  JobNotFoundError,
+  JobSearchError,
+  DatabaseError,
+);
+
 export class JobsRpcs extends RpcGroup.make(
   Rpc.make("jobs.search", {
     success: JobSearchResult,
-    error: JobSearchError,
+    error: JobRpcError,
     payload: {
       q: Schema.optional(Schema.String),
       occupation: Schema.optional(Schema.String),
@@ -180,15 +187,21 @@ export class JobsRpcs extends RpcGroup.make(
       workingHoursType: Schema.optional(Schema.String),
       remote: Schema.optional(Schema.Boolean),
       experienceRequired: Schema.optional(Schema.Boolean),
-      page: Schema.optional(Schema.Number.pipe(Schema.int(), Schema.positive())),
+      page: Schema.optional(
+        Schema.Number.pipe(Schema.int(), Schema.positive()),
+      ),
       pageSize: Schema.optional(
-        Schema.Number.pipe(Schema.int(), Schema.positive(), Schema.lessThanOrEqualTo(100)),
+        Schema.Number.pipe(
+          Schema.int(),
+          Schema.positive(),
+          Schema.lessThanOrEqualTo(100),
+        ),
       ),
     },
   }),
   Rpc.make("jobs.getById", {
     success: Job,
-    error: Schema.Union(JobNotFoundError, JobSearchError),
+    error: JobRpcError,
     payload: {
       id: Schema.String,
     },

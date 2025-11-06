@@ -361,12 +361,6 @@ Code is considered complete only when:
 
 ## Key Directories
 
-### Configuration & Specs
-
-- `.patterns/` - Development patterns and best practices
-  - `effect-usage.md` - Core Effect patterns
-  - `error-handling.md` - Structured error management patterns
-
 ### Source Code References
 
 - `vendor/effect/` - Complete Effect-TS source repository (gitignored)
@@ -374,17 +368,6 @@ Code is considered complete only when:
   - When online docs are insufficient, explore the source code directly
   - Main packages are in `vendor/effect/packages/` (effect, schema, platform, etc.)
   - Update with: `cd vendor/effect && git pull`
-
-## Development Patterns Reference
-
-The `.patterns/` directory contains comprehensive development patterns and best practices for the Effect library. **Always reference these patterns before implementing new functionality** to ensure consistency with established codebase conventions.
-
-### Core Patterns to Follow:
-
-- **Effect TS Development**: Fundamental patterns, forbidden practices, and mandatory patterns
-- **Module Organization**: Directory structure, export patterns, naming conventions, and TypeId usage
-- **Error Handling**: Data.TaggedError usage, error transformation, and recovery patterns
-- **Platform Integration**: Service abstractions, layer composition, and cross-platform patterns
 
 ## Problem-Solving Strategies
 

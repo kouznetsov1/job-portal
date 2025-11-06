@@ -30,7 +30,12 @@
     "allowImportingTsExtensions": false,
     "verbatimModuleSyntax": false,
     "skipLibCheck": true,
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "plugins": [
+      {
+        "name": "@effect/language-service"
+      }
+    ]
   },
   "exclude": ["node_modules", "dist", "build", ".next", "coverage"]
 }

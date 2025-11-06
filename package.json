@@ -17,7 +17,8 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.6",
-    "turbo": "^2.5.8",
+    "@effect/language-service": "^0.53.3",
+    "turbo": "^2.6.0",
     "typescript": "5.9.3",
     "ultracite": "5.6.4"
   },
@@ -33,6 +34,9 @@
     "catalog": {
       "eslint": "^9.34.0",
       "effect": "3.18.4",
+      "@effect/ai": "^0.31.1",
+      "@effect/ai-openai": "^0.34.0",
+      "@effect/experimental": "^0.56.0",
       "@effect/platform": "0.92.1",
       "@effect/platform-bun": "0.81.1",
       "@effect/platform-browser": "^0.71.0",
@@ -54,7 +58,7 @@
     }
   },
   "dependencies": {
-    "@tanstack/react-router": "^1.133.22",
-    "@tanstack/react-start": "^1.133.22"
+    "@tanstack/react-router": "^1.134.9",
+    "@tanstack/react-start": "^1.134.9"
   }
 }

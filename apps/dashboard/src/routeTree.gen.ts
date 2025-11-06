@@ -14,7 +14,6 @@ import { Route as appRouteRouteImport } from './routes/(app)/route'
 import { Route as appIndexRouteImport } from './routes/(app)/index'
 import { Route as authRegisterRouteImport } from './routes/(auth)/register'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
-import { Route as appJobIndexRouteImport } from './routes/(app)/job/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
 const authRouteRoute = authRouteRouteImport.update({
@@ -40,11 +39,6 @@ const authLoginRoute = authLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => authRouteRoute,
 } as any)
-const appJobIndexRoute = appJobIndexRouteImport.update({
-  id: '/job/',
-  path: '/job/',
-  getParentRoute: () => appRouteRoute,
-} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -56,14 +50,12 @@ export interface FileRoutesByFullPath {
   '/register': typeof authRegisterRoute
   '/': typeof appIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/job': typeof appJobIndexRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof authLoginRoute
   '/register': typeof authRegisterRoute
   '/': typeof appIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/job': typeof appJobIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -73,13 +65,12 @@ export interface FileRoutesById {
   '/(auth)/register': typeof authRegisterRoute
   '/(app)/': typeof appIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/(app)/job/': typeof appJobIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/login' | '/register' | '/' | '/api/auth/$' | '/job'
+  fullPaths: '/login' | '/register' | '/' | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/register' | '/' | '/api/auth/$' | '/job'
+  to: '/login' | '/register' | '/' | '/api/auth/$'
   id:
     | '__root__'
     | '/(app)'
@@ -88,7 +79,6 @@ export interface FileRouteTypes {
     | '/(auth)/register'
     | '/(app)/'
     | '/api/auth/$'
-    | '/(app)/job/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -134,13 +124,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authLoginRouteImport
       parentRoute: typeof authRouteRoute
     }
-    '/(app)/job/': {
-      id: '/(app)/job/'
-      path: '/job'
-      fullPath: '/job'
-      preLoaderRoute: typeof appJobIndexRouteImport
-      parentRoute: typeof appRouteRoute
-    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -153,12 +136,10 @@ declare module '@tanstack/react-router' {
 
 interface appRouteRouteChildren {
   appIndexRoute: typeof appIndexRoute
-  appJobIndexRoute: typeof appJobIndexRoute
 }
 
 const appRouteRouteChildren: appRouteRouteChildren = {
   appIndexRoute: appIndexRoute,
-  appJobIndexRoute: appJobIndexRoute,
 }
 
 const appRouteRouteWithChildren = appRouteRoute._addFileChildren(

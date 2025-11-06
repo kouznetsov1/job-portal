@@ -11,12 +11,7 @@
       "~/*": [
         "public/*"
       ]
-    },
-    "plugins": [
-      {
-        "name": "@effect/language-service"
-      }
-    ]
+    }
   },
   "references": [
     {

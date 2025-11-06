@@ -1,5 +1,17 @@
 # Development Log
 
+## 2025-10-28
+
+Refactored Platsbanken integration by consolidating all services into a dedicated services/platsbanken/ directory, renamed JobSyncSchedulerLayer to PlatsbankenSyncSchedulerLayer, and removed legacy integration files.
+
+## 2025-10-27
+
+Migrated chat system from Vercel AI SDK to @effect/ai with OpenAI provider, implemented Prisma-backed persistence layer for chat history with 30-day TTL, created OpenAI language model layer with FetchHttpClient, and updated RPC schemas and handlers to use Chat.Persistence with streaming responses.
+
+## 2025-10-26
+
+Added AI chat streaming with OpenAI integration using NDJSON protocol, refactored codebase with Option patterns and improved linter configuration, implemented accessibility fixes with safer type annotations, and created slash commands for project management workflow.
+
 ## 2025-10-22
 
 Refactored RPC architecture by removing WebSocket protocol in favor of HTTP-only, fixed client imports to use proper Effect module paths, enhanced JobService with tracing spans and error logging, cleaned up job sync scheduler, and added logging/tracing guidelines to CLAUDE.md.

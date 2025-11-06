@@ -12,13 +12,18 @@
     "clean": "git clean -xdf .cache .turbo dist node_modules"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^2.0.53",
     "@anthropic-ai/claude-agent-sdk": "^0.1.22",
+    "@effect/ai": "catalog:",
+    "@effect/ai-openai": "catalog:",
+    "@effect/experimental": "catalog:",
     "@effect/language-service": "catalog:",
     "@effect/platform": "catalog:",
     "@effect/platform-bun": "catalog:",
     "@effect/rpc": "catalog:",
     "@repo/domain": "workspace:*",
     "@repo/db": "workspace:*",
+    "ai": "^5.0.80",
     "better-auth": "catalog:",
     "effect": "catalog:",
     "zod": "^4.1.11"

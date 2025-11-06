@@ -1,18 +1,22 @@
-import { Effect, Data } from "effect";
+import { Effect, Schema } from "effect";
 import { FileSystem, Path } from "@effect/platform";
 import * as ChildProcess from "node:child_process";
 
-export class TypstCompilationError extends Data.TaggedError(
+export class TypstCompilationError extends Schema.TaggedError<TypstCompilationError>()(
   "TypstCompilationError",
-)<{
-  message: string;
-  stderr?: string;
-}> {}
+  {
+    message: Schema.String,
+    stderr: Schema.optional(Schema.String),
+  },
+) {}
 
-export class TypstFileError extends Data.TaggedError("TypstFileError")<{
-  message: string;
-  cause?: unknown;
-}> {}
+export class TypstFileError extends Schema.TaggedError<TypstFileError>()(
+  "TypstFileError",
+  {
+    message: Schema.String,
+    cause: Schema.optional(Schema.Unknown),
+  },
+) {}
 
 export class TypstService extends Effect.Service<TypstService>()(
   "TypstService",

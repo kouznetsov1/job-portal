@@ -1,10 +1,13 @@
-import { Effect, Data, Config } from "effect";
+import { Effect, Schema, Config } from "effect";
 import { FileSystem, Path } from "@effect/platform";
 
-export class FileStorageError extends Data.TaggedError("FileStorageError")<{
-  message: string;
-  cause?: unknown;
-}> {}
+export class FileStorageError extends Schema.TaggedError<FileStorageError>()(
+  "FileStorageError",
+  {
+    message: Schema.String,
+    cause: Schema.optional(Schema.Unknown),
+  },
+) {}
 
 export class FileStorageService extends Effect.Service<FileStorageService>()(
   "FileStorageService",

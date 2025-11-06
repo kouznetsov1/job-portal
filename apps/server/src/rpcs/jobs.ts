@@ -1,4 +1,4 @@
-import { Effect, Layer, } from "effect";
+import { Effect, Layer } from "effect";
 import { JobsRpcs } from "@repo/domain";
 import { JobService } from "../services/job-service";
 import { Database } from "@repo/db";
