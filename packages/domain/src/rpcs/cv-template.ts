@@ -1,20 +1,29 @@
 import { Rpc, RpcGroup } from "@effect/rpc";
 import { Schema } from "effect";
-import { CVTemplate, CVTemplateId, TemplateRpcError } from "../schema/cv-template";
+import {
+  CVTemplate,
+  CVTemplateId,
+  TemplateRpcError,
+} from "../schema/cv-template";
 
-export class CVTemplatesRpcs extends RpcGroup.make(
-  Rpc.make("cvTemplates.list", {
+export class CVTemplatePublicRpcs extends RpcGroup.make(
+  Rpc.make("cvTemplate.list", {
     success: Schema.Array(CVTemplate),
     error: TemplateRpcError,
   }),
-  Rpc.make("cvTemplates.get", {
+  Rpc.make("cvTemplate.get", {
     payload: Schema.Struct({ templateId: CVTemplateId }),
     success: CVTemplate,
     error: TemplateRpcError,
   }),
-  Rpc.make("cvTemplates.setActive", {
+) {}
+
+export class CVTemplateAuthRpcs extends RpcGroup.make(
+  Rpc.make("cvTemplate.setActive", {
     payload: Schema.Struct({ templateId: CVTemplateId }),
     success: Schema.Boolean,
     error: TemplateRpcError,
   }),
 ) {}
+
+export const CVTemplateRpcs = CVTemplatePublicRpcs.merge(CVTemplateAuthRpcs);

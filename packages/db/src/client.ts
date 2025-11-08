@@ -35,7 +35,3 @@ export class Database extends Effect.Service<Database>()("Database", {
     Layer.provide(Layer.setConfigProvider(ConfigProvider.fromEnv())),
   );
 }
-
-const s = Schema.declare((u): u is UserModel => typeof u === "object", {
-  identifier: "PrismaUser",
-});

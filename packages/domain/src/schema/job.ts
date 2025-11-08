@@ -51,8 +51,8 @@ export class Job extends Schema.Class<Job>("Job")({
   description: Schema.String,
   url: Schema.optional(Schema.String),
 
-  companyId: Schema.optional(CompanyId),
-  company: Company,
+  companyId: CompanyId,
+  company: Schema.optional(Company),
 
   employmentType: Schema.optional(Schema.String),
   workingHoursType: Schema.optional(Schema.String),

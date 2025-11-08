@@ -12,32 +12,32 @@ import {
   RegenerateApplicationRequest,
 } from "../schema/application";
 
-export class ApplicationsRpcs extends RpcGroup.make(
-  Rpc.make("applications.generate", {
+export class ApplicationRpcs extends RpcGroup.make(
+  Rpc.make("application.generate", {
     payload: GenerateApplicationRequest,
     success: GenerationProgress,
     error: ApplicationRpcError,
   }),
-  Rpc.make("applications.get", {
+  Rpc.make("application.get", {
     payload: Schema.Struct({ applicationId: ApplicationId }),
     success: Application,
     error: ApplicationRpcError,
   }),
-  Rpc.make("applications.list", {
+  Rpc.make("application.list", {
     success: Schema.Array(Application),
     error: ApplicationRpcError,
   }),
-  Rpc.make("applications.regenerate", {
+  Rpc.make("application.regenerate", {
     payload: RegenerateApplicationRequest,
     success: GenerationProgress,
     error: ApplicationRpcError,
   }),
-  Rpc.make("applications.download", {
+  Rpc.make("application.download", {
     payload: DownloadApplicationRequest,
     success: DownloadApplicationResult,
     error: ApplicationRpcError,
   }),
-  Rpc.make("applications.markApplied", {
+  Rpc.make("application.markApplied", {
     payload: MarkAppliedRequest,
     success: Application,
     error: ApplicationRpcError,

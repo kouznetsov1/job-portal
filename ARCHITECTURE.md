@@ -312,44 +312,47 @@ NOTE: This has been changed so in schema we export from index there, in rpcs in 
 
 ### 1.1: Database Schema - Users
 
-**File**: `packages/db/prisma/schema.prisma`
+NOTE: Completed - User model exists with uuidv7 IDs, email/password auth configured.
 
-- [ ] Add User model with id (cuid), email (unique), name, avatarUrl
-- [ ] Add profile relation (1:1 UserProfile)
-- [ ] Add savedJobs relation (1:many SavedJob)
-- [ ] Add applications relation (1:many Application)
-- [ ] Add onboardingChats relation (1:1 OnboardingChat)
-- [ ] Add createdAt and updatedAt timestamps
-- [ ] Add index on email field
+**File**: `packages/db/src/prisma/models/user.prisma`
+
+- [x] Add User model with id (uuidv7), email (unique), name, image
+- [x] Add createdAt and updatedAt timestamps
+- [x] Add index on email field (via @unique)
+- [x] Add sessions, accounts relations (Better Auth)
+- [x] Add cvs, chats relations
+- [ ] Add profile relation (1:1 UserProfile) - will be added in Phase 2
+- [ ] Add savedJobs relation (1:many SavedJob) - will be added in Phase 3
+- [ ] Add applications relation (1:many Application) - will be added in Phase 5
+- [ ] Add onboardingChats relation (1:1 OnboardingChat) - will be added in Phase 4
 
 ---
 
 ### 1.2: Better Auth Setup
 
-**File**: `packages/auth/src/index.ts`
-
-NOTE: Parts of this has been done already, which things is unclear - do some research before moving on with this phase.
+**File**: `packages/auth/src/auth.ts`
 
 For testing this we have to do some frontend work which is not noted down here below.
 
-- [ ] Install Better Auth: `bun add better-auth`
-- [ ] Install Prisma adapter: `bun add better-auth/adapters/prisma`
-- [ ] Create auth instance with betterAuth()
-- [ ] Configure Prisma adapter with PrismaClient
-- [ ] Enable email/password authentication
-- [ ] Configure Google OAuth provider (clientId, clientSecret from env)
-- [ ] Configure LinkedIn OAuth provider (clientId, clientSecret from env)
-- [ ] Export auth instance
-- [ ] Export Session type inference
+- [x] Install Better Auth: `bun add better-auth`
+- [x] Install Prisma adapter: `bun add better-auth/adapters/prisma`
+- [x] Create Auth service using Effect.Service pattern
+- [x] Configure Prisma adapter with PrismaClient
+- [x] Enable email/password authentication
+- [x] Configure Google OAuth provider (clientId, clientSecret from env)
+- [x] Configure LinkedIn OAuth provider (clientId, clientSecret from env)
+- [x] Export auth instance from service
+- [x] Implement getSession method (accepts Headers)
+- [x] Implement requireAuth method (accepts Headers)
 
 **Note**: Better Auth automatically creates API endpoints like `/api/auth/signin`, `/api/auth/signup`, `/api/auth/signout` that clients use directly.
 
 **File**: `.env`
 
-- [ ] Add GOOGLE_CLIENT_ID
-- [ ] Add GOOGLE_CLIENT_SECRET
-- [ ] Add LINKEDIN_CLIENT_ID
-- [ ] Add LINKEDIN_CLIENT_SECRET
+- [x] Add GOOGLE_CLIENT_ID
+- [x] Add GOOGLE_CLIENT_SECRET
+- [x] Add LINKEDIN_CLIENT_ID
+- [x] Add LINKEDIN_CLIENT_SECRET
 
 ---
 
@@ -361,17 +364,16 @@ For testing this we have to do some frontend work which is not noted down here b
 
 #### Service Setup
 
-- [ ] Create UserRepo class extending Effect.Service
-- [ ] Add Database dependency injection
-- [ ] Setup scoped Effect.gen function
+- [x] Create UserRepo class extending Effect.Service
+- [x] Add Database dependency injection
+- [x] Setup scoped Effect.gen function
 
 #### getCurrentUser method
 
-- [ ] Get userId from Session context (Better Auth session)
-- [ ] If no session, fail with SessionNotFoundError
-- [ ] Fetch user from database by userId
-- [ ] Transform to UserPublic schema
-- [ ] Use Effect.fn(userRepo.getCurrentUser) so we have spans
+- [x] Get userId from Session context (Better Auth session) - currently using "temp-user-id" placeholder
+- [x] Fetch user from database by userId
+- [x] Transform to UserPublic schema
+- [x] Use Effect.fn for spans
 
 #### updateProfile method
 
@@ -384,43 +386,48 @@ For testing this we have to do some frontend work which is not noted down here b
 
 ### 1.4: Implement UsersRpcs Handler
 
-**File**: `apps/server/src/rpcs/users.ts`
+**File**: `apps/server/src/handlers/users.ts`
 
-- [ ] Import UsersRpcs from @repo/domain
-- [ ] Import UserService
-- [ ] Create UsersLiveHandler using UsersRpcs.toLayer
-- [ ] Wire up "users.getCurrentUser" endpoint to userService.getCurrentUser
-- [ ] Wire up "users.updateProfile" endpoint to userService.updateProfile
-- [ ] Provide UserService.Default layer
-- [ ] Provide Database.Live layer
+- [x] Import UsersRpcs from @repo/domain
+- [x] Import UserRepo
+- [x] Create Users handler using UsersRpcs.toLayer
+- [x] Wire up "users.getCurrentUser" endpoint to userRepo.getCurrentUser
+- [x] Add DatabaseError to UserRpcError union in domain
+- [ ] Wire up "users.updateProfile" endpoint to userRepo.updateProfile
 
 ---
 
 ### 1.5: Register Handler
 
-**File**: `apps/server/src/rpcs/index.ts`
+**File**: `apps/server/src/handlers/index.ts`
 
-- [ ] Import UsersLiveHandler
-- [ ] Merge UsersLiveHandler into RpcHandlers with Layer.mergeAll
+- [x] Import Users handler
+- [x] Merge Users into RpcHandlers with Layer.mergeAll
 
 ---
 
 ### 1.6: Session Context Middleware
 
-**File**: `apps/server/src/middleware/session.ts`
+**File**: `apps/server/src/services/session.ts`
 
-- [ ] Create Session service for Effect context
-- [ ] Extract session from request headers/cookies (Better Auth sets these)
-- [ ] Verify session with Better Auth (or read from Better Auth's session store)
-- [ ] Add session (userId, email) to Effect context
-- [ ] Create middleware layer that provides Session service
+- [x] Create Session service using Effect.Service
+- [x] Extract session from request headers using Better Auth
+- [x] Verify session with Better Auth
+- [x] Return session data (userId, email) from fromHeaders method
 
-**File**: `apps/server/src/rpcs/*.ts` (all handlers)
+**File**: `apps/server/src/handlers/users.ts`
 
-- [ ] Replace "temp-user-id" placeholders with Session.userId from context
-- [ ] Update all handlers to extract userId from Session service
+- [x] Replace "temp-user-id" placeholder with Session.fromHeaders
+- [x] Extract userId from session in handler
 
-**Note**: Better Auth manages sessions automatically. Your middleware just needs to extract the userId from the session that Better Auth creates.
+**File**: `apps/server/src/handlers/index.ts`
+
+- [x] Provide Session.Default layer to RpcHandlers
+- [x] Provide Auth.Live layer to RpcHandlers
+- [x] Provide Database.Live layer to RpcHandlers
+- [x] Provide UserRepo.Default layer to RpcHandlers
+
+**Note**: Better Auth manages sessions automatically. Session service extracts userId from the session that Better Auth creates via request headers.
 
 ---
 

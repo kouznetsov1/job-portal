@@ -9,29 +9,34 @@ export class JobSearchResult extends Schema.Class<JobSearchResult>(
   total: Schema.Number,
 }) {}
 
-export class JobsRpcs extends RpcGroup.make(
-  Rpc.make("jobs.search", {
+export class JobPublicRpcs extends RpcGroup.make(
+  Rpc.make("job.search", {
     payload: JobSearchParams,
     success: JobSearchResult,
     error: JobRpcError,
   }),
-  Rpc.make("jobs.getById", {
+  Rpc.make("job.getById", {
     payload: Schema.Struct({ id: JobId }),
     success: Job,
     error: JobRpcError,
   }),
-  Rpc.make("jobs.getSaved", {
+) {}
+
+export class JobAuthRpcs extends RpcGroup.make(
+  Rpc.make("job.getSaved", {
     success: Schema.Array(Job),
     error: JobRpcError,
   }),
-  Rpc.make("jobs.save", {
+  Rpc.make("job.save", {
     payload: Schema.Struct({ jobId: JobId }),
     success: Schema.Boolean,
     error: JobRpcError,
   }),
-  Rpc.make("jobs.unsave", {
+  Rpc.make("job.unsave", {
     payload: Schema.Struct({ jobId: JobId }),
     success: Schema.Boolean,
     error: JobRpcError,
   }),
 ) {}
+
+export const JobRpcs = JobPublicRpcs.merge(JobAuthRpcs);

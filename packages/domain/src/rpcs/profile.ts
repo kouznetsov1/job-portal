@@ -8,22 +8,22 @@ import {
   UserProfile,
 } from "../schema/profile";
 
-export class ProfilesRpcs extends RpcGroup.make(
-  Rpc.make("profiles.get", {
+export class ProfileRpcs extends RpcGroup.make(
+  Rpc.make("profile.get", {
     success: UserProfile,
     error: ProfileRpcError,
   }),
-  Rpc.make("profiles.update", {
+  Rpc.make("profile.update", {
     payload: UpdateProfileData,
     success: UserProfile,
     error: ProfileRpcError,
   }),
-  Rpc.make("profiles.uploadCV", {
+  Rpc.make("profile.uploadCV", {
     payload: CVUploadRequest,
     success: ParsedCVResult,
     error: ProfileRpcError,
   }),
-  Rpc.make("profiles.parseLinkedIn", {
+  Rpc.make("profile.parseLinkedIn", {
     payload: LinkedInImportRequest,
     success: UpdateProfileData,
     error: ProfileRpcError,

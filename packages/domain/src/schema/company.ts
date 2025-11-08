@@ -79,4 +79,7 @@ export class CompanyNotFoundError extends Schema.TaggedError<CompanyNotFoundErro
   { id: CompanyId },
 ) {}
 
-export const CompanyRpcError = Schema.Union(CompanyNotFoundError, DatabaseError);
+export const CompanyRpcError = Schema.Union(
+  CompanyNotFoundError,
+  DatabaseError,
+);

@@ -1,5 +1,6 @@
 import { Schema } from "effect";
-import { SessionNotFoundError } from "./auth";
+import { SessionNotFoundError, AuthError } from "./auth";
+import { DatabaseError } from "./database";
 
 export const UserId = Schema.String.pipe(Schema.brand("UserId"));
 
@@ -18,4 +19,6 @@ export class UserNotFoundError extends Schema.TaggedError<UserNotFoundError>()(
 export const UserRpcError = Schema.Union(
   UserNotFoundError,
   SessionNotFoundError,
+  AuthError,
+  DatabaseError,
 );

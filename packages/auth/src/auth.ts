@@ -1,58 +1,61 @@
 import { Database } from "@repo/db";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { Context, Effect, Layer } from "effect";
+import { Effect } from "effect";
 import type { BetterAuthOptions } from "better-auth";
 import { AuthError, SessionNotFoundError } from "@repo/domain";
+import { google, linkedin } from "better-auth/social-providers";
 
-export class Auth extends Context.Tag("Auth")<
-  Auth,
-  ReturnType<typeof betterAuth>
->() {
-  static readonly Live = Layer.effect(
-    Auth,
-    Effect.gen(function* () {
-      const db = yield* Database;
+export class Auth extends Effect.Service<Auth>()("Auth", {
+  effect: Effect.gen(function* () {
+    const db = yield* Database;
 
-      const config: BetterAuthOptions = {
-        database: prismaAdapter(db.client, {
-          provider: "postgresql",
+    const config: BetterAuthOptions = {
+      database: prismaAdapter(db.client, {
+        provider: "postgresql",
+      }),
+      emailAndPassword: {
+        enabled: true,
+        requireEmailVerification: false,
+      },
+      socialProviders: {
+        google: google({
+          clientId: process.env.GOOGLE_CLIENT_ID || "",
+          clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
         }),
-        emailAndPassword: {
-          enabled: true,
-          requireEmailVerification: false,
-        },
-        trustedOrigins: ["http://localhost:3000"],
-      };
+        linkedin: linkedin({
+          clientId: process.env.LINKEDIN_CLIENT_ID || "",
+          clientSecret: process.env.LINKEDIN_CLIENT_SECRET || "",
+        }),
+      },
+      trustedOrigins: ["http://localhost:3000"],
+    };
 
-      return betterAuth(config);
-    }),
-  );
+    const auth = betterAuth(config);
 
-  static readonly getSession = (request: Request) =>
-    Effect.gen(function* () {
-      const auth = yield* Auth;
-      const session = yield* Effect.tryPromise({
-        try: () => auth.api.getSession({ headers: request.headers }),
-        catch: (cause) =>
-          new AuthError({ message: "Failed to get session", cause }),
+    const getSession = (headers: Headers) =>
+      Effect.gen(function* () {
+        const session = yield* Effect.tryPromise({
+          try: () => auth.api.getSession({ headers }),
+          catch: (cause) =>
+            new AuthError({ message: "Failed to get session", cause }),
+        });
+
+        if (!session) {
+          return yield* Effect.fail(
+            new SessionNotFoundError({ message: "No active session found" }),
+          );
+        }
+
+        return session;
       });
 
-      if (!session) {
-        return yield* Effect.fail(
-          new SessionNotFoundError({ message: "No active session found" }),
-        );
-      }
+    const requireAuth = (headers: Headers) => getSession(headers);
 
-      return session;
-    });
-
-  static readonly requireAuth = (request: Request) =>
-    Auth.getSession(request).pipe(
-      Effect.mapError((error) =>
-        error._tag === "SessionNotFoundError"
-          ? new AuthError({ message: "Authentication required" })
-          : error,
-      ),
-    );
-}
+    return {
+      auth,
+      getSession,
+      requireAuth,
+    };
+  }),
+}) {}
