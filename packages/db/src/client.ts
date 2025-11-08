@@ -1,10 +1,9 @@
 import { PrismaPg } from "@prisma/adapter-pg";
 import type {
   PrismaPromise,
-  UserModel,
 } from "./generated/prisma/internal/prismaNamespace";
 import { PrismaClient } from "./generated/prisma/client";
-import { Config, ConfigProvider, Effect, Layer, Schema } from "effect";
+import { Config, ConfigProvider, Effect, Layer, } from "effect";
 import { DatabaseError } from "@repo/domain";
 
 export class Database extends Effect.Service<Database>()("Database", {
