@@ -6,7 +6,7 @@ services:
     volumes:
       - type: bind
         source: ./data
-        target: /var/lib/postgresql/data
+        target: /var/lib/postgresql
     restart: always
     shm_size: 128mb
     ports:

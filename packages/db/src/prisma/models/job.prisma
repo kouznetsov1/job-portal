@@ -1,13 +1,9 @@
 enum JobSource {
   PLATSBANKEN
-  LINKEDIN
-  INDEED
-  STEPSTONE
-  GLASSDOOR
 }
 
 model Job {
-  id        String   @id @default(cuid())
+  id        String   @id @default(dbgenerated("uuidv7()")) @db.Uuid
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -22,7 +18,7 @@ model Job {
   description String  @db.Text
   url         String?
 
-  companyId String?  @map("company_id")
+  companyId String?  @map("company_id") @db.Uuid
   company   Company? @relation(fields: [companyId], references: [id])
 
   employmentType   String? @map("employment_type")
@@ -93,8 +89,8 @@ model Job {
 }
 
 model JobSourceLink {
-  id    String @id @default(cuid())
-  jobId String @map("job_id")
+  id    String @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  jobId String @map("job_id") @db.Uuid
   job   Job    @relation(fields: [jobId], references: [id], onDelete: Cascade)
 
   source       JobSource
@@ -108,7 +104,7 @@ model JobSourceLink {
 }
 
 model Company {
-  id                 String  @id @default(cuid())
+  id                 String  @id @default(dbgenerated("uuidv7()")) @db.Uuid
   name               String
   organizationNumber String? @unique @map("organization_number")
   website            String?
@@ -128,10 +124,10 @@ model Company {
 }
 
 model JobRequirement {
-  id String @id @default(cuid())
+  id String @id @default(dbgenerated("uuidv7()")) @db.Uuid
 
   job   Job    @relation(fields: [jobId], references: [id], onDelete: Cascade)
-  jobId String @map("job_id")
+  jobId String @map("job_id") @db.Uuid
 
   requirementType String @map("requirement_type")
   category        String
@@ -147,8 +143,8 @@ model JobRequirement {
 }
 
 model JobContact {
-  id    String @id @default(cuid())
-  jobId String @map("job_id")
+  id    String @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  jobId String @map("job_id") @db.Uuid
   job   Job    @relation(fields: [jobId], references: [id], onDelete: Cascade)
 
   name        String?

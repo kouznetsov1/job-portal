@@ -1,11 +1,11 @@
 # PostgreSQL with backup support
-FROM postgres:17.0-bookworm
+FROM postgres:18.0-bookworm
 
 # Add extensions and dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     postgresql-contrib \
-    postgresql-17-postgis \
-    postgresql-17-pgvector \
+    postgresql-18-postgis \
+    postgresql-18-pgvector \
     wget \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/*
@@ -47,6 +47,9 @@ RUN sed -ri "s/^#archive_timeout = 0/archive_timeout = {{.Env.ARCHIVE_TIMEOUT}}/
 RUN sed -ri "s/^#archive_command = ''/archive_command = '\/usr\/local\/bin\/wal-g wal-push %p'/" /etc/postgresql/postgresql.conf.template
 RUN sed -ri "s/^#max_wal_size = 1GB/max_wal_size = 2GB/" /etc/postgresql/postgresql.conf.template
 RUN sed -ri "s/^#wal_keep_size = 0/wal_keep_size = 1GB/" /etc/postgresql/postgresql.conf.template
+
+# Copy init script to enable extensions
+COPY init.sql /docker-entrypoint-initdb.d/init.sql
 
 # Copy our entrypoint
 COPY docker-entrypoint.sh /docker-entrypoint.sh

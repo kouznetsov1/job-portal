@@ -2,7 +2,7 @@ import { FetchHttpClient, HttpLayerRouter } from "@effect/platform";
 import { BunHttpServer, BunRuntime } from "@effect/platform-bun";
 import { Layer } from "effect";
 import { RpcSerialization, RpcServer } from "@effect/rpc";
-import { RpcHandlers } from "./rpcs";
+import { RpcHandlers } from "./handlers";
 import { Rpcs } from "@repo/domain";
 import { PlatsbankenSyncSchedulerLayer } from "./services/platsbanken/platsbanken-sync";
 

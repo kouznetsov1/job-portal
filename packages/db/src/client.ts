@@ -1,7 +1,10 @@
 import { PrismaPg } from "@prisma/adapter-pg";
-import type { PrismaPromise } from "./generated/prisma/internal/prismaNamespace";
+import type {
+  PrismaPromise,
+  UserModel,
+} from "./generated/prisma/internal/prismaNamespace";
 import { PrismaClient } from "./generated/prisma/client";
-import { Config, ConfigProvider, Effect, Layer } from "effect";
+import { Config, ConfigProvider, Effect, Layer, Schema } from "effect";
 import { DatabaseError } from "@repo/domain";
 
 export class Database extends Effect.Service<Database>()("Database", {
@@ -32,3 +35,7 @@ export class Database extends Effect.Service<Database>()("Database", {
     Layer.provide(Layer.setConfigProvider(ConfigProvider.fromEnv())),
   );
 }
+
+const s = Schema.declare((u): u is UserModel => typeof u === "object", {
+  identifier: "PrismaUser",
+});

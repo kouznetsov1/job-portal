@@ -1,6 +1,6 @@
 model Chat {
-  id        String   @id
-  userId    String
+  id        String   @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  userId    String   @db.Uuid
 
   /// Full conversation history serialized as JSON
   /// Contains: messages array with role, content, options

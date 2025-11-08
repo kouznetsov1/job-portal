@@ -1,6 +1,6 @@
 model Session {
-  id        String   @id @default(cuid())
-  userId    String   @map("user_id")
+  id        String   @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
   token     String   @unique
   expiresAt DateTime @map("expires_at")
   ipAddress String?  @map("ip_address")
@@ -15,8 +15,8 @@ model Session {
 }
 
 model Account {
-  id                    String    @id @default(cuid())
-  userId                String    @map("user_id")
+  id                    String    @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  userId                String    @map("user_id") @db.Uuid
   accountId             String    @map("account_id")
   providerId            String    @map("provider_id")
   accessToken           String?   @map("access_token") @db.Text
@@ -36,7 +36,7 @@ model Account {
 }
 
 model Verification {
-  id         String   @id @default(cuid())
+  id         String   @id @default(dbgenerated("uuidv7()")) @db.Uuid
   identifier String
   value      String
   expiresAt  DateTime @map("expires_at")

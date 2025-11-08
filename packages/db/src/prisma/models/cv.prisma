@@ -1,6 +1,6 @@
 model Cv {
-  id          String   @id @default(cuid())
-  userId      String   @map("user_id")
+  id          String   @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  userId      String   @map("user_id") @db.Uuid
   typstSource String?  @map("typst_source") @db.Text
   pdfPath     String?  @map("pdf_path")
   createdAt   DateTime @default(now()) @map("created_at")
