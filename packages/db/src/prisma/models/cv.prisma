@@ -11,3 +11,45 @@ model Cv {
   @@index([userId])
   @@map("cv")
 }
+
+model CVTemplate {
+  id          String   @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  name        String
+  description String?
+  typstCode   String   @map("typst_code") @db.Text
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([name])
+  @@map("cv_template")
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+}
+
+model CVEditorChat {
+  id        String          @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  userId    String          @map("user_id") @db.Uuid
+  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  typstCode String          @map("typst_code") @db.Text
+  messages  CVChatMessage[]
+  createdAt DateTime        @default(now()) @map("created_at")
+  updatedAt DateTime        @updatedAt @map("updated_at")
+
+  @@index([userId])
+  @@map("cv_editor_chat")
+}
+
+model CVChatMessage {
+  id        String       @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  chatId    String       @map("chat_id") @db.Uuid
+  chat      CVEditorChat @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  role      MessageRole
+  content   String       @db.Text
+  createdAt DateTime     @default(now()) @map("created_at")
+
+  @@index([chatId])
+  @@map("cv_chat_message")
+}

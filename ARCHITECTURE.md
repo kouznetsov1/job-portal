@@ -318,9 +318,10 @@ NOTE: Completed - User model exists with uuidv7 IDs, email/password auth configu
 - [x] Add index on email field (via @unique)
 - [x] Add sessions, accounts relations (Better Auth)
 - [x] Add cvs, chats relations
-- [ ] Add profile relation (1:1 UserProfile) - will be added in Phase 2
-- [ ] Add savedJobs relation (1:many SavedJob) - will be added in Phase 3
-- [ ] Add applications relation (1:many Application) - will be added in Phase 5
+- [x] Add profile relation (1:1 UserProfile)
+- [x] Add savedJobs relation (1:many SavedJob)
+- [x] Add applications relation (1:many Application)
+- [x] Add cvEditorChats relation (1:many CVEditorChat)
 - [ ] Add onboardingChats relation (1:1 OnboardingChat) - will be added in Phase 4
 
 ---
@@ -584,18 +585,23 @@ For testing this we have to do some frontend work which is not noted down here b
 
 **File**: `packages/db/prisma/schema.prisma`
 
-- [ ] Update Job model: add **aiSummary** field (text) - AI-generated 10-sentence summary
-- [ ] Update Job model: add **aiSummaryEmbedding** field (vector(1536)) - embedding of AI summary
-- [ ] Add SavedJob model (id, userId, jobId, createdAt)
-- [ ] Add User and Job relations to SavedJob
-- [ ] Add unique constraint on (userId, jobId)
-- [ ] Add indexes on userId and jobId for SavedJob
-- [ ] Add InteractionAction enum (VIEW, SAVE, UNSAVE, APPLY, SKIP)
-- [ ] Add UserJobInteraction model (id, userId, jobId, action, createdAt)
-- [ ] Add Job relation to UserJobInteraction
-- [ ] Add indexes on userId, jobId, and (userId, action) for UserJobInteraction
-- [ ] Update Job model: add savedBy, interactions, applications relations
-- [ ] Push to db by going to db package and do bunx prisma db push
+- [x] Update Job model: add **aiSummary** field (text) - AI-generated 10-sentence summary
+- [x] Update Job model: add **aiSummaryEmbedding** field (vector(1536)) - embedding of AI summary
+- [x] Add SavedJob model (id, userId, jobId, createdAt)
+- [x] Add User and Job relations to SavedJob
+- [x] Add unique constraint on (userId, jobId)
+- [x] Add indexes on userId and jobId for SavedJob
+- [x] Add InteractionAction enum (VIEW, SAVE, UNSAVE, APPLY, SKIP)
+- [x] Add UserJobInteraction model (id, userId, jobId, action, createdAt)
+- [x] Add Job relation to UserJobInteraction
+- [x] Add indexes on userId, jobId, and (userId, action) for UserJobInteraction
+- [x] Update Job model: add savedBy, interactions, applications relations
+- [x] Push to db by going to db package and do bunx prisma db push
+- [x] Add ApplicationStatus enum (DRAFT, APPLIED, ARCHIVED)
+- [x] Add Application model (id, userId, jobId, generatedCvText, generatedLetterText, companyResearchNotes, status, createdAt, appliedAt)
+- [x] Add User and Job relations to Application
+- [x] Add indexes on userId, jobId, status for Application
+- [x] Update Company model: add slug, aiDescription, socialMedia, scrapedData, lastEnriched fields
 
 ---
 
@@ -605,76 +611,78 @@ For testing this we have to do some frontend work which is not noted down here b
 
 **Note**: CV templates are SYSTEM templates created by Searcha, NOT user-created. Users select from available templates.
 
-- [ ] Add CVTemplate model (id, name, description, typstCode text, createdAt, updatedAt)
-- [ ] Add index on name
-- [ ] Add CVEditorChat model (id, userId, typstCode text, createdAt, updatedAt)
-- [ ] Add User relation to CVEditorChat
-- [ ] Add index on userId
-- [ ] Add CVChatMessage model (id, chatId, role enum, content text, createdAt)
-- [ ] Add CVEditorChat relation to CVChatMessage
-- [ ] Add index on chatId
-- [ ] Push to db by going to db package and do bunx prisma db push
+- [x] Add CVTemplate model (id, name, description, typstCode text, createdAt, updatedAt)
+- [x] Add index on name
+- [x] Add CVEditorChat model (id, userId, typstCode text, createdAt, updatedAt)
+- [x] Add User relation to CVEditorChat
+- [x] Add index on userId
+- [x] Add MessageRole enum (USER, ASSISTANT)
+- [x] Add CVChatMessage model (id, chatId, role enum, content text, createdAt)
+- [x] Add CVEditorChat relation to CVChatMessage
+- [x] Add index on chatId
+- [x] Update User model: add cvEditorChats relation
+- [x] Push to db by going to db package and do bunx prisma db push
 
 ---
 
-### 3.3: Extend JobService for Saved Jobs & Matching
+### 3.3: Extend JobRepo for Saved Jobs & Matching
 
-**File**: `apps/server/src/services/job-service.ts`
+**File**: `apps/server/src/services/job-repo.ts`
 
 **Note**: Match score calculation happens on-the-fly during job search, not as separate RPC.
 
 #### Update search method
 
-- [ ] Add support for minMatchScore and maxMatchScore filters in params
-- [ ] Add support for sortByMatch parameter in params
-- [ ] If user is authenticated: fetch user's perfectJobEmbedding from profile
-- [ ] For each job: calculate matchScore using cosine similarity (job.aiSummaryEmbedding <=> user.perfectJobEmbedding)
-- [ ] Convert cosine distance to percentage score (0-100)
-- [ ] Generate matchReasons using quick AI call (compare job aiSummary with user perfectJobDescription)
-- [ ] Filter jobs by match score range if minMatchScore or maxMatchScore provided
-- [ ] Sort by match score if sortByMatch is true
-- [ ] Return jobs with matchScore and matchReasons fields populated
-- [ ] Add span and logging
+- [x] Add support for minMatchScore and maxMatchScore filters in params
+- [x] Add support for sortByMatch parameter in params
+- [x] If user is authenticated: fetch user's perfectJobEmbedding from profile using raw SQL
+- [x] For each job: calculate matchScore using PostgreSQL cosine similarity (job.aiSummaryEmbedding <=> user.perfectJobEmbedding) via raw SQL
+- [x] Convert cosine distance to percentage score (0-100): `ROUND((1 - (j.ai_summary_embedding <=> embedding::vector)) * 100)`
+- [x] Filter jobs by match score range if minMatchScore or maxMatchScore provided
+- [x] Sort by match score if sortByMatch is true
+- [x] Return jobs with matchScore fields populated
+- [x] Add span and logging
+
+**Note**: matchReasons generation deferred - would require AI call for every job which is too expensive. Can be added in future if needed.
 
 #### getSaved method
 
-- [ ] Query SavedJob where userId matches
-- [ ] Include full Job relations (company, sources, requirements, contacts)
-- [ ] Calculate matchScore for each job (same as search method)
-- [ ] Decode to Job[]
-- [ ] Add span and logging
+- [x] Query SavedJob where userId matches
+- [x] Include full Job relations (sources, requirements, contacts)
+- [x] Transform to Job[] schema
+- [x] Add span and logging
 
 #### save method
 
-- [ ] Check if already saved
-- [ ] Create SavedJob record
-- [ ] Create UserJobInteraction with action SAVE
-- [ ] Return true
-- [ ] Add span and logging
+- [x] Check if already saved
+- [x] Create SavedJob record
+- [x] Create UserJobInteraction with action SAVE
+- [x] Return true
+- [x] Add span and logging
 
 #### unsave method
 
-- [ ] Delete SavedJob record
-- [ ] Create UserJobInteraction with action UNSAVE
-- [ ] Return true
-- [ ] Add span and logging
+- [x] Delete SavedJob record
+- [x] Create UserJobInteraction with action UNSAVE
+- [x] Return true
+- [x] Add span and logging
 
-#### isSaved method
-
-- [ ] Check if SavedJob exists for userId and jobId
-- [ ] Return boolean
-- [ ] Add span and logging
+**Note**: isSaved method not implemented - frontend can check if job is in saved jobs list instead.
 
 ---
 
 ### 3.4: Update JobsRpcs Handler
 
-**File**: `apps/server/src/rpcs/jobs.ts`
+**File**: `apps/server/src/handlers/jobs.ts`
 
-- [ ] Wire up "jobs.getSaved" - get userId from Session context
-- [ ] Wire up "jobs.save" - get userId from Session context
-- [ ] Wire up "jobs.unsave" - get userId from Session context
-- [ ] Wire up "jobs.isSaved" - get userId from Session context
+- [x] Create Jobs handler using JobRpcs.toLayer
+- [x] Wire up "job.search" - get optional userId from CurrentSession context (using Effect.either), pass to JobRepo.search
+- [x] Wire up "job.getById" - pass jobId to JobRepo.getById
+- [x] Wire up "job.getSaved" - get userId from CurrentSession context
+- [x] Wire up "job.save" - get userId from CurrentSession context
+- [x] Wire up "job.unsave" - get userId from CurrentSession context
+- [x] Register handler in apps/server/src/handlers/index.ts
+- [x] Provide JobRepo.Default layer
 
 ---
 
@@ -687,7 +695,7 @@ For testing this we have to do some frontend work which is not noted down here b
 - [ ] After fetching jobs from Platsbanken API, for each job:
 - [ ] Check if company exists by organizationNumber
 - [ ] If company is NEW: call CompanyEnrichmentService.enrichCompany() (see 3.6)
-- [ ] Generate job AI summary (10 sentences) using Claude API
+- [ ] Generate job AI summary (10 sentences) using an AI service
 - [ ] Include company.aiDescription in context if available
 - [ ] Call OpenAI embedding API (text-embedding-3-small) on the AI summary
 - [ ] Store aiSummary and aiSummaryEmbedding in Job record

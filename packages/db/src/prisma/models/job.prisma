@@ -70,9 +70,15 @@ model Job {
   searchText      String?                      @map("search_text") @db.Text
   relevanceVector Unsupported("vector(1536)")? @map("relevance_vector")
 
+  aiSummary          String?                      @map("ai_summary") @db.Text
+  aiSummaryEmbedding Unsupported("vector(1536)")? @map("ai_summary_embedding")
+
   sources      JobSourceLink[]
   requirements JobRequirement[]
   contacts     JobContact[]
+  savedBy      SavedJob[]
+  interactions UserJobInteraction[]
+  applications Application[]
 
   @@index([removed, publishedAt])
   @@index([companyId])
@@ -104,14 +110,19 @@ model JobSourceLink {
 }
 
 model Company {
-  id                 String  @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  id                 String    @id @default(dbgenerated("uuidv7()")) @db.Uuid
   name               String
-  organizationNumber String? @unique @map("organization_number")
+  slug               String?   @unique
+  organizationNumber String?   @unique @map("organization_number")
   website            String?
   logo               String?
-  description        String? @db.Text
+  description        String?   @db.Text
+  aiDescription      String?   @map("ai_description") @db.Text
   industry           String?
   size               String?
+  socialMedia        Json?     @map("social_media")
+  scrapedData        Json?     @map("scraped_data")
+  lastEnriched       DateTime? @map("last_enriched")
 
   jobs Job[]
 
@@ -119,7 +130,9 @@ model Company {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@index([name])
+  @@index([slug])
   @@index([organizationNumber])
+  @@index([industry])
   @@map("company")
 }
 
@@ -155,4 +168,65 @@ model JobContact {
 
   @@index([jobId])
   @@map("job_contact")
+}
+
+enum InteractionAction {
+  VIEW
+  SAVE
+  UNSAVE
+  APPLY
+  SKIP
+}
+
+model SavedJob {
+  id        String   @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobId     String   @map("job_id") @db.Uuid
+  job       Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([userId, jobId])
+  @@index([userId])
+  @@index([jobId])
+  @@map("saved_job")
+}
+
+model UserJobInteraction {
+  id        String            @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  userId    String            @map("user_id") @db.Uuid
+  jobId     String            @map("job_id") @db.Uuid
+  job       Job               @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  action    InteractionAction
+  createdAt DateTime          @default(now()) @map("created_at")
+
+  @@index([userId])
+  @@index([jobId])
+  @@index([userId, action])
+  @@map("user_job_interaction")
+}
+
+enum ApplicationStatus {
+  DRAFT
+  APPLIED
+  ARCHIVED
+}
+
+model Application {
+  id                   String            @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  userId               String            @map("user_id") @db.Uuid
+  user                 User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobId                String            @map("job_id") @db.Uuid
+  job                  Job               @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  generatedCvText      String            @map("generated_cv_text") @db.Text
+  generatedLetterText  String            @map("generated_letter_text") @db.Text
+  companyResearchNotes String?           @map("company_research_notes") @db.Text
+  status               ApplicationStatus @default(DRAFT)
+  createdAt            DateTime          @default(now()) @map("created_at")
+  appliedAt            DateTime?         @map("applied_at")
+
+  @@index([userId])
+  @@index([jobId])
+  @@index([status])
+  @@map("application")
 }
