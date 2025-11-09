@@ -81,14 +81,12 @@ apps/
 - [x] Create `UpdateProfileData` schema (partial of UserProfile fields)
 - [x] Create `CVUploadRequest` schema (fileName, fileData base64, mimeType)
 - [x] Create `ParsedCVResult` schema (text)
-- [x] Create `LinkedInImportRequest` schema (linkedinUrl with validation)
 
 #### Errors
 
 - [x] Create `ProfileNotFoundError` with userId field
 - [x] Create `CVParseError` with message field
-- [x] Create `LinkedInImportError` with message field
-- [x] Create `ProfileRpcError` union (ProfileNotFoundError, CVParseError, LinkedInImportError, DatabaseError)
+- [x] Create `ProfileRpcError` union (ProfileNotFoundError, CVParseError, DatabaseError)
 
 #### RPC Interface
 
@@ -96,7 +94,6 @@ apps/
 - [x] Add `profiles.get` RPC (success: UserProfile, error: ProfileRpcError)
 - [x] Add `profiles.update` RPC (payload: UpdateProfileData, success: UserProfile, error: ProfileRpcError)
 - [x] Add `profiles.uploadCV` RPC (payload: CVUploadRequest, success: ParsedCVResult, error: ProfileRpcError)
-- [x] Add `profiles.parseLinkedIn` RPC (payload: LinkedInImportRequest, success: UpdateProfileData, error: ProfileRpcError)
 
 ---
 
@@ -447,21 +444,21 @@ For testing this we have to do some frontend work which is not noted down here b
 
 **File**: `packages/db/prisma/schema.prisma`
 
-- [ ] Add UserProfile model (id, userId unique, fullName, email, phone, headline, summary, skills[], linkedinUrl, cvFileUrl, cvParsedText, createdAt, updatedAt)
-- [ ] Add **perfectJobDescription** field (text) - AI-generated description of user's ideal job
-- [ ] Add **perfectJobEmbedding** field (vector(1536)) - embedding for job matching
-- [ ] Add **activeTemplateId** field (string nullable) - current CV template ID
-- [ ] Add User relation to UserProfile
-- [ ] Add index on userId
-- [ ] Add Experience model (id, profileId, title, company, startDate, endDate, description, current)
-- [ ] Add UserProfile relation to Experience
-- [ ] Add index on profileId for Experience
-- [ ] Add Education model (id, profileId, institution, degree, field, startDate, endDate, current)
-- [ ] Add UserProfile relation to Education
-- [ ] Add index on profileId for Education
-- [ ] Enable pgvector extension: `CREATE EXTENSION IF NOT EXISTS vector;`
-- [ ] Run migration: `bunx prisma migrate dev --name add_profiles`
-- [ ] Generate Prisma client
+- [x] Add UserProfile model (id, userId unique, fullName, email, phone, headline, summary, skills[], linkedinUrl, cvFileUrl, cvParsedText, createdAt, updatedAt)
+- [x] Add **perfectJobDescription** field (text) - AI-generated description of user's ideal job
+- [x] Add **perfectJobEmbedding** field (vector(1536)) - embedding for job matching
+- [x] Add **activeTemplateId** field (string nullable) - current CV template ID
+- [x] Add User relation to UserProfile
+- [x] Add index on userId
+- [x] Add Experience model (id, profileId, title, company, startDate, endDate, description, current)
+- [x] Add UserProfile relation to Experience
+- [x] Add index on profileId for Experience
+- [x] Add Education model (id, profileId, institution, degree, field, startDate, endDate, current)
+- [x] Add UserProfile relation to Education
+- [x] Add index on profileId for Education
+- [x] Enable pgvector extension: `CREATE EXTENSION IF NOT EXISTS vector;`
+- [x] Run migration: `bunx prisma migrate dev --name add_profiles`
+- [x] Generate Prisma client
 
 ---
 
@@ -495,29 +492,17 @@ For testing this we have to do some frontend work which is not noted down here b
 #### uploadCV method
 
 - [ ] Save file using FileStorageService
-- [ ] Detect file type (PDF vs DOCX)
-- [ ] Parse PDF using pdf-parse library
-- [ ] Parse DOCX using mammoth library
-- [ ] Extract raw text from file
-- [ ] Call Claude API to extract structured data (name, skills[], experience[], education[])
+- [ ] OCR service using mistral (https://docs.mistral.ai/capabilities/document_ai/basic_ocr)
+- [ ] Make a AI service using effect (check vendor for how to implement this) to extract structured data (name, skills[], experience[], education[])
 - [ ] Return ParsedCVResult with text and extracted profile
-- [ ] Add span and logging
-
-#### parseLinkedIn method
-
-- [ ] Validate LinkedIn URL format
-- [ ] Use Puppeteer to scrape LinkedIn profile page
-- [ ] Extract: name, headline, summary, experience, education, skills
-- [ ] Transform to UpdateProfileData format
-- [ ] Handle scraping errors gracefully
 - [ ] Add span and logging
 
 #### generatePerfectJobDescription method
 
 - [ ] Fetch complete profile with experience and education
-- [ ] Call Claude API to generate "perfect job description" (10 sentences describing ideal role based on user's skills, experience, preferences)
+- [ ] Call AI service to generate "perfect job description" (10 sentences describing ideal role based on user's skills, experience, preferences)
 - [ ] Store description in profile.perfectJobDescription
-- [ ] Call OpenAI embedding API (text-embedding-3-small) on the perfect job description
+- [ ] Call OpenAI embedding API (make a service) (text-embedding-3-small) on the perfect job description
 - [ ] Store embedding in profile.perfectJobEmbedding vector
 - [ ] Return success boolean
 - [ ] Add span and logging
@@ -528,10 +513,7 @@ For testing this we have to do some frontend work which is not noted down here b
 
 ### 2.3: CV Parsing Library Setup
 
-- [ ] Install pdf-parse: `bun add pdf-parse`
-- [ ] Install mammoth: `bun add mammoth`
-- [ ] Install @anthropic-ai/sdk: `bun add @anthropic-ai/sdk`
-- [ ] Add ANTHROPIC_API_KEY to .env
+Check what mistral needs to install and an env variable for it has to be added.
 
 ---
 

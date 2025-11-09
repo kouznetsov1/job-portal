@@ -69,14 +69,6 @@ export class ParsedCVResult extends Schema.Class<ParsedCVResult>(
   text: Schema.String,
 }) {}
 
-export class LinkedInImportRequest extends Schema.Class<LinkedInImportRequest>(
-  "LinkedInImportRequest"
-)({
-  linkedinUrl: Schema.String.pipe(
-    Schema.pattern(/^https:\/\/(www\.)?linkedin\.com\/in\/.+$/)
-  ),
-}) {}
-
 export class ProfileNotFoundError extends Schema.TaggedError<ProfileNotFoundError>()(
   "ProfileNotFoundError",
   { userId: UserId }
@@ -87,14 +79,8 @@ export class CVParseError extends Schema.TaggedError<CVParseError>()(
   { message: Schema.String }
 ) {}
 
-export class LinkedInImportError extends Schema.TaggedError<LinkedInImportError>()(
-  "LinkedInImportError",
-  { message: Schema.String }
-) {}
-
 export const ProfileRpcError = Schema.Union(
   ProfileNotFoundError,
   CVParseError,
-  LinkedInImportError,
   DatabaseError
 );

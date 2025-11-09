@@ -11,6 +11,7 @@ model User {
   accounts Account[]
   cvs      Cv[]
   chats    Chat[]
+  profile  UserProfile?
 
   @@map("user")
 }

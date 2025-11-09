@@ -1,7 +1,6 @@
 import { Rpc, RpcGroup } from "@effect/rpc";
 import {
   CVUploadRequest,
-  LinkedInImportRequest,
   ParsedCVResult,
   ProfileRpcError,
   UpdateProfileData,
@@ -21,11 +20,6 @@ export class ProfileRpcs extends RpcGroup.make(
   Rpc.make("profile.uploadCV", {
     payload: CVUploadRequest,
     success: ParsedCVResult,
-    error: ProfileRpcError,
-  }),
-  Rpc.make("profile.parseLinkedIn", {
-    payload: LinkedInImportRequest,
-    success: UpdateProfileData,
     error: ProfileRpcError,
   })
 ) {}

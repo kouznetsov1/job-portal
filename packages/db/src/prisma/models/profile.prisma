@@ -1,0 +1,59 @@
+model UserProfile {
+  id                    String                       @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  userId                String                       @unique @map("user_id") @db.Uuid
+  user                  User                         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fullName              String?                      @map("full_name")
+  email                 String?
+  phone                 String?
+  headline              String?
+  summary               String?                      @db.Text
+  skills                String[]
+  linkedinUrl           String?                      @map("linkedin_url")
+  cvFileUrl             String?                      @map("cv_file_url")
+  cvParsedText          String?                      @map("cv_parsed_text") @db.Text
+  perfectJobDescription String?                      @map("perfect_job_description") @db.Text
+  perfectJobEmbedding   Unsupported("vector(1536)")? @map("perfect_job_embedding")
+  activeTemplateId      String?                      @map("active_template_id") @db.Uuid
+  createdAt             DateTime                     @default(now()) @map("created_at")
+  updatedAt             DateTime                     @updatedAt @map("updated_at")
+
+  experience Experience[]
+  education  Education[]
+
+  @@map("user_profile")
+  @@index([userId])
+}
+
+model Experience {
+  id          String       @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  profileId   String       @map("profile_id") @db.Uuid
+  profile     UserProfile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  title       String
+  company     String
+  startDate   DateTime     @map("start_date")
+  endDate     DateTime?    @map("end_date")
+  description String?      @db.Text
+  current     Boolean      @default(false)
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+
+  @@map("experience")
+  @@index([profileId])
+}
+
+model Education {
+  id          String       @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  profileId   String       @map("profile_id") @db.Uuid
+  profile     UserProfile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  institution String
+  degree      String
+  field       String
+  startDate   DateTime     @map("start_date")
+  endDate     DateTime?    @map("end_date")
+  current     Boolean      @default(false)
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+
+  @@map("education")
+  @@index([profileId])
+}
