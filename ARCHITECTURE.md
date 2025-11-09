@@ -427,15 +427,6 @@ For testing this we have to do some frontend work which is not noted down here b
 
 ---
 
-### 1.7: Testing
-
-**File**: `apps/server/src/services/__tests__/user-service.test.ts`
-
-- [x] Test getCurrentUser with valid session
-- [x] Test getCurrentUser without session (should fail)
-
----
-
 ## Phase 2: Profile & CV Management
 
 **Goal**: User profile management with CV upload/parsing and LinkedIn import
@@ -465,6 +456,7 @@ For testing this we have to do some frontend work which is not noted down here b
 ### 2.2: Implement Profile Service & Supporting Services
 
 **Files**:
+
 - `apps/server/src/services/profile-repo.ts` (Profile)
 - `apps/server/src/services/file-storage.ts` (FileStorage)
 - `apps/server/src/services/ocr.ts` (OCR)
@@ -538,10 +530,12 @@ For testing this we have to do some frontend work which is not noted down here b
 **Note**: This should be called automatically after profile creation (onboarding complete) and whenever profile is updated.
 
 **Dependencies added**:
+
 - `@ai-sdk/mistral@2.0.23` - for OCR via AI SDK
 - Already had: `@ai-sdk/openai@2.0.53`, `ai@5.0.80`
 
 **Environment variables required**:
+
 - `MISTRAL_API_KEY` - for OCR
 - `OPENAI_API_KEY` - for embeddings
 
@@ -582,19 +576,6 @@ For testing this we have to do some frontend work which is not noted down here b
 
 ---
 
-### 2.6: Testing
-
-**File**: `apps/server/src/services/__tests__/profile-service.test.ts`
-
-- [ ] Test get profile (creates if doesn't exist)
-- [ ] Test update profile with basic fields
-- [ ] Test update profile with nested experience/education
-- [ ] Test uploadCV with PDF file
-- [ ] Test uploadCV with DOCX file
-- [ ] Test generateEmbedding
-
----
-
 ## Phase 3: Job Embeddings, CV Templates & Saved Jobs
 
 **Goal**: Job AI summaries with embeddings, CV template system, and saved jobs tracking
@@ -614,8 +595,7 @@ For testing this we have to do some frontend work which is not noted down here b
 - [ ] Add Job relation to UserJobInteraction
 - [ ] Add indexes on userId, jobId, and (userId, action) for UserJobInteraction
 - [ ] Update Job model: add savedBy, interactions, applications relations
-- [ ] Run migration: `bunx prisma migrate dev --name add_job_embeddings_saved_jobs`
-- [ ] Generate Prisma client
+- [ ] Push to db by going to db package and do bunx prisma db push
 
 ---
 
@@ -633,8 +613,7 @@ For testing this we have to do some frontend work which is not noted down here b
 - [ ] Add CVChatMessage model (id, chatId, role enum, content text, createdAt)
 - [ ] Add CVEditorChat relation to CVChatMessage
 - [ ] Add index on chatId
-- [ ] Run migration: `bunx prisma migrate dev --name add_cv_templates`
-- [ ] Generate Prisma client
+- [ ] Push to db by going to db package and do bunx prisma db push
 
 ---
 
@@ -877,33 +856,6 @@ For testing this we have to do some frontend work which is not noted down here b
 
 ---
 
-### 3.12: Testing
-
-**File**: `apps/server/src/services/__tests__/job-service.test.ts`
-
-- [ ] Test search with minMatchScore filter
-- [ ] Test search with maxMatchScore filter
-- [ ] Test search with sortByMatch
-- [ ] Test getSaved with match scores calculated
-- [ ] Test save (creates SavedJob and interaction)
-- [ ] Test unsave (deletes SavedJob and creates interaction)
-- [ ] Test isSaved
-
-**File**: `apps/server/src/services/__tests__/cv-template-service.test.ts`
-
-- [ ] Test list templates
-- [ ] Test get template by id
-- [ ] Test setActive template
-
-**File**: `apps/server/src/services/__tests__/cv-editor-service.test.ts`
-
-- [ ] Test getOrCreateChat (creates with default template)
-- [ ] Test sendMessage (mocked Claude API, streaming)
-- [ ] Test updateTypstCode (manual edits)
-- [ ] Test compile (mocked Typst compilation)
-
----
-
 ## Phase 4: Onboarding Chat
 
 **Goal**: AI chat-based onboarding that helps users build their profile
@@ -1020,18 +972,6 @@ For testing this we have to do some frontend work which is not noted down here b
 
 - [ ] Import OnboardingLiveHandler
 - [ ] Merge OnboardingLiveHandler into RpcHandlers
-
----
-
-### 4.6: Testing
-
-**File**: `apps/server/src/services/__tests__/onboarding-service.test.ts`
-
-- [ ] Test start (creates chat with greeting)
-- [ ] Test sendMessage (mocked Claude API)
-- [ ] Test uploadCV (integrates with ProfileService)
-- [ ] Test complete (marks completed, generates embedding)
-- [ ] Test getChat
 
 ---
 
@@ -1205,19 +1145,6 @@ For testing this we have to do some frontend work which is not noted down here b
 
 ---
 
-### 5.9: Testing
-
-**File**: `apps/server/src/services/__tests__/application-service.test.ts`
-
-- [ ] Test generate (mocked Claude API and streaming)
-- [ ] Test get application
-- [ ] Test list applications
-- [ ] Test download as PDF
-- [ ] Test download as DOCX
-- [ ] Test markApplied
-
----
-
 ## Phase 6: Company Pages & SEO
 
 **Goal**: Company profiles with SEO-optimized pages (enrichment happens automatically during job sync in Phase 3.6)
@@ -1342,16 +1269,6 @@ For testing this we have to do some frontend work which is not noted down here b
   - Company pages (/foretag/:slug)
 - [ ] Set proper lastmod dates
 - [ ] Return XML response with correct headers
-
----
-
-### 6.8: Testing
-
-**File**: `apps/server/src/services/__tests__/company-service.test.ts`
-
-- [ ] Test search companies
-- [ ] Test getById
-- [ ] Test getJobs
 
 ---
 
@@ -1633,22 +1550,6 @@ Already covered in 6.8, but add:
 - [ ] Create spacing and sizing utilities
 - [ ] Add dark mode support (optional)
 - [ ] Ensure responsive design for all pages
-
----
-
-### 7.13: Testing Frontend
-
-**File**: `apps/dashboard/src/__tests__/onboarding.test.tsx`
-
-- [ ] Test onboarding chat flow
-- [ ] Test CV upload
-- [ ] Test profile completion
-
-**File**: `apps/dashboard/src/__tests__/application-generation.test.tsx`
-
-- [ ] Test application generation flow
-- [ ] Test streaming progress display
-- [ ] Test download buttons
 
 ---
 

@@ -29,16 +29,6 @@ export class Database extends Effect.Service<Database>()("Database", {
   }),
 }) {
   static readonly Live = Database.Default.pipe(
-    Layer.provide(Layer.setConfigProvider(ConfigProvider.fromEnv()))
+    Layer.provide(Layer.setConfigProvider(ConfigProvider.fromEnv())),
   );
-
-  static readonly Mock = (mockData: unknown) =>
-    Layer.succeed(
-      this,
-      new Database({
-        client: {} as PrismaClient,
-        use: <A>(_f: (p: PrismaClient) => PrismaPromise<A>) =>
-          Effect.succeed(mockData) as Effect.Effect<A, never, never>,
-      })
-    );
 }
