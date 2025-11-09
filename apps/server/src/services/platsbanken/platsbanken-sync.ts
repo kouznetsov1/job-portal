@@ -1,15 +1,15 @@
+import { Database } from "@repo/db";
 import {
-  Effect,
+  Array,
   Console,
   DateTime,
   Duration,
-  Schema,
-  Option,
-  Array,
-  Schedule,
+  Effect,
   Layer,
+  Option,
+  Schedule,
+  Schema,
 } from "effect";
-import { Database } from "@repo/db";
 import { PlatsbankenService } from "./platsbanken";
 import {
   PlatsbankenJobTransform,
@@ -146,7 +146,7 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
               },
               orderBy: { lastChecked: "desc" },
               select: { lastChecked: true },
-            }),
+            })
           )
           .pipe(Effect.map(Option.fromNullable));
 
@@ -155,9 +155,9 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
           Option.map(DateTime.unsafeFromDate),
           Option.getOrElse(() =>
             DateTime.unsafeNow().pipe(
-              DateTime.subtractDuration(Duration.days(7)),
-            ),
-          ),
+              DateTime.subtractDuration(Duration.days(7))
+            )
+          )
         );
       });
 
@@ -172,20 +172,20 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
                   ...companyData(company),
                   organizationNumber: orgNumber,
                 },
-              }),
+              })
             ),
           onNone: () =>
             db.use((p) =>
               p.company.create({
                 data: { ...companyData(company) },
-              }),
+              })
             ),
         });
 
       const updateJobRelations = (jobId: string, job: TransformedJob) =>
         Effect.gen(function* () {
           yield* db.use((p) =>
-            p.jobRequirement.deleteMany({ where: { jobId } }),
+            p.jobRequirement.deleteMany({ where: { jobId } })
           );
 
           yield* db.use((p) => p.jobContact.deleteMany({ where: { jobId } }));
@@ -200,7 +200,7 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
                   label: req.label,
                   weight: req.weight,
                 })),
-              }),
+              })
             );
           }
 
@@ -215,7 +215,7 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
                   phone: contact.phone,
                   description: contact.description,
                 })),
-              }),
+              })
             );
           }
         });
@@ -225,8 +225,8 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
         return wkt
           ? db.use((p) =>
               p.$executeRawUnsafe(
-                `UPDATE job SET coordinates = ST_GeomFromText('${wkt}', 4326) WHERE id = '${jobId}'`,
-              ),
+                `UPDATE job SET coordinates = ST_GeomFromText('${wkt}', 4326) WHERE id = '${jobId}'`
+              )
             )
           : Effect.void;
       };
@@ -244,7 +244,7 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
                 },
               },
               include: { job: true },
-            }),
+            })
           );
 
           if (existingJobSource) {
@@ -252,7 +252,7 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
               p.job.update({
                 where: { id: existingJobSource.job.id },
                 data: jobDataForUpdate(job, companyId),
-              }),
+              })
             );
 
             yield* setCoordinates(updatedJob.id, job);
@@ -273,7 +273,7 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
                   },
                 },
               },
-            }),
+            })
           );
 
           yield* setCoordinates(newJob.id, job);
@@ -294,7 +294,7 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
                   },
                 },
                 include: { job: true },
-              }),
+              })
             )
             .pipe(Effect.map(Option.fromNullable));
 
@@ -308,11 +308,11 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
                     data: {
                       removed: true,
                       removedAt: Option.fromNullable(removedAt).pipe(
-                        Option.getOrElse(() => new Date()),
+                        Option.getOrElse(() => new Date())
                       ),
                       lastChecked: new Date(),
                     },
-                  }),
+                  })
                 )
                 .pipe(Effect.map(() => Option.some(jobSource.job.id))),
           });
@@ -331,7 +331,7 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
 
         const [activeAds, removedAds] = Array.partition(
           jobAds,
-          (ad) => !ad.removed,
+          (ad) => !ad.removed
         );
 
         const [removedErrors, removedResults] = yield* Effect.partition(
@@ -339,9 +339,9 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
           (ad) =>
             markJobAsRemoved(
               ad.id,
-              ad.removed_date ? new Date(ad.removed_date) : null,
+              ad.removed_date ? new Date(ad.removed_date) : null
             ),
-          { concurrency: 10 },
+          { concurrency: 10 }
         );
 
         const removedCount = Array.filter(removedResults, Option.isSome).length;
@@ -358,7 +358,7 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
         const [transformErrors, transformedJobs] = yield* Effect.partition(
           activeAds,
           (ad) => Schema.decode(PlatsbankenJobTransform)(ad),
-          { concurrency: "unbounded" },
+          { concurrency: "unbounded" }
         );
 
         if (transformedJobs.length === 0) {
@@ -372,7 +372,7 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
         const [importErrors, importedJobs] = yield* Effect.partition(
           transformedJobs,
           upsertJob,
-          { concurrency: 10 },
+          { concurrency: 10 }
         );
 
         const stats = {
@@ -383,7 +383,7 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
         };
 
         yield* Console.log(
-          `Sync complete: ${stats.imported} imported, ${stats.removed} removed, ${stats.failed} failed`,
+          `Sync complete: ${stats.imported} imported, ${stats.removed} removed, ${stats.failed} failed`
         );
 
         return stats;
@@ -393,25 +393,25 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
         syncJobs.pipe(
           Effect.catchAll((error) =>
             Console.error(`Sync failed: ${error}`).pipe(
-              Effect.as({ imported: 0, removed: 0, failed: 0 }),
-            ),
+              Effect.as({ imported: 0, removed: 0, failed: 0 })
+            )
           ),
-          Effect.repeat(Schedule.fixed("1 hour")),
-        ),
+          Effect.repeat(Schedule.fixed("1 hour"))
+        )
       );
 
       return {
         startScheduler,
       };
     }),
-  },
+  }
 ) {}
 
 export const PlatsbankenSyncSchedulerLayer = Layer.effectDiscard(
   PlatsbankenSyncService.pipe(
-    Effect.flatMap((service) => service.startScheduler),
-  ),
+    Effect.flatMap((service) => service.startScheduler)
+  )
 ).pipe(
   Layer.provide(PlatsbankenSyncService.Default),
-  Layer.provide(Database.Live),
+  Layer.provide(Database.Live)
 );

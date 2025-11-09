@@ -1,6 +1,6 @@
 import { HttpClient } from "@effect/platform";
-import { Console, DateTime, Effect, Schedule, Schema } from "effect";
 import { JobStreamResponse } from "@repo/domain";
+import { Console, DateTime, Effect, Schedule, Schema } from "effect";
 
 const formatDateTime = (dt: DateTime.DateTime): string =>
   DateTime.formatIso(dt).split(".")[0]!;
@@ -21,7 +21,7 @@ export class PlatsbankenService extends Effect.Service<PlatsbankenService>()(
               HttpClient.retryTransient({
                 times: 5,
                 schedule: Schedule.jittered(Schedule.exponential("1 second")),
-              }),
+              })
             )
             .get(`${baseUrl}/snapshot`, {
               headers: {
@@ -31,7 +31,7 @@ export class PlatsbankenService extends Effect.Service<PlatsbankenService>()(
             })
             .pipe(
               Effect.flatMap((httpResponse) => httpResponse.json),
-              Effect.flatMap(Schema.decodeUnknown(JobStreamResponse)),
+              Effect.flatMap(Schema.decodeUnknown(JobStreamResponse))
             );
 
           yield* Console.log(`Snapshot fetched: ${res.length} ads`);
@@ -49,12 +49,12 @@ export class PlatsbankenService extends Effect.Service<PlatsbankenService>()(
           if (options.updatedBeforeDate) {
             queryParams.set(
               "updated-before-date",
-              formatDateTime(options.updatedBeforeDate),
+              formatDateTime(options.updatedBeforeDate)
             );
           }
 
           yield* Console.log(
-            `Fetching stream since ${formatDateTime(options.date)}...`,
+            `Fetching stream since ${formatDateTime(options.date)}...`
           );
 
           const res = yield* client
@@ -62,7 +62,7 @@ export class PlatsbankenService extends Effect.Service<PlatsbankenService>()(
               HttpClient.retryTransient({
                 times: 5,
                 schedule: Schedule.jittered(Schedule.exponential("1 second")),
-              }),
+              })
             )
             .get(`${baseUrl}/stream?${queryParams}`, {
               headers: {
@@ -72,14 +72,14 @@ export class PlatsbankenService extends Effect.Service<PlatsbankenService>()(
             })
             .pipe(
               Effect.flatMap((httpResponse) => httpResponse.json),
-              Effect.flatMap(Schema.decodeUnknown(JobStreamResponse)),
+              Effect.flatMap(Schema.decodeUnknown(JobStreamResponse))
             );
 
           const activeAds = res.filter((ad) => !ad.removed);
           const removedAds = res.filter((ad) => ad.removed);
 
           yield* Console.log(
-            `Stream fetched: ${activeAds.length} active, ${removedAds.length} removed`,
+            `Stream fetched: ${activeAds.length} active, ${removedAds.length} removed`
           );
 
           return res;
@@ -90,5 +90,5 @@ export class PlatsbankenService extends Effect.Service<PlatsbankenService>()(
         stream,
       };
     }),
-  },
+  }
 ) {}

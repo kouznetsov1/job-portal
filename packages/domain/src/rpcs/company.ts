@@ -3,12 +3,11 @@ import { Schema } from "effect";
 import {
   CompanyDetailed,
   CompanyId,
-  CompanyJobsRequest,
-  CompanyJobsResult,
   CompanyRpcError,
   CompanySearchParams,
   CompanySearchResult,
 } from "../schema/company";
+import { CompanyJobsRequest, CompanyJobsResult } from "../schema/company-jobs";
 
 export class CompanyRpcs extends RpcGroup.make(
   Rpc.make("companie.search", {
@@ -25,5 +24,5 @@ export class CompanyRpcs extends RpcGroup.make(
     payload: CompanyJobsRequest,
     success: CompanyJobsResult,
     error: CompanyRpcError,
-  }),
+  })
 ) {}

@@ -1,6 +1,6 @@
 import { Schema } from "effect";
+import { CompanyId } from "./company";
 import { DatabaseError } from "./database";
-import { Company, CompanyId } from "./company";
 
 export const JobId = Schema.String.pipe(Schema.brand("JobId"));
 
@@ -13,11 +13,11 @@ export class JobSourceLink extends Schema.Class<JobSourceLink>("JobSourceLink")(
     sourceId: Schema.String,
     sourceUrl: Schema.optional(Schema.String),
     discoveredAt: Schema.Date,
-  },
+  }
 ) {}
 
 export class JobRequirement extends Schema.Class<JobRequirement>(
-  "JobRequirement",
+  "JobRequirement"
 )({
   id: Schema.String,
   requirementType: Schema.String,
@@ -52,7 +52,6 @@ export class Job extends Schema.Class<Job>("Job")({
   url: Schema.optional(Schema.String),
 
   companyId: CompanyId,
-  company: Schema.optional(Company),
 
   employmentType: Schema.optional(Schema.String),
   workingHoursType: Schema.optional(Schema.String),
@@ -110,7 +109,7 @@ export class Job extends Schema.Class<Job>("Job")({
 }) {}
 
 export class JobSearchParams extends Schema.Class<JobSearchParams>(
-  "JobSearchParams",
+  "JobSearchParams"
 )({
   q: Schema.optional(Schema.String),
   limit: Schema.optional(Schema.Number),
@@ -122,7 +121,7 @@ export class JobSearchParams extends Schema.Class<JobSearchParams>(
 
 export class JobNotFoundError extends Schema.TaggedError<JobNotFoundError>()(
   "JobNotFoundError",
-  { id: JobId },
+  { id: JobId }
 ) {}
 
 export const JobRpcError = Schema.Union(JobNotFoundError, DatabaseError);

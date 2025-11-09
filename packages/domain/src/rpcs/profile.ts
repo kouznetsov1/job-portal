@@ -27,5 +27,5 @@ export class ProfileRpcs extends RpcGroup.make(
     payload: LinkedInImportRequest,
     success: UpdateProfileData,
     error: ProfileRpcError,
-  }),
+  })
 ) {}

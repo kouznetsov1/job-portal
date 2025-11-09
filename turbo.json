@@ -1,40 +1,22 @@
 {
   "$schema": "https://turborepo.com/schema.json",
   "ui": "stream",
-  "globalEnv": [
-    "BETTER_AUTH_SECRET",
-    "DATABASE_URL"
-  ],
+  "globalEnv": ["BETTER_AUTH_SECRET", "DATABASE_URL"],
   "tasks": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        ".env*"
-      ],
-      "outputs": [
-        "dist/**",
-        ".output/",
-        ".tanstack/",
-        ".nitro/"
-      ]
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": ["dist/**", ".output/", ".tanstack/", ".nitro/"]
     },
     "dev": {
       "persistent": true,
       "cache": false
     },
     "type-check": {
-      "dependsOn": [
-        "@repo/domain#build",
-        "^type-check"
-      ]
+      "dependsOn": ["@repo/domain#build", "^type-check"]
     },
     "test": {
-      "dependsOn": [
-        "^test"
-      ]
+      "dependsOn": ["^test"]
     },
     "clean": {
       "cache": false

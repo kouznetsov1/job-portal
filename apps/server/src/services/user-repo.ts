@@ -1,5 +1,5 @@
 import { Database } from "@repo/db";
-import { UserNotFoundError, UserId, UserPublic } from "@repo/domain";
+import { UserId, UserNotFoundError, UserPublic } from "@repo/domain";
 import { Effect } from "effect";
 
 export class UserRepo extends Effect.Service<UserRepo>()("UserRepo", {
@@ -17,12 +17,12 @@ export class UserRepo extends Effect.Service<UserRepo>()("UserRepo", {
               name: true,
               createdAt: true,
             },
-          }),
+          })
         );
 
         if (!user) {
           return yield* Effect.fail(
-            new UserNotFoundError({ id: UserId.make(userId) }),
+            new UserNotFoundError({ id: UserId.make(userId) })
           );
         }
 

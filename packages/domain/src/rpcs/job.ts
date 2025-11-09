@@ -3,7 +3,7 @@ import { Schema } from "effect";
 import { Job, JobId, JobRpcError, JobSearchParams } from "../schema/job";
 
 export class JobSearchResult extends Schema.Class<JobSearchResult>(
-  "JobSearchResult",
+  "JobSearchResult"
 )({
   jobs: Schema.Array(Job),
   total: Schema.Number,
@@ -19,7 +19,7 @@ export class JobPublicRpcs extends RpcGroup.make(
     payload: Schema.Struct({ id: JobId }),
     success: Job,
     error: JobRpcError,
-  }),
+  })
 ) {}
 
 export class JobAuthRpcs extends RpcGroup.make(
@@ -36,7 +36,7 @@ export class JobAuthRpcs extends RpcGroup.make(
     payload: Schema.Struct({ jobId: JobId }),
     success: Schema.Boolean,
     error: JobRpcError,
-  }),
+  })
 ) {}
 
 export const JobRpcs = JobPublicRpcs.merge(JobAuthRpcs);

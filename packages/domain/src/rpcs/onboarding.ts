@@ -30,5 +30,5 @@ export class OnboardingRpcs extends RpcGroup.make(
     payload: Schema.Struct({ chatId: OnboardingChatId }),
     success: GetChatResult,
     error: OnboardingRpcError,
-  }),
+  })
 ) {}

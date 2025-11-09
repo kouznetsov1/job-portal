@@ -3,10 +3,10 @@ import { DatabaseError } from "./database";
 import { UserId } from "./user";
 
 export const CVEditorChatId = Schema.String.pipe(
-  Schema.brand("CVEditorChatId"),
+  Schema.brand("CVEditorChatId")
 );
 export const CVChatMessageId = Schema.String.pipe(
-  Schema.brand("CVChatMessageId"),
+  Schema.brand("CVChatMessageId")
 );
 
 export const MessageRole = Schema.Literal("USER", "ASSISTANT");
@@ -18,7 +18,7 @@ export class CVChatMessage extends Schema.Class<CVChatMessage>("CVChatMessage")(
     role: MessageRole,
     content: Schema.String,
     createdAt: Schema.Date,
-  },
+  }
 ) {}
 
 export class CVEditorChat extends Schema.Class<CVEditorChat>("CVEditorChat")({
@@ -31,14 +31,14 @@ export class CVEditorChat extends Schema.Class<CVEditorChat>("CVEditorChat")({
 }) {}
 
 export class SendCVChatMessageRequest extends Schema.Class<SendCVChatMessageRequest>(
-  "SendCVChatMessageRequest",
+  "SendCVChatMessageRequest"
 )({
   chatId: CVEditorChatId,
   message: Schema.String,
 }) {}
 
 export class CVChatStreamChunk extends Schema.Class<CVChatStreamChunk>(
-  "CVChatStreamChunk",
+  "CVChatStreamChunk"
 )({
   content: Schema.String,
   done: Schema.Boolean,
@@ -46,7 +46,7 @@ export class CVChatStreamChunk extends Schema.Class<CVChatStreamChunk>(
 }) {}
 
 export class CompiledCVResult extends Schema.Class<CompiledCVResult>(
-  "CompiledCVResult",
+  "CompiledCVResult"
 )({
   pdfData: Schema.String,
   success: Schema.Boolean,
@@ -55,7 +55,7 @@ export class CompiledCVResult extends Schema.Class<CompiledCVResult>(
 
 export class CVEditorError extends Schema.TaggedError<CVEditorError>()(
   "CVEditorError",
-  { message: Schema.String },
+  { message: Schema.String }
 ) {}
 
 export class CVCompilationError extends Schema.TaggedError<CVCompilationError>()(
@@ -63,11 +63,11 @@ export class CVCompilationError extends Schema.TaggedError<CVCompilationError>()
   {
     message: Schema.String,
     errors: Schema.String,
-  },
+  }
 ) {}
 
 export const CVEditorRpcError = Schema.Union(
   CVEditorError,
   CVCompilationError,
-  DatabaseError,
+  DatabaseError
 );

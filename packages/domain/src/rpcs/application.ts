@@ -41,5 +41,5 @@ export class ApplicationRpcs extends RpcGroup.make(
     payload: MarkAppliedRequest,
     success: Application,
     error: ApplicationRpcError,
-  }),
+  })
 ) {}

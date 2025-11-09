@@ -3,14 +3,14 @@ import { DatabaseError } from "./database";
 import { UserId } from "./user";
 
 export const OnboardingChatId = Schema.String.pipe(
-  Schema.brand("OnboardingChatId"),
+  Schema.brand("OnboardingChatId")
 );
 export const ChatMessageId = Schema.String.pipe(Schema.brand("ChatMessageId"));
 
 export const OnboardingStatus = Schema.Literal(
   "ACTIVE",
   "COMPLETED",
-  "ABANDONED",
+  "ABANDONED"
 );
 
 export const ChatMessageRole = Schema.Literal("USER", "ASSISTANT");
@@ -24,7 +24,7 @@ export class ChatMessage extends Schema.Class<ChatMessage>("ChatMessage")({
 }) {}
 
 export class OnboardingChat extends Schema.Class<OnboardingChat>(
-  "OnboardingChat",
+  "OnboardingChat"
 )({
   id: OnboardingChatId,
   userId: UserId,
@@ -34,21 +34,21 @@ export class OnboardingChat extends Schema.Class<OnboardingChat>(
 }) {}
 
 export class SendMessageRequest extends Schema.Class<SendMessageRequest>(
-  "SendMessageRequest",
+  "SendMessageRequest"
 )({
   chatId: OnboardingChatId,
   message: Schema.String,
 }) {}
 
 export class ChatStreamChunk extends Schema.Class<ChatStreamChunk>(
-  "ChatStreamChunk",
+  "ChatStreamChunk"
 )({
   content: Schema.String,
   done: Schema.Boolean,
 }) {}
 
 export class CompleteOnboardingRequest extends Schema.Class<CompleteOnboardingRequest>(
-  "CompleteOnboardingRequest",
+  "CompleteOnboardingRequest"
 )({
   chatId: OnboardingChatId,
 }) {}
@@ -57,21 +57,21 @@ export class GetChatResult extends Schema.Class<GetChatResult>("GetChatResult")(
   {
     chat: OnboardingChat,
     messages: Schema.Array(ChatMessage),
-  },
+  }
 ) {}
 
 export class OnboardingChatNotFoundError extends Schema.TaggedError<OnboardingChatNotFoundError>()(
   "OnboardingChatNotFoundError",
-  { chatId: OnboardingChatId },
+  { chatId: OnboardingChatId }
 ) {}
 
 export class OnboardingError extends Schema.TaggedError<OnboardingError>()(
   "OnboardingError",
-  { message: Schema.String },
+  { message: Schema.String }
 ) {}
 
 export const OnboardingRpcError = Schema.Union(
   OnboardingChatNotFoundError,
   OnboardingError,
-  DatabaseError,
+  DatabaseError
 );

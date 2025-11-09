@@ -15,7 +15,7 @@ export class CVTemplatePublicRpcs extends RpcGroup.make(
     payload: Schema.Struct({ templateId: CVTemplateId }),
     success: CVTemplate,
     error: TemplateRpcError,
-  }),
+  })
 ) {}
 
 export class CVTemplateAuthRpcs extends RpcGroup.make(
@@ -23,7 +23,7 @@ export class CVTemplateAuthRpcs extends RpcGroup.make(
     payload: Schema.Struct({ templateId: CVTemplateId }),
     success: Schema.Boolean,
     error: TemplateRpcError,
-  }),
+  })
 ) {}
 
 export const CVTemplateRpcs = CVTemplatePublicRpcs.merge(CVTemplateAuthRpcs);

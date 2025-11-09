@@ -14,7 +14,10 @@ export class CVTemplate extends Schema.Class<CVTemplate>("CVTemplate")({
 
 export class TemplateNotFoundError extends Schema.TaggedError<TemplateNotFoundError>()(
   "TemplateNotFoundError",
-  { id: CVTemplateId },
+  { id: CVTemplateId }
 ) {}
 
-export const TemplateRpcError = Schema.Union(TemplateNotFoundError, DatabaseError);
+export const TemplateRpcError = Schema.Union(
+  TemplateNotFoundError,
+  DatabaseError
+);

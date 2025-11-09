@@ -1,19 +1,19 @@
-import { Link } from "@tanstack/react-router";
 import {
   Sidebar,
-  SidebarHeader,
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
   SidebarMenu,
-  SidebarMenuItem,
   SidebarMenuButton,
+  SidebarMenuItem,
 } from "@repo/ui/components/sidebar";
-import { Home, Briefcase, Settings, User } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { Briefcase, Home, Settings, User } from "lucide-react";
 
 export function AppSidebar() {
   return (
-    <Sidebar variant="inset" collapsible="offcanvas">
+    <Sidebar collapsible="offcanvas" variant="inset">
       <SidebarHeader>
         <div className="flex items-center gap-2 px-2 py-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
@@ -56,7 +56,7 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip="Profil" disabled>
+                <SidebarMenuButton asChild disabled tooltip="Profil">
                   <Link to="/">
                     <User />
                     <span>Profil</span>
@@ -64,7 +64,7 @@ export function AppSidebar() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip="Inställningar" disabled>
+                <SidebarMenuButton asChild disabled tooltip="Inställningar">
                   <Link to="/">
                     <Settings />
                     <span>Inställningar</span>

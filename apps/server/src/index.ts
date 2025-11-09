@@ -1,9 +1,9 @@
 import { FetchHttpClient, HttpLayerRouter } from "@effect/platform";
 import { BunHttpServer, BunRuntime } from "@effect/platform-bun";
-import { Layer } from "effect";
 import { RpcSerialization, RpcServer } from "@effect/rpc";
-import { RpcHandlers } from "./handlers";
 import { Rpcs } from "@repo/domain";
+import { Layer } from "effect";
+import { RpcHandlers } from "./handlers";
 import { PlatsbankenSyncSchedulerLayer } from "./services/platsbanken/platsbanken-sync";
 
 const HttpRoute = RpcServer.layerHttpRouter({
@@ -12,18 +12,18 @@ const HttpRoute = RpcServer.layerHttpRouter({
   protocol: "http",
 }).pipe(
   Layer.provide(RpcHandlers),
-  Layer.provide(RpcSerialization.layerNdjson),
+  Layer.provide(RpcSerialization.layerNdjson)
 );
 
 const Routes = Layer.mergeAll(HttpRoute).pipe(
-  Layer.provide(HttpLayerRouter.cors()),
+  Layer.provide(HttpLayerRouter.cors())
 );
 
 const Main = Layer.mergeAll(
   HttpLayerRouter.serve(Routes).pipe(
-    Layer.provide(BunHttpServer.layer({ port: 9090 })),
+    Layer.provide(BunHttpServer.layer({ port: 9090 }))
   ),
-  PlatsbankenSyncSchedulerLayer,
+  PlatsbankenSyncSchedulerLayer
 ).pipe(Layer.provide(FetchHttpClient.layer));
 
 BunRuntime.runMain(Layer.launch(Main));

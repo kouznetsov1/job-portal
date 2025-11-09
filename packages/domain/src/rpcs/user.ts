@@ -5,5 +5,5 @@ export class UserRpcs extends RpcGroup.make(
   Rpc.make("user.getCurrentUser", {
     success: UserPublic,
     error: UserRpcError,
-  }),
+  })
 ) {}

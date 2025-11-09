@@ -10,7 +10,7 @@ import {
 } from "../schema/cv-editor";
 
 export class GetOrCreateChatResult extends Schema.Class<GetOrCreateChatResult>(
-  "GetOrCreateChatResult",
+  "GetOrCreateChatResult"
 )({
   chat: CVEditorChat,
   messages: Schema.Array(CVChatMessage),
@@ -30,5 +30,5 @@ export class CVEditorRpcs extends RpcGroup.make(
     payload: Schema.Struct({ typstCode: Schema.String }),
     success: CompiledCVResult,
     error: CVEditorRpcError,
-  }),
+  })
 ) {}

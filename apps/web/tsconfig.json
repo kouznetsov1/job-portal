@@ -5,12 +5,8 @@
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "src/*"
-      ],
-      "~/*": [
-        "public/*"
-      ]
+      "@/*": ["src/*"],
+      "~/*": ["public/*"]
     }
   },
   "references": [
@@ -21,13 +17,6 @@
       "path": "../../packages/domain"
     }
   ],
-  "include": [
-    "src",
-    "test"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "dist-node"
-  ]
+  "include": ["src", "test"],
+  "exclude": ["node_modules", "dist", "dist-node"]
 }

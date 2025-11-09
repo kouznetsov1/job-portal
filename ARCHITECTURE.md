@@ -393,7 +393,6 @@ For testing this we have to do some frontend work which is not noted down here b
 - [x] Create Users handler using UsersRpcs.toLayer
 - [x] Wire up "users.getCurrentUser" endpoint to userRepo.getCurrentUser
 - [x] Add DatabaseError to UserRpcError union in domain
-- [ ] Wire up "users.updateProfile" endpoint to userRepo.updateProfile
 
 ---
 
@@ -435,9 +434,8 @@ For testing this we have to do some frontend work which is not noted down here b
 
 **File**: `apps/server/src/services/__tests__/user-service.test.ts`
 
-- [ ] Test getCurrentUser with valid session
-- [ ] Test getCurrentUser without session (should fail)
-- [ ] Test updateProfile with valid userId
+- [x] Test getCurrentUser with valid session
+- [x] Test getCurrentUser without session (should fail)
 
 ---
 

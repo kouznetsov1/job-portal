@@ -1,4 +1,4 @@
-import { UserRpcs, CurrentSession } from "@repo/domain";
+import { CurrentSession, UserRpcs } from "@repo/domain";
 import { Effect } from "effect";
 import { UserRepo } from "../services/user-repo";
 
@@ -13,5 +13,5 @@ export const User = UserRpcs.toLayer(
           return yield* userRepo.getUser(userId);
         }),
     };
-  }),
+  })
 );

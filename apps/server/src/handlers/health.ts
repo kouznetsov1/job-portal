@@ -8,5 +8,5 @@ export const Health = HealthRpcs.toLayer(
     return {
       health,
     };
-  }),
+  })
 );

@@ -1,10 +1,10 @@
 import { Database } from "@repo/db";
+import { AuthError, SessionNotFoundError } from "@repo/domain";
+import type { BetterAuthOptions } from "better-auth";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { Effect } from "effect";
-import type { BetterAuthOptions } from "better-auth";
-import { AuthError, SessionNotFoundError } from "@repo/domain";
 import { google, linkedin } from "better-auth/social-providers";
+import { Effect } from "effect";
 
 export class Auth extends Effect.Service<Auth>()("Auth", {
   effect: Effect.gen(function* () {
@@ -43,7 +43,7 @@ export class Auth extends Effect.Service<Auth>()("Auth", {
 
         if (!session) {
           return yield* Effect.fail(
-            new SessionNotFoundError({ message: "No active session found" }),
+            new SessionNotFoundError({ message: "No active session found" })
           );
         }
 

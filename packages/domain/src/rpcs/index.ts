@@ -1,13 +1,13 @@
-import { HealthRpcs } from "./health";
-import { UserRpcs } from "./user";
-import { ProfileRpcs } from "./profile";
-import { CompanyRpcs } from "./company";
-import { JobPublicRpcs, JobAuthRpcs } from "./job";
-import { CVTemplatePublicRpcs, CVTemplateAuthRpcs } from "./cv-template";
-import { CVEditorRpcs } from "./cv-editor";
-import { OnboardingRpcs } from "./onboarding";
-import { ApplicationRpcs } from "./application";
 import { AuthMiddleware } from "../middleware/auth";
+import { ApplicationRpcs } from "./application";
+import { CompanyRpcs } from "./company";
+import { CVEditorRpcs } from "./cv-editor";
+import { CVTemplateAuthRpcs, CVTemplatePublicRpcs } from "./cv-template";
+import { HealthRpcs } from "./health";
+import { JobAuthRpcs, JobPublicRpcs } from "./job";
+import { OnboardingRpcs } from "./onboarding";
+import { ProfileRpcs } from "./profile";
+import { UserRpcs } from "./user";
 
 export const PublicRpcs = HealthRpcs.merge(CompanyRpcs)
   .merge(JobPublicRpcs)
@@ -23,13 +23,13 @@ export const AuthenticatedRpcs = UserRpcs.merge(ProfileRpcs)
 
 export const Rpcs = PublicRpcs.merge(AuthenticatedRpcs);
 
-export * from "./health";
-export * from "./user";
-export * from "./profile";
-export * from "./company";
-export * from "./job";
-export * from "./cv-template";
-export * from "./cv-editor";
-export * from "./onboarding";
-export * from "./application";
 export * from "../middleware/auth";
+export * from "./application";
+export * from "./company";
+export * from "./cv-editor";
+export * from "./cv-template";
+export * from "./health";
+export * from "./job";
+export * from "./onboarding";
+export * from "./profile";
+export * from "./user";

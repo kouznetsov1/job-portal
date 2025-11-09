@@ -1,6 +1,5 @@
 import { Schema } from "effect";
 import { DatabaseError } from "./database";
-import { Job } from "./job";
 
 export const CompanyId = Schema.String.pipe(Schema.brand("CompanyId"));
 
@@ -18,7 +17,7 @@ export class Company extends Schema.Class<Company>("Company")({
 }) {}
 
 export class CompanyDetailed extends Schema.Class<CompanyDetailed>(
-  "CompanyDetailed",
+  "CompanyDetailed"
 )({
   id: CompanyId,
   name: Schema.String,
@@ -39,7 +38,7 @@ export class CompanyDetailed extends Schema.Class<CompanyDetailed>(
 }) {}
 
 export class CompanySearchParams extends Schema.Class<CompanySearchParams>(
-  "CompanySearchParams",
+  "CompanySearchParams"
 )({
   q: Schema.optional(Schema.String),
   industry: Schema.optional(Schema.String),
@@ -50,7 +49,7 @@ export class CompanySearchParams extends Schema.Class<CompanySearchParams>(
 }) {}
 
 export class CompanySearchResult extends Schema.Class<CompanySearchResult>(
-  "CompanySearchResult",
+  "CompanySearchResult"
 )({
   companies: Schema.Array(CompanyDetailed),
   total: Schema.Number,
@@ -58,28 +57,12 @@ export class CompanySearchResult extends Schema.Class<CompanySearchResult>(
   pageSize: Schema.Number,
 }) {}
 
-export class CompanyJobsRequest extends Schema.Class<CompanyJobsRequest>(
-  "CompanyJobsRequest",
-)({
-  companyId: CompanyId,
-  page: Schema.optional(Schema.Number),
-  pageSize: Schema.optional(Schema.Number),
-}) {}
-
-export class CompanyJobsResult extends Schema.Class<CompanyJobsResult>(
-  "CompanyJobsResult",
-)({
-  company: CompanyDetailed,
-  jobs: Schema.Array(Job),
-  total: Schema.Number,
-}) {}
-
 export class CompanyNotFoundError extends Schema.TaggedError<CompanyNotFoundError>()(
   "CompanyNotFoundError",
-  { id: CompanyId },
+  { id: CompanyId }
 ) {}
 
 export const CompanyRpcError = Schema.Union(
   CompanyNotFoundError,
-  DatabaseError,
+  DatabaseError
 );

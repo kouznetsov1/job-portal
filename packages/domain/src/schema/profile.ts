@@ -1,6 +1,6 @@
 import { Schema } from "effect";
-import { UserId } from "./user";
 import { DatabaseError } from "./database";
+import { UserId } from "./user";
 
 export const ProfileId = Schema.String.pipe(Schema.brand("ProfileId"));
 
@@ -42,7 +42,7 @@ export class UserProfile extends Schema.Class<UserProfile>("UserProfile")({
 }) {}
 
 export class UpdateProfileData extends Schema.Class<UpdateProfileData>(
-  "UpdateProfileData",
+  "UpdateProfileData"
 )({
   fullName: Schema.optional(Schema.String),
   email: Schema.optional(Schema.String),
@@ -56,7 +56,7 @@ export class UpdateProfileData extends Schema.Class<UpdateProfileData>(
 }) {}
 
 export class CVUploadRequest extends Schema.Class<CVUploadRequest>(
-  "CVUploadRequest",
+  "CVUploadRequest"
 )({
   fileName: Schema.String,
   fileData: Schema.String,
@@ -64,37 +64,37 @@ export class CVUploadRequest extends Schema.Class<CVUploadRequest>(
 }) {}
 
 export class ParsedCVResult extends Schema.Class<ParsedCVResult>(
-  "ParsedCVResult",
+  "ParsedCVResult"
 )({
   text: Schema.String,
 }) {}
 
 export class LinkedInImportRequest extends Schema.Class<LinkedInImportRequest>(
-  "LinkedInImportRequest",
+  "LinkedInImportRequest"
 )({
   linkedinUrl: Schema.String.pipe(
-    Schema.pattern(/^https:\/\/(www\.)?linkedin\.com\/in\/.+$/),
+    Schema.pattern(/^https:\/\/(www\.)?linkedin\.com\/in\/.+$/)
   ),
 }) {}
 
 export class ProfileNotFoundError extends Schema.TaggedError<ProfileNotFoundError>()(
   "ProfileNotFoundError",
-  { userId: UserId },
+  { userId: UserId }
 ) {}
 
 export class CVParseError extends Schema.TaggedError<CVParseError>()(
   "CVParseError",
-  { message: Schema.String },
+  { message: Schema.String }
 ) {}
 
 export class LinkedInImportError extends Schema.TaggedError<LinkedInImportError>()(
   "LinkedInImportError",
-  { message: Schema.String },
+  { message: Schema.String }
 ) {}
 
 export const ProfileRpcError = Schema.Union(
   ProfileNotFoundError,
   CVParseError,
   LinkedInImportError,
-  DatabaseError,
+  DatabaseError
 );

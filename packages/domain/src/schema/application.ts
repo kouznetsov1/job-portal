@@ -12,7 +12,7 @@ export const GenerationStage = Schema.Literal(
   "analyzing_job",
   "generating_letter",
   "finalizing",
-  "complete",
+  "complete"
 );
 
 export class Application extends Schema.Class<Application>("Application")({
@@ -27,13 +27,13 @@ export class Application extends Schema.Class<Application>("Application")({
 }) {}
 
 export class GenerateApplicationRequest extends Schema.Class<GenerateApplicationRequest>(
-  "GenerateApplicationRequest",
+  "GenerateApplicationRequest"
 )({
   jobId: JobId,
 }) {}
 
 export class GenerationProgress extends Schema.Class<GenerationProgress>(
-  "GenerationProgress",
+  "GenerationProgress"
 )({
   stage: GenerationStage,
   message: Schema.String,
@@ -42,20 +42,20 @@ export class GenerationProgress extends Schema.Class<GenerationProgress>(
 }) {}
 
 export class RegenerateApplicationRequest extends Schema.Class<RegenerateApplicationRequest>(
-  "RegenerateApplicationRequest",
+  "RegenerateApplicationRequest"
 )({
   applicationId: ApplicationId,
   feedback: Schema.optional(Schema.String),
 }) {}
 
 export class DownloadApplicationRequest extends Schema.Class<DownloadApplicationRequest>(
-  "DownloadApplicationRequest",
+  "DownloadApplicationRequest"
 )({
   applicationId: ApplicationId,
 }) {}
 
 export class DownloadApplicationResult extends Schema.Class<DownloadApplicationResult>(
-  "DownloadApplicationResult",
+  "DownloadApplicationResult"
 )({
   fileName: Schema.String,
   fileData: Schema.String,
@@ -63,23 +63,23 @@ export class DownloadApplicationResult extends Schema.Class<DownloadApplicationR
 }) {}
 
 export class MarkAppliedRequest extends Schema.Class<MarkAppliedRequest>(
-  "MarkAppliedRequest",
+  "MarkAppliedRequest"
 )({
   applicationId: ApplicationId,
 }) {}
 
 export class ApplicationNotFoundError extends Schema.TaggedError<ApplicationNotFoundError>()(
   "ApplicationNotFoundError",
-  { id: ApplicationId },
+  { id: ApplicationId }
 ) {}
 
 export class ApplicationGenerationError extends Schema.TaggedError<ApplicationGenerationError>()(
   "ApplicationGenerationError",
-  { message: Schema.String },
+  { message: Schema.String }
 ) {}
 
 export const ApplicationRpcError = Schema.Union(
   ApplicationNotFoundError,
   ApplicationGenerationError,
-  DatabaseError,
+  DatabaseError
 );

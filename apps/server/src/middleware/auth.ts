@@ -1,7 +1,7 @@
-import { AuthMiddleware } from "@repo/domain";
 import { Auth } from "@repo/auth";
-import { Effect, Layer } from "effect";
+import { AuthMiddleware } from "@repo/domain";
 import { fromNodeHeaders } from "better-auth/node";
+import { Effect, Layer } from "effect";
 
 export const AuthMiddlewareLive = Layer.effect(
   AuthMiddleware,
@@ -17,7 +17,7 @@ export const AuthMiddlewareLive = Layer.effect(
           userId: session.user.id,
           email: session.user.email,
         };
-      }),
+      })
     );
-  }),
+  })
 );

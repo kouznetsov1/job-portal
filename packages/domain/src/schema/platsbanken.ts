@@ -56,25 +56,25 @@ export const WorkplaceAddress = Schema.Struct({
   postcode: Schema.optional(Schema.NullOr(Schema.String)),
   city: Schema.optional(Schema.NullOr(Schema.String)),
   coordinates: Schema.optional(
-    Schema.NullOr(Schema.Array(Schema.NullOr(Schema.Number))),
+    Schema.NullOr(Schema.Array(Schema.NullOr(Schema.Number)))
   ),
 });
 
 export const Requirements = Schema.Struct({
   skills: Schema.optional(
-    Schema.NullOr(Schema.Array(WeightedJobtechTaxonomyItem)),
+    Schema.NullOr(Schema.Array(WeightedJobtechTaxonomyItem))
   ),
   languages: Schema.optional(
-    Schema.NullOr(Schema.Array(WeightedJobtechTaxonomyItem)),
+    Schema.NullOr(Schema.Array(WeightedJobtechTaxonomyItem))
   ),
   work_experiences: Schema.optional(
-    Schema.NullOr(Schema.Array(WeightedJobtechTaxonomyItem)),
+    Schema.NullOr(Schema.Array(WeightedJobtechTaxonomyItem))
   ),
   education: Schema.optional(
-    Schema.NullOr(Schema.Array(WeightedJobtechTaxonomyItem)),
+    Schema.NullOr(Schema.Array(WeightedJobtechTaxonomyItem))
   ),
   education_level: Schema.optional(
-    Schema.NullOr(Schema.Array(WeightedJobtechTaxonomyItem)),
+    Schema.NullOr(Schema.Array(WeightedJobtechTaxonomyItem))
   ),
 });
 
@@ -105,7 +105,9 @@ export const JobAd = Schema.Struct({
         Schema.Array(Schema.String),
         Schema.transform(Schema.String, Schema.Array(Schema.String), {
           decode: (str) => {
-            if (str === "[]") { return []; }
+            if (str === "[]") {
+              return [];
+            }
             if (str.startsWith("[") && str.endsWith("]")) {
               try {
                 return JSON.parse(str.replace(/'/g, '"'));
@@ -116,9 +118,9 @@ export const JobAd = Schema.Struct({
             return [];
           },
           encode: (arr) => JSON.stringify(arr),
-        }),
-      ),
-    ),
+        })
+      )
+    )
   ),
   webpage_url: Schema.optional(Schema.Unknown),
   logo_url: Schema.optional(Schema.NullOr(Schema.String)),
@@ -139,7 +141,7 @@ export const JobAd = Schema.Struct({
   access_to_own_car: Schema.optional(Schema.NullOr(Schema.Boolean)),
   driving_license_required: Schema.optional(Schema.NullOr(Schema.Boolean)),
   driving_license: Schema.optional(
-    Schema.NullOr(Schema.Array(JobTechTaxonomyItem)),
+    Schema.NullOr(Schema.Array(JobTechTaxonomyItem))
   ),
   occupation: Schema.optional(Schema.NullOr(JobTechTaxonomyItem)),
   occupation_group: Schema.optional(Schema.NullOr(JobTechTaxonomyItem)),
@@ -148,7 +150,7 @@ export const JobAd = Schema.Struct({
   must_have: Schema.optional(Schema.NullOr(Requirements)),
   nice_to_have: Schema.optional(Schema.NullOr(Requirements)),
   application_contacts: Schema.optional(
-    Schema.NullOr(Schema.Array(ApplicationContact)),
+    Schema.NullOr(Schema.Array(ApplicationContact))
   ),
   publication_date: Schema.optional(Schema.NullOr(Schema.String)),
   last_publication_date: Schema.optional(Schema.NullOr(Schema.String)),
@@ -188,10 +190,10 @@ export const FreetextConcepts = Schema.Struct({
   location_must: Schema.optional(Schema.NullOr(Schema.Array(Schema.String))),
   skill_must_not: Schema.optional(Schema.NullOr(Schema.Array(Schema.String))),
   occupation_must_not: Schema.optional(
-    Schema.NullOr(Schema.Array(Schema.String)),
+    Schema.NullOr(Schema.Array(Schema.String))
   ),
   location_must_not: Schema.optional(
-    Schema.NullOr(Schema.Array(Schema.String)),
+    Schema.NullOr(Schema.Array(Schema.String))
   ),
 });
 

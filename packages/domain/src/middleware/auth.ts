@@ -15,5 +15,5 @@ export class AuthMiddleware extends RpcMiddleware.Tag<AuthMiddleware>()(
   {
     provides: CurrentSession,
     failure: Schema.Union(SessionNotFoundError, AuthError),
-  },
+  }
 ) {}

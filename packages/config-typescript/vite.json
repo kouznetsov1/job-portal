@@ -4,11 +4,7 @@
   "display": "Vite React",
   "compilerOptions": {
     "target": "ESNext",
-    "lib": [
-      "DOM",
-      "DOM.Iterable",
-      "ESNext"
-    ],
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "allowJs": false,
     "jsx": "react-jsx",
     "noEmit": true,
@@ -17,8 +13,6 @@
     "experimentalDecorators": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "types": [
-      "vite/client"
-    ]
+    "types": ["vite/client"]
   }
 }

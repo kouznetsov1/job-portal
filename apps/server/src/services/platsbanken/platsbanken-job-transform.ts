@@ -1,18 +1,18 @@
-import { Schema, Effect, ParseResult, Option } from "effect";
 import { JobAd } from "@repo/domain";
+import { Effect, Option, ParseResult, Schema } from "effect";
 
 const extractTaxonomyLabel = (
-  item: { readonly label?: string | null | undefined } | null | undefined,
+  item: { readonly label?: string | null | undefined } | null | undefined
 ): Option.Option<string> => Option.fromNullable(item?.label);
 
 const parseCoordinates = (
-  coords: readonly (number | null)[] | null | undefined,
+  coords: readonly (number | null)[] | null | undefined
 ): Option.Option<[number, number]> =>
   Option.fromNullable(coords).pipe(
     Option.filter((arr) => arr.length === 2),
     Option.flatMap((arr) =>
-      Option.all([Option.fromNullable(arr[0]), Option.fromNullable(arr[1])]),
-    ),
+      Option.all([Option.fromNullable(arr[0]), Option.fromNullable(arr[1])])
+    )
   );
 
 const extractRequirementsFromCategory = (
@@ -24,7 +24,7 @@ const extractRequirementsFromCategory = (
     | null
     | undefined,
   category: string,
-  requirementType: "must_have" | "nice_to_have",
+  requirementType: "must_have" | "nice_to_have"
 ) =>
   Option.fromNullable(items).pipe(
     Option.map((arr) =>
@@ -39,11 +39,11 @@ const extractRequirementsFromCategory = (
           Option.match({
             onNone: () => [],
             onSome: (req) => [req],
-          }),
-        ),
-      ),
+          })
+        )
+      )
     ),
-    Option.getOrElse(() => []),
+    Option.getOrElse(() => [])
   );
 
 const extractAllRequirements = (jobAd: typeof JobAd.Type) => {
@@ -51,27 +51,27 @@ const extractAllRequirements = (jobAd: typeof JobAd.Type) => {
     ...extractRequirementsFromCategory(
       jobAd.must_have?.skills,
       "skill",
-      "must_have",
+      "must_have"
     ),
     ...extractRequirementsFromCategory(
       jobAd.must_have?.languages,
       "language",
-      "must_have",
+      "must_have"
     ),
     ...extractRequirementsFromCategory(
       jobAd.must_have?.work_experiences,
       "work_experience",
-      "must_have",
+      "must_have"
     ),
     ...extractRequirementsFromCategory(
       jobAd.must_have?.education,
       "education",
-      "must_have",
+      "must_have"
     ),
     ...extractRequirementsFromCategory(
       jobAd.must_have?.education_level,
       "education_level",
-      "must_have",
+      "must_have"
     ),
   ];
 
@@ -79,27 +79,27 @@ const extractAllRequirements = (jobAd: typeof JobAd.Type) => {
     ...extractRequirementsFromCategory(
       jobAd.nice_to_have?.skills,
       "skill",
-      "nice_to_have",
+      "nice_to_have"
     ),
     ...extractRequirementsFromCategory(
       jobAd.nice_to_have?.languages,
       "language",
-      "nice_to_have",
+      "nice_to_have"
     ),
     ...extractRequirementsFromCategory(
       jobAd.nice_to_have?.work_experiences,
       "work_experience",
-      "nice_to_have",
+      "nice_to_have"
     ),
     ...extractRequirementsFromCategory(
       jobAd.nice_to_have?.education,
       "education",
-      "nice_to_have",
+      "nice_to_have"
     ),
     ...extractRequirementsFromCategory(
       jobAd.nice_to_have?.education_level,
       "education_level",
-      "nice_to_have",
+      "nice_to_have"
     ),
   ];
 
@@ -107,7 +107,7 @@ const extractAllRequirements = (jobAd: typeof JobAd.Type) => {
 };
 
 const transformCompany = (
-  jobAd: typeof JobAd.Type,
+  jobAd: typeof JobAd.Type
 ): typeof TransformedCompanySchema.Type => ({
   name: jobAd.employer?.name || "Okänd arbetsgivare",
   organizationNumber: jobAd.employer?.organization_number ?? null,
@@ -221,13 +221,13 @@ export const PlatsbankenJobTransform = Schema.transformOrFail(
         const title = jobAd.headline || "";
         if (!title.trim()) {
           return yield* ParseResult.fail(
-            new ParseResult.Type(ast, jobAd, "No title in job"),
+            new ParseResult.Type(ast, jobAd, "No title in job")
           );
         }
 
         if (!jobAd.employer) {
           return yield* ParseResult.fail(
-            new ParseResult.Type(ast, jobAd, "Missing employer"),
+            new ParseResult.Type(ast, jobAd, "Missing employer")
           );
         }
 
@@ -255,14 +255,12 @@ export const PlatsbankenJobTransform = Schema.transformOrFail(
           company,
 
           employmentType: extractTaxonomyLabel(jobAd.employment_type).pipe(
-            Option.getOrNull,
+            Option.getOrNull
           ),
           workingHoursType: extractTaxonomyLabel(jobAd.working_hours_type).pipe(
-            Option.getOrNull,
+            Option.getOrNull
           ),
-          duration: extractTaxonomyLabel(jobAd.duration).pipe(
-            Option.getOrNull,
-          ),
+          duration: extractTaxonomyLabel(jobAd.duration).pipe(Option.getOrNull),
 
           vacancies: jobAd.number_of_vacancies ?? null,
           startDate: jobAd.access ?? null,
@@ -270,18 +268,18 @@ export const PlatsbankenJobTransform = Schema.transformOrFail(
           workloadMax: jobAd.scope_of_work?.max ?? null,
 
           salaryType: extractTaxonomyLabel(jobAd.salary_type).pipe(
-            Option.getOrNull,
+            Option.getOrNull
           ),
           salaryDescription: jobAd.salary_description ?? null,
 
           occupation: extractTaxonomyLabel(jobAd.occupation).pipe(
-            Option.getOrNull,
+            Option.getOrNull
           ),
           occupationGroup: extractTaxonomyLabel(jobAd.occupation_group).pipe(
-            Option.getOrNull,
+            Option.getOrNull
           ),
           occupationField: extractTaxonomyLabel(jobAd.occupation_field).pipe(
-            Option.getOrNull,
+            Option.getOrNull
           ),
 
           experienceRequired: jobAd.experience_required ?? false,
@@ -308,9 +306,9 @@ export const PlatsbankenJobTransform = Schema.transformOrFail(
           postalCode: jobAd.workplace_address?.postcode ?? null,
           country: jobAd.workplace_address?.country || "Sverige",
           countryCode: jobAd.workplace_address?.country_code ?? null,
-          coordinates: parseCoordinates(jobAd.workplace_address?.coordinates).pipe(
-            Option.getOrNull,
-          ),
+          coordinates: parseCoordinates(
+            jobAd.workplace_address?.coordinates
+          ).pipe(Option.getOrNull),
 
           requirements,
           contacts,
@@ -324,5 +322,5 @@ export const PlatsbankenJobTransform = Schema.transformOrFail(
           text: transformed.description,
         },
       }),
-  },
+  }
 );
