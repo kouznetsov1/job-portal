@@ -1,0 +1,1 @@
+- [] make better prompts for embedded job description in profile

@@ -462,85 +462,123 @@ For testing this we have to do some frontend work which is not noted down here b
 
 ---
 
-### 2.2: Implement ProfileService
+### 2.2: Implement Profile Service & Supporting Services
 
-**File**: `apps/server/src/services/profile-service.ts`
+**Files**:
+- `apps/server/src/services/profile-repo.ts` (Profile)
+- `apps/server/src/services/file-storage.ts` (FileStorage)
+- `apps/server/src/services/ocr.ts` (OCR)
+- `apps/server/src/services/embedding.ts` (Embedding)
 
 #### Service Setup
 
-- [ ] Create ProfileService class extending Effect.Service
-- [ ] Add Database dependency
-- [ ] Add FileStorageService dependency
-- [ ] Setup scoped Effect.gen
+- [x] Create Profile class extending Effect.Service
+- [x] Add Database dependency
+- [x] Add FileStorage dependency (uses Effect's FileSystem & Path)
+- [x] Add OCR dependency (uses AI SDK with Mistral)
+- [x] Add Embedding dependency (uses AI SDK with OpenAI)
+- [x] Setup scoped Effect.gen
+
+#### FileStorage service
+
+- [x] Uses Effect's FileSystem.FileSystem and Path.Path
+- [x] `save(fileName, fileData, mimeType)` - Saves base64 CV files to uploads/cvs/
+- [x] `read(filePath)` - Reads file buffers
+
+#### OCR service
+
+- [x] Uses `@ai-sdk/mistral` with `createMistral()`
+- [x] `parseDocument(fileData, mimeType)` - Uses AI SDK `generateText()` with Mistral OCR
+- [x] Supports PDFs and images via data URLs
+- [x] Returns extracted text in markdown format (Swedish prompt)
+- [x] Custom OCRError for error handling
+
+#### Embedding service
+
+- [x] Uses `@ai-sdk/openai` with `createOpenAI()`
+- [x] `generate(text)` - Uses AI SDK `embed()` with text-embedding-3-small model
+- [x] Returns embedding vector as number array
+- [x] Custom EmbeddingError for error handling
 
 #### get method
 
-- [ ] Fetch UserProfile by userId with experience and education relations
-- [ ] If not found, create empty profile
-- [ ] Decode to UserProfile schema
-- [ ] Add span and logging
+- [x] Fetch UserProfile by userId with experience and education relations
+- [x] If not found, create empty profile
+- [x] Transform to UserProfile schema
+- [x] Add Effect.fn for spans
 
 #### update method
 
-- [ ] Fetch existing profile
-- [ ] Update profile fields (fullName, email, phone, headline, summary, skills, linkedinUrl)
-- [ ] Handle nested experience updates (upsert/delete)
-- [ ] Handle nested education updates (upsert/delete)
-- [ ] Return updated profile
-- [ ] Add span and logging
+- [x] Fetch existing profile
+- [x] Update profile fields (fullName, email, phone, headline, summary, skills, linkedinUrl)
+- [x] Handle nested experience updates (delete all, then recreate)
+- [x] Handle nested education updates (delete all, then recreate)
+- [x] Return updated profile
+- [x] Add Effect.fn for spans
 
 #### uploadCV method
 
-- [ ] Save file using FileStorageService
-- [ ] OCR service using mistral (https://docs.mistral.ai/capabilities/document_ai/basic_ocr)
-- [ ] Make a AI service using effect (check vendor for how to implement this) to extract structured data (name, skills[], experience[], education[])
-- [ ] Return ParsedCVResult with text and extracted profile
-- [ ] Add span and logging
+- [x] Save file using FileStorage.save
+- [x] Parse document using OCR.parseDocument (AI SDK with Mistral)
+- [x] Update profile with cvFileUrl and cvParsedText
+- [x] Return ParsedCVResult with text
+- [x] Map OCRError to CVParseError
+- [x] Add Effect.fn for spans
 
 #### generatePerfectJobDescription method
 
-- [ ] Fetch complete profile with experience and education
-- [ ] Call AI service to generate "perfect job description" (10 sentences describing ideal role based on user's skills, experience, preferences)
-- [ ] Store description in profile.perfectJobDescription
-- [ ] Call OpenAI embedding API (make a service) (text-embedding-3-small) on the perfect job description
-- [ ] Store embedding in profile.perfectJobEmbedding vector
-- [ ] Return success boolean
-- [ ] Add span and logging
+- [x] Fetch complete profile with experience and education
+- [x] Generate "perfect job description" from profile data (Swedish)
+- [x] Store description in profile.perfectJobDescription
+- [x] Generate embedding using Embedding.generate (AI SDK with OpenAI text-embedding-3-small)
+- [x] Store embedding in profile.perfectJobEmbedding vector using raw SQL
+- [x] Return success boolean
+- [x] Add Effect.fn for spans
 
 **Note**: This should be called automatically after profile creation (onboarding complete) and whenever profile is updated.
+
+**Dependencies added**:
+- `@ai-sdk/mistral@2.0.23` - for OCR via AI SDK
+- Already had: `@ai-sdk/openai@2.0.53`, `ai@5.0.80`
+
+**Environment variables required**:
+- `MISTRAL_API_KEY` - for OCR
+- `OPENAI_API_KEY` - for embeddings
 
 ---
 
 ### 2.3: CV Parsing Library Setup
 
-Check what mistral needs to install and an env variable for it has to be added.
+- [x] Using AI SDK with `@ai-sdk/mistral` for OCR
+- [x] Using AI SDK with `@ai-sdk/openai` for embeddings
+- [x] Environment variables: MISTRAL_API_KEY, OPENAI_API_KEY
 
 ---
 
 ### 2.4: Implement ProfilesRpcs Handler
 
-**File**: `apps/server/src/rpcs/profiles.ts`
+**File**: `apps/server/src/handlers/profiles.ts`
 
-- [ ] Import ProfilesRpcs from @repo/domain
-- [ ] Import ProfileService, FileStorageService
-- [ ] Create ProfilesLiveHandler using ProfilesRpcs.toLayer
-- [ ] Wire up "profiles.get" - get userId from Session context
-- [ ] Wire up "profiles.update" - get userId from Session context
-- [ ] Wire up "profiles.uploadCV" - get userId from Session context
-- [ ] Wire up "profiles.parseLinkedIn" - get userId from Session context
-- [ ] Wire up "profiles.generateEmbedding" - get userId from Session context (calls generatePerfectJobDescription internally)
-- [ ] Provide ProfileService.Default, FileStorageService.Default, Database.Live layers
+- [x] Import ProfilesRpcs from @repo/domain
+- [x] Import Profile service
+- [x] Create Profiles handler using ProfilesRpcs.toLayer
+- [x] Wire up "profile.get" - get userId from CurrentSession context
+- [x] Wire up "profile.update" - get userId from CurrentSession context, calls generatePerfectJobDescription after update (errors caught silently)
+- [x] Wire up "profile.uploadCV" - get userId from CurrentSession context
+- [x] Add PlatformError to ProfileRpcError union (for FileStorage errors)
 
-**Note**: Call generatePerfectJobDescription after onboarding.complete and after profiles.update
+**Note**: generatePerfectJobDescription is called automatically after profile.update. LinkedIn import feature removed from scope.
 
 ---
 
 ### 2.5: Register Handler
 
-**File**: `apps/server/src/rpcs/index.ts`
+**File**: `apps/server/src/handlers/index.ts`
 
-- [ ] Import ProfilesLiveHandler
-- [ ] Merge ProfilesLiveHandler into RpcHandlers
+- [x] Import Profiles handler
+- [x] Merge Profiles into RpcHandlers
+- [x] Provide Profile.Default, FileStorage.Default, OCR.Default, Embedding.Default layers
+- [x] Provide BunContext.layer for FileSystem/Path services
 
 ---
 

@@ -1,4 +1,5 @@
 import { Schema } from "effect";
+import { PlatformError } from "@effect/platform/Error";
 import { DatabaseError } from "./database";
 import { UserId } from "./user";
 
@@ -82,5 +83,6 @@ export class CVParseError extends Schema.TaggedError<CVParseError>()(
 export const ProfileRpcError = Schema.Union(
   ProfileNotFoundError,
   CVParseError,
-  DatabaseError
+  DatabaseError,
+  PlatformError
 );
