@@ -22,6 +22,7 @@
     "@effect/platform": "catalog:",
     "@effect/platform-bun": "catalog:",
     "@effect/rpc": "catalog:",
+    "@mendable/firecrawl-js": "^4.5.0",
     "@repo/db": "workspace:*",
     "@repo/domain": "workspace:*",
     "ai": "^5.0.80",
