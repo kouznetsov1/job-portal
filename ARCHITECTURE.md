@@ -242,7 +242,7 @@ NOTE: The old job domain spec has been deleted so we have to make it from scratc
 
 **File**: `packages/domain/src/schema/company.ts`
 
-**Note**: Company enrichment (scraping, AI description) happens automatically during job sync for NEW companies only. NOT an RPC endpoint.
+**Note**: Company information is sourced from Platsbanken job ads during sync. No web scraping or AI enrichment.
 
 #### Schemas
 
@@ -577,11 +577,17 @@ For testing this we have to do some frontend work which is not noted down here b
 
 ---
 
-## Phase 3: Job Embeddings, CV Templates & Saved Jobs
+## Phase 3: CV Templates & Saved Jobs
 
-**Goal**: Job AI summaries with embeddings, CV template system, and saved jobs tracking
+**Goal**: CV template system and saved jobs tracking
 
-### 3.1: Database Schema - Job Embeddings & Saved Jobs
+**Note**: Company and job data comes directly from Platsbanken without AI enrichment. AI services are still used for:
+- Onboarding chat (Phase 4) - Claude API for profile building
+- CV editor chat (Phase 3.8) - Claude API for CV editing
+- Application generation (Phase 5) - Claude API for tailored applications
+- Profile embeddings - OpenAI embeddings for future matching features
+
+### 3.1: Database Schema - Saved Jobs
 
 **File**: `packages/db/prisma/schema.prisma`
 
@@ -625,25 +631,11 @@ For testing this we have to do some frontend work which is not noted down here b
 
 ---
 
-### 3.3: Extend JobRepo for Saved Jobs & Matching
+### 3.3: Extend JobRepo for Saved Jobs
 
 **File**: `apps/server/src/services/job-repo.ts`
 
-**Note**: Match score calculation happens on-the-fly during job search, not as separate RPC.
-
-#### Update search method
-
-- [x] Add support for minMatchScore and maxMatchScore filters in params
-- [x] Add support for sortByMatch parameter in params
-- [x] If user is authenticated: fetch user's perfectJobEmbedding from profile using raw SQL
-- [x] For each job: calculate matchScore using PostgreSQL cosine similarity (job.aiSummaryEmbedding <=> user.perfectJobEmbedding) via raw SQL
-- [x] Convert cosine distance to percentage score (0-100): `ROUND((1 - (j.ai_summary_embedding <=> embedding::vector)) * 100)`
-- [x] Filter jobs by match score range if minMatchScore or maxMatchScore provided
-- [x] Sort by match score if sortByMatch is true
-- [x] Return jobs with matchScore fields populated
-- [x] Add span and logging
-
-**Note**: matchReasons generation deferred - would require AI call for every job which is too expensive. Can be added in future if needed.
+**Note**: AI-based matching is deferred. Job search uses Platsbanken data with filters only.
 
 #### getSaved method
 
@@ -686,53 +678,51 @@ For testing this we have to do some frontend work which is not noted down here b
 
 ---
 
-### 3.5: Update Platsbanken Sync - Add AI Summary Generation
+### 3.5: Platsbanken Job Sync
 
 **File**: `apps/server/src/services/platsbanken/platsbanken-sync.ts`
 
-**Note**: This extends the existing hourly job sync to generate AI summaries and embeddings for ALL jobs.
+**Note**: Job data comes directly from Platsbanken API. No AI enrichment needed.
 
-- [ ] After fetching jobs from Platsbanken API, for each job:
-- [ ] Check if company exists by organizationNumber
-- [ ] If company is NEW: call CompanyEnrichmentService.enrichCompany() (see 3.6)
-- [ ] Generate job AI summary (10 sentences) using an AI service
-- [ ] Include company.aiDescription in context if available
-- [ ] Call OpenAI embedding API (text-embedding-3-small) on the AI summary
-- [ ] Store aiSummary and aiSummaryEmbedding in Job record
-- [ ] Log summary generation progress and any errors
-- [ ] Add span and logging
+- [x] Fetch jobs from Platsbanken API hourly
+- [x] Upsert company information from job ads
+- [x] Create/update job records with all Platsbanken data
+- [x] Update job relations (requirements, contacts)
+- [x] Set job coordinates
+- [x] Mark removed jobs
+
+**Data from Platsbanken**:
+- Job description, title, requirements
+- Company name, website, logo, description
+- Location, salary, employment type
+- Application details and contacts
 
 ---
 
-### 3.6: Implement CompanyEnrichmentService
+### 3.6: Company Information from Platsbanken
 
-**File**: `apps/server/src/services/company-enrichment-service.ts`
+**Note**: Company information is sourced directly from Platsbanken job ads. No web scraping or AI enrichment.
 
-**Note**: This runs during job sync for NEW companies only (checked by organizationNumber).
+**Removed for simplicity**:
+- ~~WebCrawler service~~ - Firecrawl-based scraping removed
+- ~~CompanyEnrichmentService~~ - AI company description generation removed
+- ~~Job AI summaries~~ - AI-generated job summaries removed
+- Use Platsbanken data directly instead
 
-#### Service Setup
+**Company data from Platsbanken**:
+- Company name (`employer.name`)
+- Organization number (`employer.organization_number`)
+- Website URL (`employer.url`)
+- Company description (`description.company_information`)
+- Logo URL (`logo_url`)
 
-- [ ] Create CompanyEnrichmentService class extending Effect.Service
-- [ ] Add Database dependency
-- [ ] Add Puppeteer/Playwright dependency for scraping
-- [ ] Setup scoped Effect.gen
+This data is stored in the Company table during job sync via the `upsertCompany` method in PlatsbankenSyncService.
 
-#### enrichCompany method
-
-- [ ] Fetch company website from company record
-- [ ] If no website: generate basic AI description from company name only
-- [ ] If website exists: launch browser, navigate to homepage
-- [ ] Scrape homepage and about page for text content
-- [ ] Extract: description, mission statement, values, culture
-- [ ] Find social media links in footer/header (LinkedIn, Facebook, Twitter)
-- [ ] Call Claude API to generate company AI description (summary of what company does, their mission, culture)
-- [ ] Store in company.aiDescription field
-- [ ] Store raw scraped data in company.scrapedData (JSON)
-- [ ] Set company.lastEnriched to now
-- [ ] Close browser
-- [ ] Handle errors gracefully (timeout, blocked, SSL errors)
-- [ ] Return enriched company
-- [ ] Add span and logging
+**AI still used for**:
+- User onboarding chat (Phase 4)
+- CV editor chat (Phase 3.8)
+- Application generation (Phase 5)
+- Profile embeddings for future matching
 
 ---
 

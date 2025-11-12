@@ -10,10 +10,6 @@ import {
   Schedule,
   Schema,
 } from "effect";
-import { AIGeneration } from "../ai-generation";
-import { CompanyEnrichmentService } from "../company-enrichment-service";
-import { Embedding } from "../embedding";
-import { WebCrawler } from "../web-crawler";
 import { PlatsbankenService } from "./platsbanken";
 import {
   PlatsbankenJobTransform,
@@ -26,9 +22,6 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
     effect: Effect.gen(function* () {
       const db = yield* Database;
       const platsbankenService = yield* PlatsbankenService;
-      const companyEnrichment = yield* CompanyEnrichmentService;
-      const aiGeneration = yield* AIGeneration;
-      const embedding = yield* Embedding;
 
       const companyData = (company: TransformedJob["company"]) => ({
         name: company.name,
@@ -192,18 +185,6 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
             }
           );
 
-          if (!upsertedCompany.lastEnriched) {
-            yield* companyEnrichment["enrichCompany"](upsertedCompany.id).pipe(
-                Effect.tapError((error) =>
-                  Effect.logError("Misslyckades med att berika företag", {
-                    companyId: upsertedCompany.id,
-                    error,
-                  })
-                ),
-                Effect.ignore
-              );
-          }
-
           return upsertedCompany;
         });
 
@@ -256,48 +237,6 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
           : Effect.void;
       };
 
-      const generateJobAISummary = (
-        jobId: string,
-        job: TransformedJob,
-        companyAiDescription?: string | null
-      ) =>
-        Effect.gen(function* () {
-          const aiSummary = yield* aiGeneration
-            .generateJobSummary(
-              job.title,
-              job.description,
-              companyAiDescription || undefined
-            )
-            .pipe(
-              Effect.tapError((error) =>
-                Effect.logError("Misslyckades med att generera jobbsammanfattning", {
-                  jobId,
-                  error,
-                })
-              )
-            );
-
-          const aiSummaryEmbedding = yield* embedding
-            .generate(aiSummary)
-            .pipe(
-              Effect.tapError((error) =>
-                Effect.logError("Misslyckades med att generera embedding", {
-                  jobId,
-                  error,
-                })
-              )
-            );
-
-          yield* db.use((p) =>
-            p.$executeRawUnsafe(
-              "UPDATE job SET ai_summary = $1, ai_summary_embedding = $2 WHERE id = $3",
-              aiSummary,
-              `[${aiSummaryEmbedding.join(",")}]`,
-              jobId
-            )
-          );
-        });
-
       const upsertJob = (job: TransformedJob) =>
         Effect.gen(function* () {
           const company = yield* upsertCompany(job.company);
@@ -326,20 +265,6 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
             yield* setCoordinates(updatedJob.id, job);
             yield* updateJobRelations(updatedJob.id, job);
 
-            yield* generateJobAISummary(
-              updatedJob.id,
-              job,
-              company.aiDescription
-            ).pipe(
-              Effect.tapError((error) =>
-                Effect.logError("AI-sammanfattning misslyckades för befintligt jobb", {
-                  jobId: updatedJob.id,
-                  error,
-                })
-              ),
-              Effect.ignore
-            );
-
             return updatedJob;
           }
 
@@ -360,16 +285,6 @@ export class PlatsbankenSyncService extends Effect.Service<PlatsbankenSyncServic
 
           yield* setCoordinates(newJob.id, job);
           yield* updateJobRelations(newJob.id, job);
-
-          yield* generateJobAISummary(newJob.id, job, company.aiDescription).pipe(
-            Effect.tapError((error) =>
-              Effect.logError("AI-sammanfattning misslyckades för nytt jobb", {
-                jobId: newJob.id,
-                error,
-              })
-            ),
-            Effect.ignore
-          );
 
           return newJob;
         });
@@ -505,9 +420,5 @@ export const PlatsbankenSyncSchedulerLayer = Layer.effectDiscard(
   )
 ).pipe(
   Layer.provide(PlatsbankenSyncService.Default),
-  Layer.provide(CompanyEnrichmentService.Default),
-  Layer.provide(AIGeneration.Default),
-  Layer.provide(Embedding.Default),
-  Layer.provide(WebCrawler.Default),
   Layer.provide(Database.Live)
 );

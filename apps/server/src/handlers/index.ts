@@ -8,9 +8,7 @@ import { JobRepo } from "../services/job-repo";
 import { FileStorage } from "../services/file-storage";
 import { OCR } from "../services/ocr";
 import { Embedding } from "../services/embedding";
-import { WebCrawler } from "../services/web-crawler";
 import { AIGeneration } from "../services/ai-generation";
-import { CompanyEnrichmentService } from "../services/company-enrichment-service";
 import { Health } from "./health";
 import { User } from "./users";
 import { Profiles } from "./profiles";
@@ -25,9 +23,7 @@ export const RpcHandlers = Layer.mergeAll(Health, User, Profiles, Jobs).pipe(
   Layer.provide(FileStorage.Default),
   Layer.provide(OCR.Default),
   Layer.provide(Embedding.Default),
-  Layer.provide(WebCrawler.Default),
   Layer.provide(AIGeneration.Default),
-  Layer.provide(CompanyEnrichmentService.Default),
   Layer.provide(Auth.Default),
   Layer.provide(Database.Live),
   Layer.provide(BunContext.layer)
