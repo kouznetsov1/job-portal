@@ -1,1 +1,5 @@
 - [] make better prompts for embedded job description in profile
+- [] move embedding to general ai service which has embedding function
+- [] make generations of templates and send the file over to browse templates
+- [] make sure that typst .tmp folder is not deleted/created all the time
+- [] make sure that typst file names are random to avoid collisions right at generation

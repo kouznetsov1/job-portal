@@ -397,4 +397,4 @@ Code is considered complete only when:
 - Prioritize clarity over premature optimization
 - Use appropriate data structures for the use case
 - Claude NEVER runs the dev server, the user already has it running
-
+- Claude follows a plan with phases in ARCHITECTURE.md

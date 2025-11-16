@@ -420,5 +420,6 @@ export const PlatsbankenSyncSchedulerLayer = Layer.effectDiscard(
   )
 ).pipe(
   Layer.provide(PlatsbankenSyncService.Default),
+  Layer.provide(PlatsbankenService.Default),
   Layer.provide(Database.Live)
 );

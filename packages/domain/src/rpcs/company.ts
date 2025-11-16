@@ -10,19 +10,19 @@ import {
 import { CompanyJobsRequest, CompanyJobsResult } from "../schema/company-jobs";
 
 export class CompanyRpcs extends RpcGroup.make(
-  Rpc.make("companie.search", {
+  Rpc.make("company.search", {
     payload: CompanySearchParams,
     success: CompanySearchResult,
     error: CompanyRpcError,
   }),
-  Rpc.make("companie.getById", {
+  Rpc.make("company.getById", {
     payload: Schema.Struct({ id: CompanyId }),
     success: CompanyDetailed,
     error: CompanyRpcError,
   }),
-  Rpc.make("companie.getJobs", {
+  Rpc.make("company.getJobs", {
     payload: CompanyJobsRequest,
     success: CompanyJobsResult,
     error: CompanyRpcError,
-  })
+  }),
 ) {}

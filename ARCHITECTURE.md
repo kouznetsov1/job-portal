@@ -726,7 +726,7 @@ This data is stored in the Company table during job sync via the `upsertCompany`
 
 ---
 
-### 3.7: Implement CVTemplateService
+### 3.7: Implement CVTemplateService ✅
 
 **File**: `apps/server/src/services/cv-template-service.ts`
 
@@ -734,28 +734,36 @@ This data is stored in the Company table during job sync via the `upsertCompany`
 
 #### Service Setup
 
-- [ ] Create CVTemplateService class extending Effect.Service
-- [ ] Add Database dependency
-- [ ] Setup scoped Effect.gen
+- [x] Create CVTemplateService class extending Effect.Service
+- [x] Add Database dependency
+- [x] Setup scoped Effect.gen
 
 #### list method
 
-- [ ] Fetch all CVTemplate records from database
-- [ ] Return CVTemplate[]
-- [ ] Add span and logging
+- [x] Fetch all CVTemplate records from database
+- [x] Return CVTemplate[]
+- [x] Add span and logging
 
 #### get method
 
-- [ ] Fetch CVTemplate by id
-- [ ] If not found, fail with TemplateNotFoundError
-- [ ] Return template
-- [ ] Add span and logging
+- [x] Fetch CVTemplate by id
+- [x] If not found, fail with TemplateNotFoundError
+- [x] Return template
+- [x] Add span and logging
 
 #### setActive method
 
-- [ ] Update user profile activeTemplateId
-- [ ] Return success boolean
-- [ ] Add span and logging
+- [x] Update user profile activeTemplateId
+- [x] Return success boolean
+- [x] Add span and logging
+
+#### TypstService (bonus)
+
+- [x] Created `apps/server/src/services/typst.ts` for PDF compilation
+- [x] Uses Command API from @effect/platform correctly
+- [x] Proper temp file management in project .tmp/ directory
+- [x] Error handling with CVCompilationError
+- [x] Tests passing with @effect/vitest
 
 **Note**: No create/update/delete methods - templates are managed by Searcha admins via database seeds.
 
