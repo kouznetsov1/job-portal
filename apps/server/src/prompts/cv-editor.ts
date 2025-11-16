@@ -52,8 +52,7 @@ export function buildCVEditorUserPrompt(context: CVEditorPromptContext): string 
     prompt += `Användarens profildata:\n${JSON.stringify(profileData, null, 2)}\n\n`;
   }
 
-  prompt += `Användarens förfrågan: ${userMessage}\n\n`;
-  prompt += `Vänligen returnera den uppdaterade Typst-koden baserat på användarens förfrågan.`;
+  prompt += `Användarens förfrågan: ${userMessage}`;
 
   return prompt;
 }

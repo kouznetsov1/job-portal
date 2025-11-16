@@ -14,14 +14,18 @@ import {
 import { Effect } from "effect";
 import { FileStorage } from "./file-storage";
 import { OCR } from "./ocr";
-import { Embedding } from "./embedding";
+import { AI } from "./ai";
+import {
+  PERFECT_JOB_DESCRIPTION_SYSTEM_PROMPT,
+  buildPerfectJobUserPrompt,
+} from "../prompts/profile";
 
 export class Profile extends Effect.Service<Profile>()("Profile", {
   effect: Effect.gen(function* () {
     const db = yield* Database;
     const fileStorage = yield* FileStorage;
     const ocr = yield* OCR;
-    const embedding = yield* Embedding;
+    const ai = yield* AI;
 
     const get = (userId: string) =>
       Effect.fn("profile.get")(function* () {
@@ -290,9 +294,35 @@ export class Profile extends Effect.Service<Profile>()("Profile", {
           );
         }
 
-        const perfectJobDescription = `Baserat på profilen: Sök ett jobb som ${profile.headline || "passar mina kompetenser"}. Jag har erfarenhet av ${profile.experience.map((e) => e.title).join(", ")} och kompetenser inom ${profile.skills.slice(0, 5).join(", ")}. Jag söker en roll där jag kan använda min erfarenhet och utvecklas vidare inom mitt område.`;
+        const userPrompt = buildPerfectJobUserPrompt({
+          fullName: profile.fullName ?? undefined,
+          headline: profile.headline ?? undefined,
+          summary: profile.summary ?? undefined,
+          skills: profile.skills,
+          experience: profile.experience.map((exp) => ({
+            title: exp.title,
+            company: exp.company,
+            startDate: exp.startDate,
+            endDate: exp.endDate ?? undefined,
+            description: exp.description ?? undefined,
+            current: exp.current,
+          })),
+          education: profile.education.map((edu) => ({
+            institution: edu.institution,
+            degree: edu.degree,
+            field: edu.field,
+            startDate: edu.startDate,
+            endDate: edu.endDate ?? undefined,
+            current: edu.current,
+          })),
+        });
 
-        const embeddingVector = yield* embedding.generate(
+        const perfectJobDescription = yield* ai.generate({
+          system: PERFECT_JOB_DESCRIPTION_SYSTEM_PROMPT,
+          messages: [{ role: "user", content: userPrompt }],
+        });
+
+        const embeddingVector = yield* ai.createEmbedding(
           perfectJobDescription,
         );
 

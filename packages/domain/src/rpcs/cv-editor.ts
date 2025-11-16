@@ -25,6 +25,7 @@ export class CVEditorRpcs extends RpcGroup.make(
     payload: SendCVChatMessageRequest,
     success: CVChatStreamChunk,
     error: CVEditorRpcError,
+    stream: true,
   }),
   Rpc.make("cvEditor.updateTypstCode", {
     payload: Schema.Struct({ typstCode: Schema.String }),
